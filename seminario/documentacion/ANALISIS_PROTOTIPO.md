@@ -85,8 +85,9 @@ El notebook implementa un pipeline riguroso de calidad de datos para garantizar 
 5. **Ingeniería de Características Cíclicas (Dirección del Viento):**
    - La variable angular `direccion_viento` (en grados de 0 a 360) presenta discontinuidad en el salto $359^\circ \rightarrow 0^\circ$.
    - Se descompuso trigonométricamente en componentes ortogonales continuas:
-     $$\text{dir\_viento\_sen} = \sin\left(\frac{\text{direccion\_viento} \cdot \pi}{180}\right)$$
-     $$\text{dir\_viento\_cos} = \cos\left(\frac{\text{direccion\_viento} \cdot \pi}{180}\right)$$
+     $$\mathrm{viento}_{\sin} = \sin\left(\frac{\theta \cdot \pi}{180}\right) \quad (\text{variable } \texttt{dir\_viento\_sen})$$
+     $$\mathrm{viento}_{\cos} = \cos\left(\frac{\theta \cdot \pi}{180}\right) \quad (\text{variable } \texttt{dir\_viento\_cos})$$
+     donde $\theta$ representa la dirección angular en grados sexagesimales.
    - Con esto, el dataset final consolidó **22 variables numéricas continuas** preparadas para modelado.
 
 ---

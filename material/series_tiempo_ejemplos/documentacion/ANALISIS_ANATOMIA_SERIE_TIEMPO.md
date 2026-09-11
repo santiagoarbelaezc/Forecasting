@@ -12,24 +12,31 @@ Para evaluar con rigor absoluto la capacidad de detección de cada técnica esta
 ### 1.1 Ecuaciones del Proceso Generador
 La serie temporal observada $Y_t$ se sintetiza bajo la siguiente formulación estructural aditiva:
 
-$$Y_t = N_t + T_t + S_t + \text{Efecto\_Temperatura}_t + \text{Efecto\_Precio}_t + R_t$$
+$$Y_t = N_t + T_t + S_t + E^{(\text{temp})}_t + E^{(\text{precio})}_t + R_t$$
 
-Donde cada término está rigurosamente definido por:
+Donde cada término y componente exógeno está rigurosamente modelado por:
 
 1. **Nivel Base ($N_t$):**
    $$N_t = 100.0 \quad (\text{constante})$$
+
 2. **Tendencia Determinística Lineal ($T_t$):**
-   $$T_t = 0.45 \cdot t \quad (\text{pendiente mensual } +0.45, \text{ crecimiento anual de } 5.4 \text{ unidades})$$
-3. **Estacionalidad Pura Diaria/Mensual ($S_t$):**
-   $$S_t = 9.0 \cdot \sin\left(\frac{2\pi t}{12}\right) \quad (\text{período estacional fundamental } s=12 \text{ meses, amplitud } \pm 9.0)$$
-4. **Variable Exógena 1 - Temperatura ($X_{1,t}$):**
-   $$\text{Temperatura}_t = 22 + 5 \cdot \sin\left(\frac{2\pi t}{12} + 0.3\right) + \varepsilon_{\text{temp}, t}, \quad \varepsilon_{\text{temp}, t} \sim \mathcal{N}(0, 0.9^2)$$
-   $$\text{Efecto\_Temperatura}_t = 0.85 \cdot \left(\text{Temperatura}_t - \overline{\text{Temperatura}}\right)$$
-5. **Variable Exógena 2 - Precio ($X_{2,t}$):**
-   $$\text{Precio}_t = 45 + 0.18 \cdot t + 2.5 \cdot \cos\left(\frac{2\pi t}{12}\right) + \varepsilon_{\text{precio}, t}, \quad \varepsilon_{\text{precio}, t} \sim \mathcal{N}(0, 1.4^2)$$
-   $$\text{Efecto\_Precio}_t = -0.35 \cdot \left(\text{Precio}_t - \overline{\text{Precio}}\right)$$
+   $$T_t = 0.45 \cdot t$$
+   *(Pendiente mensual $+0.45$, que representa un crecimiento acumulado de $5.4$ unidades por año).*
+
+3. **Estacionalidad Pura Anual ($S_t$):**
+   $$S_t = 9.0 \cdot \sin\left(\frac{2\pi \cdot t}{12}\right)$$
+   *(Período estacional fundamental $s=12$ meses con amplitud de oscilación de $\pm 9.0$ unidades).*
+
+4. **Variable Exógena 1 - Temperatura ($X_{\text{temp}, t}$) y su Efecto ($E^{(\text{temp})}_t$):**
+   $$X_{\text{temp}, t} = 22 + 5 \cdot \sin\left(\frac{2\pi \cdot t}{12} + 0.3\right) + \varepsilon_{\text{temp}, t}, \quad \varepsilon_{\text{temp}, t} \sim \mathcal{N}(0, 0.9^2)$$
+   $$E^{(\text{temp})}_t = 0.85 \cdot \left(X_{\text{temp}, t} - \overline{X}_{\text{temp}}\right)$$
+
+5. **Variable Exógena 2 - Precio ($X_{\text{precio}, t}$) y su Efecto ($E^{(\text{precio})}_t$):**
+   $$X_{\text{precio}, t} = 45 + 0.18 \cdot t + 2.5 \cdot \cos\left(\frac{2\pi \cdot t}{12}\right) + \varepsilon_{\text{precio}, t}, \quad \varepsilon_{\text{precio}, t} \sim \mathcal{N}(0, 1.4^2)$$
+   $$E^{(\text{precio})}_t = -0.35 \cdot \left(X_{\text{precio}, t} - \overline{X}_{\text{precio}}\right)$$
+
 6. **Componente Irregular / Ruido Blanco ($R_t$):**
-   $$R_t \sim \mathcal{N}(0, 2.2^2) \quad (\sigma = 2.2)$$
+   $$R_t \sim \mathcal{N}(0, \sigma_R^2), \quad \sigma_R = 2.2$$
 
 ### 1.2 Inyección Controlada de Anomalías para Pruebas de Estrés
 Para validar el pipeline de limpieza y detección de fallas, el notebook introduce deliberadamente perturbaciones en una copia denominada `df_eda`:
@@ -111,10 +118,10 @@ $$\Delta_{12} \Delta Y_t = (Y_t - Y_{t-12}) - (Y_{t-1} - Y_{t-13})$$
 Sobre la serie transformada se ejecutan dos pruebas estadísticas de hipótesis contrapuestas:
 1. **Prueba Aumentada de Dickey-Fuller (ADF):**
    - $H_0$: La serie posee raíz unitaria (no estacionaria).
-   - Resultado: $p\text{-valor} < 0.05 \rightarrow$ Se rechaza $H_0$ (favorece estacionariedad).
+   - Resultado: $p < 0.05$ ($p$-valor significativo) $\rightarrow$ Se rechaza $H_0$ (favorece estacionariedad).
 2. **Prueba KPSS (Kwiatkowski-Phillips-Schmidt-Shin):**
    - $H_0$: La serie es estacionaria alrededor de una constante.
-   - Resultado: $p\text{-valor} > 0.05 \rightarrow$ No se rechaza $H_0$ (confirma estacionariedad).
+   - Resultado: $p > 0.05$ ($p$-valor no significativo) $\rightarrow$ No se rechaza $H_0$ (confirma estacionariedad).
 - **Conclusión combinada:** La combinación $(d=1, D=1, s=12)$ induce estacionariedad estricta de segundo orden.
 
 ### L. ACF y PACF de la Serie Estacionaria
@@ -200,7 +207,7 @@ Para cada combinación admisible, el algoritmo:
 2. Pronostica las 24 observaciones del conjunto de validación en modo fuera de muestra (*out-of-sample*).
 3. Computa el **MAE** y **RMSE** de validación frente a los valores reales.
 4. Extrae el Criterio de Información de Akaike (**AIC**).
-5. Evalúa la blancura de los residuos con la **Prueba de Ljung-Box** ($p\text{-valor} > 0.05$ para garantizar que no quede estructura autocorrelacionada sin capturar).
+5. Evalúa la blancura de los residuos con la **Prueba de Ljung-Box** ($p > 0.05$ para garantizar que no quede estructura autocorrelacionada sin capturar).
 6. Clasifica y selecciona la combinación óptima que minimice el error de validación preservando residuos compatibles con ruido blanco.
 
 ---
