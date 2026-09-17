@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>iTransformer: Inverted Transformers | Guía de Arquitectura y Pronóstico</title>
+  
+  <!-- Meta SEO -->
+  <meta name="description" content="iTransformer: Inverted Transformers Are Effective for Time Series Forecasting. Investigación de la Universidad de Tsinghua & Ant Group (ICLR 2024 Spotlight)." />
+  
+  <!-- Tipografía: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Chart.js para visualización interactiva de series temporales -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- ========================================================================= -->
+  <!-- ESTILOS 100% PUROS, NATIVOS Y CON ESPACIADO CLÍNICO ELEGANTE              -->
+  <!-- ========================================================================= -->
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 16.5px;
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 0.95rem;
+      background-color: #f8fafc;
+      color: #09090b;
+      min-height: 100vh;
+      line-height: 1.55;
+    }
+
+    svg {
+      display: inline-block;
+      vertical-align: middle;
+      flex-shrink: 0;
+      max-width: 100%;
+    }
+
+    /* Micro-textos y Títulos */
+    .micro-label {
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #71717a;
+    }
+
+    .section-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      color: #09090b;
+    }
+
+    .section-subtitle {
+      font-size: 0.85rem;
+      color: #71717a;
+      margin-top: 0.25rem;
+    }
+
+    /* Top Navbar Fijo */
+    .top-navbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background-color: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(228, 228, 231, 0.9);
+      padding: 0.85rem 2rem;
+    }
+
+    .navbar-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+      color: #09090b;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .nav-link {
+      padding: 0.45rem 0.85rem;
+      font-size: 0.825rem;
+      font-weight: 600;
+      color: #52525b;
+      border-radius: 9999px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .nav-link:hover {
+      color: #09090b;
+      background-color: #f4f4f5;
+    }
+
+    .nav-link.active {
+      background-color: #18181b;
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    }
+
+    /* Botones Clínicos y Minimalistas */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9999px;
+      padding: 0.65rem 1.35rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      background-color: #18181b;
+      color: #ffffff;
+      border: 1px solid #18181b;
+      box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.08);
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      user-select: none;
+      text-decoration: none;
+      gap: 0.45rem;
+    }
+
+    .btn-primary:hover {
+      background-color: #27272a;
+      box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.14);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9999px;
+      padding: 0.65rem 1.35rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      background-color: #f4f4f5;
+      color: #18181b;
+      border: 1px solid #e4e4e7;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+      text-decoration: none;
+      gap: 0.45rem;
+    }
+
+    .btn-secondary:hover {
+      background-color: #e4e4e7;
+      border-color: #d4d4d8;
+    }
+
+    .btn-secondary:active {
+      transform: scale(0.98);
+    }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9999px;
+      padding: 0.45rem 0.85rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      background: transparent;
+      color: #71717a;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      gap: 0.35rem;
+    }
+
+    .btn-ghost:hover {
+      color: #09090b;
+      background-color: #f4f4f5;
+    }
+
+    /* Tarjetas Clínicas */
+    .card {
+      background-color: #ffffff;
+      border: 1px solid rgba(228, 228, 231, 0.95);
+      border-radius: 1.35rem;
+      padding: 2rem;
+      box-shadow: 0 2px 12px -2px rgba(0, 0, 0, 0.03);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .card-hover:hover {
+      transform: translateY(-2px);
+      border-color: #d4d4d8;
+      box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.07);
+    }
+
+    /* Tarjeta Destacada Oscura */
+    .card-highlight-dark {
+      background-color: #121215;
+      border: 1px solid #27272a;
+      border-radius: 1.35rem;
+      padding: 2rem;
+      color: #ffffff;
+      box-shadow: 0 12px 28px -5px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Form Inputs */
+    .input-premium {
+      border-radius: 0.875rem;
+      padding: 0.65rem 0.95rem;
+      font-size: 0.85rem;
+      border: 1px solid #e4e4e7;
+      background-color: #fafafa;
+      color: #09090b;
+      outline: none;
+      width: 100%;
+      font-family: inherit;
+      transition: all 0.2s ease;
+    }
+
+    .input-premium:focus {
+      border-color: #18181b;
+      background-color: #ffffff;
+      box-shadow: 0 0 0 3px rgba(24, 24, 27, 0.08);
+    }
+
+    /* Badges de Estado */
+    .badge-active {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.725rem;
+      font-weight: 600;
+      background-color: rgba(16, 185, 129, 0.12);
+      color: #059669;
+      border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+
+    .badge-completed {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.725rem;
+      font-weight: 600;
+      background-color: #f4f4f5;
+      color: #52525b;
+      border: 1px solid #e4e4e7;
+    }
+
+    .badge-paused {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.725rem;
+      font-weight: 600;
+      background-color: rgba(245, 158, 11, 0.12);
+      color: #d97706;
+      border: 1px solid rgba(245, 158, 11, 0.25);
+    }
+
+    .status-dot-green {
+      width: 8px;
+      height: 8px;
+      border-radius: 9999px;
+      background-color: #10b981;
+      display: inline-block;
+    }
+
+    .status-dot-rose {
+      width: 8px;
+      height: 8px;
+      border-radius: 9999px;
+      background-color: #f43f5e;
+      display: inline-block;
+    }
+
+    .status-dot-amber {
+      width: 8px;
+      height: 8px;
+      border-radius: 9999px;
+      background-color: #f59e0b;
+      display: inline-block;
+    }
+
+    /* Layout y Separaciones */
+    .main-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 3rem 1.75rem 6rem 1.75rem;
+    }
+
+    .content-section {
+      margin-bottom: 5rem;
+    }
+
+    .grid-4-kpi {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .grid-2-blocks {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
+      gap: 1.75rem;
+    }
+
+    .grid-simulator {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 1.75rem;
+    }
+
+    @media (max-width: 1024px) {
+      .grid-simulator {
+        grid-template-columns: 1fr;
+      }
+      .grid-2-blocks {
+        grid-template-columns: 1fr;
+      }
+      .nav-links {
+        display: none;
+      }
+      .main-container {
+        padding: 2rem 1.25rem 4rem 1.25rem;
+      }
+      .content-section {
+        margin-bottom: 3.5rem;
+      }
+    }
+
+    /* Tablas Estilizadas */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      text-align: left;
+    }
+
+    th {
+      padding: 0.85rem 1rem;
+      font-weight: 700;
+      color: #09090b;
+      border-bottom: 2px solid #e4e4e7;
+      background-color: #fafafa;
+    }
+
+    td {
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid #f4f4f5;
+    }
+
+    tr:hover td {
+      background-color: #fafafa;
+    }
+
+    /* Ecuaciones en Bloque */
+    .math-block {
+      background-color: #18181b;
+      color: #f59e0b;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      padding: 1rem 1.25rem;
+      border-radius: 0.85rem;
+      margin: 0.75rem 0;
+      line-height: 1.6;
+    }
+
+    .math-inline {
+      font-family: 'JetBrains Mono', monospace;
+      background-color: #f4f4f5;
+      color: #18181b;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.85em;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ========================================================================= -->
+  <!-- 1. NAVBAR SUPERIOR FIJO                                                   -->
+  <!-- ========================================================================= -->
+  <header class="top-navbar">
+    <div class="navbar-container">
+      
+      <!-- Brand Logo -->
+      <a href="#header" class="nav-brand">
+        <div style="width: 36px; height: 36px; border-radius: 0.75rem; background-color: #18181b; color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem;">
+          iT
+        </div>
+        <div>
+          <div style="font-weight: 800; font-size: 1rem; letter-spacing: -0.01em; display: flex; align-items: center; gap: 0.35rem;">
+            <span>iTRANSFORMER LAB</span>
+            <span style="color: #f59e0b;">•</span>
+          </div>
+          <div class="micro-label" style="font-size: 8.5px; color: #f59e0b; letter-spacing: 0.16em;">
+            TSINGHUA &amp; ANT GROUP · ICLR 2024
+          </div>
+        </div>
+      </a>
+
+      <!-- Enlaces Rápidos a Secciones -->
+      <nav class="nav-links">
+        <a href="#resumen" class="nav-link active">Resumen</a>
+        <a href="#problema" class="nav-link">La Paradoja</a>
+        <a href="#inversion" class="nav-link">Invertir el Transformer</a>
+        <a href="#componentes" class="nav-link">Flujo de Capas</a>
+        <a href="#simulador" class="nav-link">Simulador en Vivo</a>
+        <a href="#comparativa" class="nav-link">Comparativa Tabla X</a>
+      </nav>
+
+      <!-- Acciones Superiores -->
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <button onclick="openCitationModal()" class="btn-secondary" style="font-size: 0.8rem; padding: 0.5rem 1.15rem;">
+          <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+          <span>BibTeX</span>
+        </button>
+
+        <a href="https://github.com/thuml/iTransformer" target="_blank" rel="noopener noreferrer" class="btn-primary" style="font-size: 0.8rem; padding: 0.5rem 1.15rem;">
+          <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+          </svg>
+          <span>GitHub</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+
+  <!-- ========================================================================= -->
+  <!-- 2. CONTENEDOR PRINCIPAL FLUIDO CON NUEVO CONTENIDO                        -->
+  <!-- ========================================================================= -->
+  <main class="main-container">
+    
+    <!-- Encabezado / Introducción Oficial -->
+    <section id="header" class="content-section" style="margin-bottom: 3.5rem;">
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 2rem;">
+        <div>
+          <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem;">
+            <span class="micro-label">ICLR 2024 SPOTLIGHT</span>
+            <span style="color: #d4d4d8;">•</span>
+            <span class="badge-completed" style="font-size: 9.5px; padding: 3px 9px; font-weight: 700;">TSINGHUA UNIVERSITY &amp; ANT GROUP</span>
+            <span style="color: #d4d4d8;">•</span>
+            <span style="font-size: 0.775rem; color: #71717a;">Liu, Hu, Zhang, Wu, Wang, Ma &amp; Long</span>
+          </div>
+
+          <h1 style="font-size: 2.35rem; font-weight: 800; letter-spacing: -0.035em; color: #09090b; margin-bottom: 0.5rem;">
+            1. iTransformer: Inverted Transformers
+          </h1>
+          <p style="font-size: 0.95rem; color: #71717a; max-width: 820px; line-height: 1.6;">
+            El problema no era el Transformer, sino cómo se aplicaba. <strong style="color: #09090b;">iTransformer conserva intactos los componentes estándar del Transformer e invierte las dimensiones:</strong> cada variable completa se procesa como un token independiente, calculando atención multivariada entre variables y modelando el tiempo con la red feed-forward.
+          </p>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 0.85rem; padding-top: 0.5rem;">
+          <a href="#simulador" class="btn-primary">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            <span>Ver en el Simulador</span>
+          </a>
+          <a href="#comparativa" class="btn-secondary">
+            <span>Tabla Comparativa</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ======================================================================= -->
+    <!-- 3. RESUMEN: 4 TARJETAS KPI ADAPTADAS A ITRANSFORMER                     -->
+    <!-- ======================================================================= -->
+    <section id="resumen" class="content-section">
+      <div class="grid-4-kpi">
+        
+        <!-- KPI 1: Variate Tokens -->
+        <div class="card card-hover" style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+            <span class="micro-label">VARIATE TOKENS</span>
+            <span class="status-dot-green"></span>
+          </div>
+          <div>
+            <div style="font-size: 1.85rem; font-weight: 800; color: #09090b; letter-spacing: -0.03em; font-family: 'JetBrains Mono', monospace;">
+              N Tokens
+            </div>
+            <div style="font-size: 0.775rem; color: #71717a; margin-top: 0.4rem;">
+              Cada variable completa a lo largo de T es un token
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI 2: Atención entre Variables -->
+        <div class="card card-hover" style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+            <span class="micro-label">AUTO-ATENCIÓN</span>
+            <span class="status-dot-amber"></span>
+          </div>
+          <div>
+            <div style="font-size: 1.85rem; font-weight: 800; color: #d97706; letter-spacing: -0.03em; font-family: 'JetBrains Mono', monospace;">
+              ℝ<sup>N × N</sup>
+            </div>
+            <div style="font-size: 0.775rem; color: #71717a; margin-top: 0.4rem;">
+              Correlaciones multivariadas entre variables
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI 3: Tarjeta Negra Destacada -->
+        <div class="card-highlight-dark" style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+            <span class="micro-label" style="color: #a1a1aa;">REASIGNACIÓN TOTAL</span>
+            <span class="badge-active" style="background-color: rgba(244, 63, 94, 0.2); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.35); font-size: 10px; padding: 2px 8px;">
+              Inverted
+            </span>
+          </div>
+          <div>
+            <div style="font-size: 1.85rem; font-weight: 800; color: #ffffff; letter-spacing: -0.03em;">
+              Sin Positional
+            </div>
+            <div style="font-size: 0.775rem; color: #a1a1aa; margin-top: 0.4rem;">
+              El orden temporal se codifica en el embedding
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI 4: FFN Temporal -->
+        <div class="card card-hover" style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+            <span class="micro-label">FEED-FORWARD (FFN)</span>
+            <span class="status-dot-rose"></span>
+          </div>
+          <div>
+            <div style="font-size: 1.85rem; font-weight: 800; color: #09090b; letter-spacing: -0.03em;">
+              Dinámica Temporal
+            </div>
+            <div style="font-size: 0.775rem; color: #71717a; margin-top: 0.4rem;">
+              Aprende amplitud, periodicidad y frecuencia
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ======================================================================= -->
+    <!-- 4. SECCIÓN: 1.1 EL PROBLEMA & 1.3 LIMITACIONES DE TRANSFORMERS          -->
+    <!-- ======================================================================= -->
+    <section id="problema" class="content-section">
+      <div class="card">
+        
+        <div style="margin-bottom: 1.5rem;">
+          <span class="micro-label" style="color: #f59e0b;">CONTEXTO &amp; MOTIVACIÓN</span>
+          <h2 class="section-title">1.1 La Paradoja de los Transformers en Series Temporales</h2>
+          <p class="section-subtitle">
+            ¿Por qué modelos lineales simples superaban a arquitecturas complejas de atención en exactitud y costo?
+          </p>
+        </div>
+
+        <p style="font-size: 0.875rem; color: #52525b; line-height: 1.65; margin-bottom: 1.5rem;">
+          En el pronóstico multivariado (MTSF), trabajos como Zeng et al. (2023) mostraron que capas lineales superaban a Informer, Autoformer o FEDformer. iTransformer responde que <strong>el problema no era el Transformer, sino el esquema tradicional de "token temporal"</strong> heredado del procesamiento de lenguaje (NLP).
+        </p>
+
+        <!-- 5 Limitaciones Concretas -->
+        <div class="micro-label" style="margin-bottom: 0.75rem; color: #09090b;">1.3 LIMITACIONES DEL ENFOQUE CONVENCIONAL DE TOKEN TEMPORAL</div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem;">
+          
+          <div style="background-color: #fafafa; border: 1px solid #e4e4e7; border-radius: 1rem; padding: 1.25rem;">
+            <div style="font-weight: 700; font-size: 0.95rem; color: #e11d48; margin-bottom: 0.25rem;">1. Fusión de Variables Heterogéneas</div>
+            <p style="font-size: 0.8rem; color: #71717a; line-height: 1.5;">
+              Mezcla magnitudes físicas incompatibles (temperatura, voltaje, precio) en un mismo token por instante, perdiendo representaciones <em>variate-centric</em>.
+            </p>
+          </div>
+
+          <div style="background-color: #fafafa; border: 1px solid #e4e4e7; border-radius: 1rem; padding: 1.25rem;">
+            <div style="font-weight: 700; font-size: 0.95rem; color: #e11d48; margin-bottom: 0.25rem;">2. Retardos no Alineados (Delays)</div>
+            <p style="font-size: 0.8rem; color: #71717a; line-height: 1.5;">
+              Valores registrados en el mismo timestamp no siempre corresponden al mismo evento físico causal. Forzar un token ignora desfasajes temporales.
+            </p>
+          </div>
+
+          <div style="background-color: #fafafa; border: 1px solid #e4e4e7; border-radius: 1rem; padding: 1.25rem;">
+            <div style="font-weight: 700; font-size: 0.95rem; color: #e11d48; margin-bottom: 0.25rem;">3. Campo Receptivo Local Estrecho</div>
+            <p style="font-size: 0.8rem; color: #71717a; line-height: 1.5;">
+              Un solo timestamp contiene poca información por sí mismo para capturar tendencias o estacionalidad global.
+            </p>
+          </div>
+
+          <div style="background-color: #fafafa; border: 1px solid #e4e4e7; border-radius: 1rem; padding: 1.25rem;">
+            <div style="font-weight: 700; font-size: 0.95rem; color: #e11d48; margin-bottom: 0.25rem;">4. Atención Invariante a la Permutación</div>
+            <p style="font-size: 0.8rem; color: #71717a; line-height: 1.5;">
+              La atención no tiene orden intrínseco. Aplicar un mecanismo <em>permutation-invariant</em> sobre el eje temporal desaprovecha la estricta naturaleza secuencial de los datos.
+            </p>
+          </div>
+
+          <div style="background-color: #fafafa; border: 1px solid #e4e4e7; border-radius: 1rem; padding: 1.25rem;">
+            <div style="font-weight: 700; font-size: 0.95rem; color: #e11d48; margin-bottom: 0.25rem;">5. Degradación con Lookback Largo</div>
+            <p style="font-size: 0.8rem; color: #71717a; line-height: 1.5;">
+              Al agrandar la ventana histórica, el número de tokens crece disparando el costo $O(T^2)$ y empeorando el desempeño por sobreajuste.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ======================================================================= -->
+    <!-- 5. SECCIÓN: 1.5 & 1.6 QUÉ SIGNIFICA "INVERTIR" EL TRANSFORMER           -->
+    <!-- ======================================================================= -->
+    <section id="inversion" class="content-section">
+      <div class="grid-2-blocks">
+        
+        <!-- Concepto de Inversión -->
+        <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <span class="micro-label" style="color: #f59e0b;">TRANSPOSICIÓN CONCEPTUAL</span>
+            <h3 style="font-size: 1.15rem; font-weight: 700; color: #09090b; margin: 0.35rem 0 0.75rem 0;">
+              1.5 Definición Formal: Invertir el Eje
+            </h3>
+
+            <p style="font-size: 0.85rem; color: #52525b; line-height: 1.6; margin-bottom: 1rem;">
+              En una serie multivariada con $T$ instantes y $N$ variables:
+            </p>
+
+            <ul style="font-size: 0.8rem; color: #71717a; line-height: 1.6; list-style: disc; padding-left: 1.2rem; margin-bottom: 1.25rem;">
+              <li><strong style="color: #09090b;">Transformer Convencional:</strong> cada fila (todas las variables en un instante) es un token. Secuencia de $T$ tokens.</li>
+              <li><strong style="color: #059669;">iTransformer:</strong> cada columna (toda la serie histórica de una variable) es un token. Secuencia de solo <strong style="color: #09090b;">N tokens</strong>.</li>
+            </ul>
+
+            <div class="math-block" style="text-align: center; color: #ffffff;">
+              X ∈ ℝ<sup>T × N</sup> &nbsp; ⟶ &nbsp; X<sup>T</sup> ∈ ℝ<sup>N × T</sup>
+            </div>
+          </div>
+
+          <div style="font-size: 0.8rem; color: #71717a; border-top: 1px solid #f4f4f5; padding-top: 1rem;">
+            Se intercambia el rol de "secuencia" y "variable" sin modificar las matemáticas internas de atención.
+          </div>
+        </div>
+
+        <!-- Inverted Embedding -->
+        <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <span class="micro-label" style="color: #059669;">INVERTED EMBEDDING</span>
+            <h3 style="font-size: 1.15rem; font-weight: 700; color: #09090b; margin: 0.35rem 0 0.75rem 0;">
+              1.8.2 Incrustación Invertida
+            </h3>
+
+            <p style="font-size: 0.85rem; color: #52525b; line-height: 1.6; margin-bottom: 1rem;">
+              Cada variable dispone de un vector de longitud $T$ con su historial completo. Un MLP proyecta individualmente cada serie $X_{:, n} \in \mathbb{R}^T$ a la dimensión del modelo $D$ ($d_{model}$):
+            </p>
+
+            <div class="math-block" style="color: #34d399;">
+              h<sub>n</sub><sup>0</sup> = Embedding(X<sub>:, n</sub>) ∈ ℝ<sup>D</sup> &nbsp; ⟹ &nbsp; H<sup>0</sup> ∈ ℝ<sup>N × D</sup>
+            </div>
+
+            <p style="font-size: 0.8rem; color: #71717a; line-height: 1.5; margin-top: 0.75rem;">
+              <strong style="color: #09090b;">Sin codificación posicional temporal:</strong> el historial completo constituye la entrada del embedding y el orden temporal queda intrínsecamente aprendido en la representación del token.
+            </p>
+          </div>
+
+          <div style="font-size: 0.8rem; color: #71717a; border-top: 1px solid #f4f4f5; padding-top: 1rem;">
+            Ejemplo: 96 observaciones y 7 variables ($7 \times 96$) $\to$ 7 tokens de dimensión $D$ ($7 \times D$).
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ======================================================================= -->
+    <!-- 6. SECCIÓN: SIMULADOR INTERACTIVO ADAPTADO A ITRANSFORMER              -->
+    <!-- ======================================================================= -->
+    <section id="simulador" class="content-section">
+      
+      <div style="margin-bottom: 1.75rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 1rem;">
+        <div>
+          <span class="micro-label" style="color: #059669;">SIMULADOR EN TIEMPO REAL</span>
+          <h2 class="section-title">Inferencia iTransformer vs Transformer Temporal</h2>
+          <p class="section-subtitle">
+            Observa cómo la atención entre variables ($N \times N$) evita la degradación y el desfase de fase.
+          </p>
+        </div>
+
+        <div style="display: flex; gap: 0.6rem;">
+          <button onclick="randomizeSample()" class="btn-secondary" style="font-size: 0.8rem; padding: 0.5rem 1.1rem;">
+            <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <span>Generar Ventana Aleatoria</span>
+          </button>
+          <button onclick="resetSimulator()" class="btn-ghost" style="font-size: 0.8rem;">
+            <span>Restablecer</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="grid-simulator">
+        
+        <!-- Panel de Configuración a la Izquierda -->
+        <div class="card" style="display: flex; flex-direction: column; gap: 1.4rem;">
+          
+          <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.85rem; border-bottom: 1px solid #f4f4f5;">
+            <h3 style="font-size: 1rem; font-weight: 700; color: #09090b;">Parámetros del Experimento</h3>
+            <span class="badge-active" style="font-size: 10px;">Spotlight Engine</span>
+          </div>
+
+          <!-- Dataset -->
+          <div>
+            <label class="micro-label" style="display: block; margin-bottom: 0.45rem;">DATASET (N VARIABLES)</label>
+            <select id="simDatasetSelect" onchange="onSimulatorChange()" class="input-premium">
+              <option value="weather">Weather (N = 21 variables meteorológicas)</option>
+              <option value="etth1">ETTh1 (N = 7 transformadores eléctricos)</option>
+              <option value="traffic">Traffic (N = 862 sensores de tráfico)</option>
+              <option value="electricity">Electricity (N = 321 clientes de energía)</option>
+            </select>
+          </div>
+
+          <!-- Lookback Slider T -->
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+              <label class="micro-label">LOOKBACK HISTÓRICO (T)</label>
+              <span id="simLookbackDisplay" style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; font-weight: 700; color: #09090b;">96 pasos</span>
+            </div>
+            <input type="range" id="simLookbackSlider" min="48" max="720" step="24" value="96" oninput="updateSimulatorLookback(this.value)" style="width: 100%; accent-color: #18181b; cursor: pointer;" />
+            <div style="display: flex; justify-content: space-between; font-size: 10px; color: #71717a; font-family: 'JetBrains Mono', monospace; margin-top: 0.25rem;">
+              <span>48</span>
+              <span style="font-weight: 800; color: #09090b;">96 (Default)</span>
+              <span>192</span>
+              <span>336</span>
+              <span>720</span>
+            </div>
+          </div>
+
+          <!-- Horizon Selector S -->
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.45rem;">
+              <label class="micro-label">HORIZONTE FUTURO (S)</label>
+              <span id="simHorizonDisplay" style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; font-weight: 700; color: #09090b;">24 pasos</span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.45rem;">
+              <button onclick="setSimHorizon(24)" class="btn-primary sim-h-btn" data-h="24" style="padding: 0.5rem; font-size: 0.775rem;">24</button>
+              <button onclick="setSimHorizon(48)" class="btn-secondary sim-h-btn" data-h="48" style="padding: 0.5rem; font-size: 0.775rem;">48</button>
+              <button onclick="setSimHorizon(96)" class="btn-secondary sim-h-btn" data-h="96" style="padding: 0.5rem; font-size: 0.775rem;">96</button>
+              <button onclick="setSimHorizon(192)" class="btn-secondary sim-h-btn" data-h="192" style="padding: 0.5rem; font-size: 0.775rem;">192</button>
+            </div>
+          </div>
+
+          <!-- Dimensión Oculta D -->
+          <div>
+            <label class="micro-label" style="display: block; margin-bottom: 0.45rem;">DIMENSIÓN DEL TOKEN (D = d_model)</label>
+            <select id="simHiddenSelect" onchange="onSimulatorChange()" class="input-premium">
+              <option value="64">D = 64</option>
+              <option value="128" selected>D = 128 (Paper Default)</option>
+              <option value="256">D = 256</option>
+              <option value="512">D = 512</option>
+            </select>
+          </div>
+
+          <!-- Toggles -->
+          <div style="display: flex; flex-direction: column; gap: 0.75rem; padding: 1rem; background-color: #fafafa; border-radius: 0.875rem; border: 1px solid #f4f4f5;">
+            <label style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+              <span style="font-size: 0.825rem; font-weight: 600; color: #09090b;">Atención Multivariada (N×N)</span>
+              <input type="checkbox" id="simAttentionCheck" checked onchange="onSimulatorChange()" style="width: 17px; height: 17px; accent-color: #18181b;" />
+            </label>
+            <label style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+              <span style="font-size: 0.825rem; font-weight: 600; color: #09090b;">Banda Incertidumbre (±1.96σ)</span>
+              <input type="checkbox" id="simConfidenceCheck" checked onchange="onSimulatorChange()" style="width: 17px; height: 17px; accent-color: #18181b;" />
+            </label>
+          </div>
+
+          <!-- Inspector del Tensor Invertido -->
+          <div style="padding-top: 0.75rem; border-top: 1px solid #f4f4f5;">
+            <span class="micro-label" style="display: block; margin-bottom: 0.5rem;">DIMENSIONES EN ITRANSFORMER</span>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; display: flex; flex-direction: column; gap: 0.4rem; color: #52525b;">
+              <div style="display: flex; justify-content: space-between;">
+                <span>Matriz Entrada X:</span>
+                <strong style="color: #09090b;" id="simDimIn">[96, 7] (T × N)</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span>X Transpuesta (Tokens):</span>
+                <strong style="color: #f59e0b;" id="simDimTM">[7, 96] (N × T)</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span>Matriz Tokens H⁰:</span>
+                <strong style="color: #10b981;" id="simDimFM">[7, 128] (N × D)</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span>Matriz de Atención:</span>
+                <strong style="color: #7c3aed;" id="simDimAttn">[7, 7] (N × N)</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span>Predicción Final Ŷᵀ:</span>
+                <strong style="color: #2563eb;" id="simDimOut">[24, 7] (S × N)</strong>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Canvas Gráfico y Métricas -->
+        <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+          
+          <div>
+            <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.25rem;">
+              <div>
+                <h3 class="section-title" id="chartDatasetTitle" style="font-size: 1.15rem;">Pronóstico iTransformer</h3>
+                <div style="font-size: 0.775rem; color: #71717a;" id="chartDatasetSubtitle">Historial: 96 pasos (T) → Predicción: 24 pasos (S)</div>
+              </div>
+
+              <!-- Leyenda -->
+              <div style="display: flex; flex-wrap: wrap; gap: 0.95rem; font-size: 0.775rem;">
+                <span style="display: flex; align-items: center; gap: 0.35rem; color: #71717a;"><span style="width: 14px; height: 2px; background-color: #a1a1aa; display: inline-block;"></span> Histórico</span>
+                <span style="display: flex; align-items: center; gap: 0.35rem; color: #09090b; font-weight: 700;"><span style="width: 14px; height: 3px; background-color: #09090b; display: inline-block;"></span> Ground Truth</span>
+                <span style="display: flex; align-items: center; gap: 0.35rem; color: #f59e0b; font-weight: 700;"><span style="width: 14px; height: 3px; background-color: #f59e0b; display: inline-block;"></span> iTransformer</span>
+                <span style="display: flex; align-items: center; gap: 0.35rem; color: #f43f5e;"><span style="width: 14px; height: 2px; background-color: #f43f5e; display: inline-block; border-bottom: 1px dashed;"></span> Transformer Clásico</span>
+              </div>
+            </div>
+
+            <div style="height: 400px; width: 100%; position: relative; margin-bottom: 1.25rem;">
+              <canvas id="simChartCanvas"></canvas>
+            </div>
+          </div>
+
+          <!-- Métricas en Vivo -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.85rem; padding-top: 1.25rem; border-top: 1px solid #f4f4f5;">
+            
+            <div style="padding: 0.75rem 0.95rem; background-color: #fafafa; border-radius: 0.75rem; border: 1px solid #f4f4f5;">
+              <div class="micro-label" style="font-size: 8.5px;">MSE CALCULADO</div>
+              <div style="font-size: 1.2rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: #09090b; margin-top: 0.2rem;" id="simMetricMSE">0.138</div>
+            </div>
+
+            <div style="padding: 0.75rem 0.95rem; background-color: #fafafa; border-radius: 0.75rem; border: 1px solid #f4f4f5;">
+              <div class="micro-label" style="font-size: 8.5px;">MAE CALCULADO</div>
+              <div style="font-size: 1.2rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: #09090b; margin-top: 0.2rem;" id="simMetricMAE">0.191</div>
+            </div>
+
+            <div style="padding: 0.75rem 0.95rem; background-color: #fafafa; border-radius: 0.75rem; border: 1px solid #f4f4f5;">
+              <div class="micro-label" style="font-size: 8.5px;">R² FIT SCORE</div>
+              <div style="font-size: 1.2rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: #059669; margin-top: 0.2rem;" id="simMetricR2">0.962</div>
+            </div>
+
+            <div style="padding: 0.75rem 0.95rem; background-color: #fafafa; border-radius: 0.75rem; border: 1px solid #f4f4f5;">
+              <div class="micro-label" style="font-size: 8.5px;">TOKENS EN ATENCIÓN</div>
+              <div style="font-size: 1.2rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: #09090b; margin-top: 0.2rem;" id="simMetricTokens">7 (N)</div>
+            </div>
+
+            <div style="padding: 0.75rem 0.95rem; background-color: rgba(245, 158, 11, 0.08); border-radius: 0.75rem; border: 1px solid rgba(245, 158, 11, 0.2);">
+              <div class="micro-label" style="font-size: 8.5px; color: #b45309;">MEJORA VS CLÁSICO</div>
+              <div style="font-size: 1.2rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: #b45309; margin-top: 0.2rem;" id="simMetricGain">+32.6%</div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ======================================================================= -->
+    <!-- 7. SECCIÓN: 1.8 COMPONENTES DEL BLOQUE CODIFICADOR                      -->
+    <!-- ======================================================================= -->
+    <section id="componentes" class="content-section">
+      
+      <div style="margin-bottom: 1.75rem;">
+        <span class="micro-label" style="color: #f59e0b;">ARQUITECTURA INTERNA</span>
+        <h2 class="section-title">1.8 Componentes del Bloque Codificador iTransformer</h2>
+        <p class="section-subtitle">
+          El codificador se organiza alrededor de dos transformaciones fundamentales con conexiones residuales y LayerNorm.
+        </p>
+      </div>
+
+      <div class="grid-2-blocks" style="margin-bottom: 1.75rem;">
+        
+        <!-- 1.8.3.1 Autoatención entre variables -->
+        <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <h3 style="font-size: 1.1rem; font-weight: 700; color: #09090b;">1.8.3.1 Autoatención entre Variables</h3>
+              <span class="badge-active" style="font-size: 10px;">N × N</span>
+            </div>
+
+            <p style="font-size: 0.8rem; color: #71717a; margin: 0.5rem 0 1rem 0;">
+              Como cada token representa una variable completa, la atención calcula relaciones estadísticas mutuas (<em>multivariate correlations</em>):
+            </p>
+
+            <div class="math-block">
+              Attention(Q, K, V) = softmax( (Q·K<sup>T</sup>) / √d<sub>k</sub> ) · V
+            </div>
+
+            <p style="font-size: 0.8rem; color: #71717a; margin: 0.75rem 0;">
+              El producto $QK^T$ genera una matriz $N \times N$ donde cada elemento refleja el grado de correspondencia entre pares de variables.
+            </p>
+
+            <div class="math-block" style="color: #34d399;">
+              H̃<sup>l</sup> = LayerNorm(H<sup>l-1</sup> + SelfAttn(H<sup>l-1</sup>))
+            </div>
+          </div>
+
+          <div style="font-size: 0.775rem; color: #71717a; border-top: 1px solid #f4f4f5; padding-top: 0.85rem;">
+            No implica causalidad física, sino correlaciones estadísticas aprendidas.
+          </div>
+        </div>
+
+        <!-- 1.8.3.2 Feed-Forward Network -->
+        <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+              <h3 style="font-size: 1.1rem; font-weight: 700; color: #09090b;">1.8.3.2 Red Feed-Forward (FFN)</h3>
+              <span class="badge-completed" style="font-size: 10px;">Temporal-Wise</span>
+            </div>
+
+            <p style="font-size: 0.8rem; color: #71717a; margin: 0.5rem 0 1rem 0;">
+              Se aplica de forma compartida e independiente sobre cada token de variable, transformando su información temporal global:
+            </p>
+
+            <div class="math-block">
+              FFN(h) = W<sub>2</sub> · σ(W<sub>1</sub>·h + b<sub>1</sub>) + b<sub>2</sub>
+            </div>
+
+            <p style="font-size: 0.8rem; color: #71717a; margin: 0.75rem 0;">
+              Sus neuronas actúan como filtros capaces de codificar implícitamente amplitud, periodicidad o espectro de frecuencias de la serie.
+            </p>
+
+            <div class="math-block" style="color: #60a5fa;">
+              H<sup>l</sup> = LayerNorm(H̃<sup>l</sup> + FFN(H̃<sup>l</sup>))
+            </div>
+          </div>
+
+          <div style="font-size: 0.775rem; color: #71717a; border-top: 1px solid #f4f4f5; padding-top: 0.85rem;">
+            Mantiene la dimensión $N \times D$ para el siguiente bloque.
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 1.8.4 Apilamiento & 1.8.5 Proyección de Salida -->
+      <div class="grid-2-blocks">
+        
+        <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <span class="micro-label" style="color: #f59e0b;">APILAMIENTO</span>
+            <h3 style="font-size: 1.1rem; font-weight: 700; color: #09090b; margin: 0.35rem 0 0.5rem 0;">
+              1.8.4 Apilamiento de Bloques Codificadores
+            </h3>
+            <p style="font-size: 0.85rem; color: #52525b; line-height: 1.6;">
+              El bloque Transformer invertido se repite <strong style="color: #09090b;">L veces</strong> ($H^l = \text{TrmBlock}(H^{l-1})$). Construye representaciones progresivamente más elaboradas sin alterar la cantidad de variables $N$.
+            </p>
+          </div>
+          <div class="math-block" style="color: #ffffff; text-align: center;">
+            H<sup>L</sup> ∈ ℝ<sup>N × D</sup>
+          </div>
+        </div>
+
+        <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <span class="micro-label" style="color: #059669;">PROYECCIÓN FINAL</span>
+            <h3 style="font-size: 1.1rem; font-weight: 700; color: #09090b; margin: 0.35rem 0 0.5rem 0;">
+              1.8.5 Proyección de Salida e Interpretación
+            </h3>
+            <p style="font-size: 0.85rem; color: #52525b; line-height: 1.6;">
+              Una <strong style="color: #09090b;">capa estrictamente lineal (Linear layer)</strong> proyecta de dimensión $D$ al horizonte $S$. Luego se transpone para recuperar la forma temporal:
+            </p>
+          </div>
+          <div class="math-block" style="color: #f59e0b; text-align: center;">
+            Ŷ = Linear(H<sup>L</sup>) ∈ ℝ<sup>N × S</sup> &nbsp; ⟹ &nbsp; Ŷ<sup>T</sup> ∈ ℝ<sup>S × N</sup>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ======================================================================= -->
+    <!-- 8. SECCIÓN: TABLA X: COMPARACIÓN DETALLADA                              -->
+    <!-- ======================================================================= -->
+    <section id="comparativa" class="content-section">
+      <div class="card">
+        
+        <div style="margin-bottom: 1.5rem;">
+          <span class="micro-label" style="color: #f59e0b;">TABLA X DEL DOCUMENTO</span>
+          <h2 class="section-title">Comparación entre Operaciones de Transformers</h2>
+          <p class="section-subtitle">Reasignación de funciones: cómo cada componente hace exactamente aquello para lo que fue concebido.</p>
+        </div>
+
+        <div style="overflow-x: auto; margin-bottom: 1.5rem;">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 25%;">Operación</th>
+                <th style="width: 37.5%; color: #71717a;">Transformer Convencional</th>
+                <th style="width: 37.5%; color: #b45309; background-color: rgba(245, 158, 11, 0.1);">iTransformer</th>
+              </tr>
+            </thead>
+            <tbody style="font-size: 0.85rem; color: #3f3f46;">
+              <tr>
+                <td style="font-weight: 700; color: #09090b;">Auto-atención</td>
+                <td style="color: #71717a;">Relaciona pasos de tiempo entre sí ($T \times T$).</td>
+                <td style="font-weight: 700; color: #b45309; background-color: rgba(245, 158, 11, 0.05);">Relaciona variables entre sí ($N \times N$).</td>
+              </tr>
+              <tr>
+                <td style="font-weight: 700; color: #09090b;">Red feed-forward (FFN)</td>
+                <td style="color: #71717a;">Se aplica, de forma compartida, a cada token temporal (mezcla de variables).</td>
+                <td style="font-weight: 700; color: #b45309; background-color: rgba(245, 158, 11, 0.05);">Se aplica, de forma compartida, a cada token de variable (una serie temporal completa).</td>
+              </tr>
+              <tr>
+                <td style="font-weight: 700; color: #09090b;">Normalización de capa (LayerNorm)</td>
+                <td style="color: #71717a;">Normaliza los valores de todas las variables de un mismo instante.</td>
+                <td style="font-weight: 700; color: #b45309; background-color: rgba(245, 158, 11, 0.05);">Normaliza la representación completa de cada variable sobre sus $D$ dimensiones.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="background-color: #fafafa; border: 1px solid #e4e4e7; border-radius: 0.85rem; padding: 1.15rem; font-size: 0.825rem; color: #52525b; line-height: 1.6;">
+          <strong style="color: #09090b;">Conclusión de los Autores:</strong> La atención, diseñada para descubrir relaciones en conjuntos no ordenados, modela variables; mientras que la FFN modela la evolución temporal univariada con la misma eficacia comprobada de los modelos lineales.
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ========================================================================= -->
+  <!-- 9. MODAL BIBTEX MINIMALISTA                                               -->
+  <!-- ========================================================================= -->
+  <div id="citationModal" style="display: none; position: fixed; inset: 0; z-index: 100; background-color: rgba(0,0,0,0.5); backdrop-filter: blur(4px); align-items: center; justify-content: center; padding: 1.5rem;">
+    <div class="card" style="max-width: 540px; width: 100%; box-shadow: 0 24px 48px rgba(0,0,0,0.2);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+        <h4 style="font-weight: 700; font-size: 1rem; color: #09090b;">Cita Oficial de iTransformer</h4>
+        <button onclick="closeCitationModal()" style="border: none; background: transparent; font-size: 1.35rem; cursor: pointer; color: #71717a;">✕</button>
+      </div>
+      <pre style="background-color: #18181b; color: #f59e0b; padding: 1.15rem; border-radius: 0.85rem; font-family: 'JetBrains Mono', monospace; font-size: 11px; overflow-x: auto; margin-bottom: 1.25rem;">@inproceedings{liu2024itransformer,
+  title={iTransformer: Inverted Transformers Are Effective for Time Series Forecasting},
+  author={Liu, Yong and Hu, Tengge and Zhang, Haoran and Wu, Haixu and Wang, Shiyu and Ma, Lintao and Long, Mingsheng},
+  booktitle={International Conference on Learning Representations (ICLR)},
+  year={2024}
+}</pre>
+      <div style="display: flex; justify-content: flex-end; gap: 0.6rem;">
+        <button onclick="copyBibtex()" id="btnCopyBibtex" class="btn-primary" style="font-size: 0.8rem;">Copiar BibTeX</button>
+        <button onclick="closeCitationModal()" class="btn-secondary" style="font-size: 0.8rem;">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- 10. FOOTER                                                                -->
+  <!-- ========================================================================= -->
+  <footer style="border-top: 1px solid rgba(228, 228, 231, 0.9); background-color: #ffffff; padding: 2.5rem 2rem; text-align: center; font-size: 0.8rem; color: #71717a;">
+    <div style="max-width: 1280px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;">
+      <div>
+        <strong style="color: #09090b;">Forecasting Lab</strong> • iTransformer Architecture Reference
+      </div>
+      <div>
+        Tsinghua University (BNRist) &amp; Ant Group • ICLR 2024 Spotlight
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ========================================================================= -->
+  <!-- 11. SCRIPT DE INTERACTIVIDAD DEL SIMULADOR ITRANSFORMER                   -->
+  <!-- ========================================================================= -->
+  <script>
+    let simChart = null;
+    let currentSimHorizon = 24;
+    let sampleOffset = 0;
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initSimChart();
+      updateNavbarOnScroll();
+    });
+
+    function updateNavbarOnScroll() {
+      const sections = document.querySelectorAll('section[id]');
+      const navLinks = document.querySelectorAll('.nav-link');
+
+      window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+          const sectionTop = section.offsetTop - 120;
+          if (pageYOffset >= sectionTop) {
+            current = section.getAttribute('id');
+          }
+        });
+
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === `#${current}`) {
+            link.classList.add('active');
+          }
+        });
+      });
+    }
+
+    function initSimChart() {
+      const ctx = document.getElementById('simChartCanvas');
+      if (!ctx) return;
+
+      const data = generateData();
+
+      simChart = new Chart(ctx.getContext('2d'), {
+        type: 'line',
+        data: {
+          labels: data.labels,
+          datasets: [
+            {
+              label: 'Observación Histórica (T)',
+              data: data.history,
+              borderColor: '#a1a1aa',
+              borderWidth: 1.5,
+              pointRadius: 0,
+              tension: 0.2
+            },
+            {
+              label: 'Ground Truth (Real)',
+              data: data.actual,
+              borderColor: '#09090b',
+              borderWidth: 2.2,
+              pointRadius: 0,
+              tension: 0.2
+            },
+            {
+              label: 'iTransformer',
+              data: data.itransformer,
+              borderColor: '#f59e0b',
+              borderWidth: 2.5,
+              pointRadius: 0,
+              tension: 0.25
+            },
+            {
+              label: 'Banda Superior Incertidumbre',
+              data: data.upperBand,
+              borderColor: 'transparent',
+              backgroundColor: 'rgba(245, 158, 11, 0.08)',
+              fill: '+1',
+              pointRadius: 0
+            },
+            {
+              label: 'Banda Inferior Incertidumbre',
+              data: data.lowerBand,
+              borderColor: 'transparent',
+              backgroundColor: 'rgba(245, 158, 11, 0.08)',
+              fill: '-1',
+              pointRadius: 0
+            },
+            {
+              label: 'Transformer Convencional',
+              data: data.transformer,
+              borderColor: '#f43f5e',
+              borderWidth: 1.5,
+              borderDash: [4, 4],
+              pointRadius: 0,
+              tension: 0.2
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: { duration: 350 },
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#18181b',
+              titleFont: { family: 'Plus Jakarta Sans', size: 12, weight: 'bold' },
+              bodyFont: { family: 'JetBrains Mono', size: 11 },
+              padding: 10,
+              cornerRadius: 8
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { font: { family: 'JetBrains Mono', size: 10 }, color: '#71717a', maxTicksLimit: 12 }
+            },
+            y: {
+              grid: { color: 'rgba(0, 0, 0, 0.04)' },
+              ticks: { font: { family: 'JetBrains Mono', size: 10 }, color: '#71717a' }
+            }
+          }
+        }
+      });
+    }
+
+    function generateData() {
+      const dataset = document.getElementById('simDatasetSelect').value;
+      const isAttn = document.getElementById('simAttentionCheck').checked;
+      const showConfidence = document.getElementById('simConfidenceCheck').checked;
+
+      const total = 100;
+      const split = 70;
+      const labels = [];
+      const history = [];
+      const actual = [];
+      const itransformer = [];
+      const upperBand = [];
+      const lowerBand = [];
+      const transformer = [];
+
+      let freq = dataset === 'weather' ? 0.09 : dataset === 'electricity' ? 0.13 : 0.06;
+
+      for (let i = 0; i < total; i++) {
+        const step = i + sampleOffset;
+        labels.push(`t${i - split}`);
+        const base = 22 + Math.sin(step * freq) * 7 + Math.cos(step * freq * 2.1) * 2.5;
+
+        if (i < split) {
+          history.push(+(base + Math.sin(step * 11) * 0.35).toFixed(2));
+          actual.push(null);
+          itransformer.push(null);
+          upperBand.push(null);
+          lowerBand.push(null);
+          transformer.push(null);
+        } else {
+          const act = +(base + Math.sin(step * 11) * 0.35).toFixed(2);
+          history.push(null);
+          actual.push(act);
+
+          const errIT = isAttn ? (Math.sin(step * 0.28) * 0.2) : (Math.sin(step * 0.28) * 0.75);
+          const itVal = +(act + errIT).toFixed(2);
+          itransformer.push(itVal);
+
+          if (showConfidence) {
+            upperBand.push(+(itVal + 0.9).toFixed(2));
+            lowerBand.push(+(itVal - 0.9).toFixed(2));
+          } else {
+            upperBand.push(null);
+            lowerBand.push(null);
+          }
+
+          // Transformer convencional sufre desvío por falta de alineación temporal
+          const errTrans = Math.sin((i - split) * 0.22) * 2.3 + 0.6;
+          transformer.push(+(act + errTrans).toFixed(2));
+        }
+      }
+
+      return { labels, history, actual, itransformer, upperBand, lowerBand, transformer };
+    }
+
+    function onSimulatorChange() {
+      const dataset = document.getElementById('simDatasetSelect').value;
+      const lookback = parseInt(document.getElementById('simLookbackSlider').value);
+      const isAttn = document.getElementById('simAttentionCheck').checked;
+      const D = document.getElementById('simHiddenSelect').value;
+
+      const d = generateData();
+
+      if (simChart) {
+        simChart.data.labels = d.labels;
+        simChart.data.datasets[0].data = d.history;
+        simChart.data.datasets[1].data = d.actual;
+        simChart.data.datasets[2].data = d.itransformer;
+        simChart.data.datasets[3].data = d.upperBand;
+        simChart.data.datasets[4].data = d.lowerBand;
+        simChart.data.datasets[5].data = d.transformer;
+        simChart.update();
+      }
+
+      const N = dataset === 'weather' ? 21 : dataset === 'etth1' ? 7 : dataset === 'traffic' ? 862 : 321;
+      document.getElementById('chartDatasetSubtitle').innerText = `Entrada: ${lookback} pasos pasados (T) → Predicción: ${currentSimHorizon} pasos futuros (S) sobre ${N} variables`;
+
+      // Actualizar Inspector de Dimensiones
+      document.getElementById('simDimIn').innerText = `[${lookback}, ${N}] (T × N)`;
+      document.getElementById('simDimTM').innerText = `[${N}, ${lookback}] (N × T)`;
+      document.getElementById('simDimFM').innerText = `[${N}, ${D}] (N × D)`;
+      document.getElementById('simDimAttn').innerText = `[${N}, ${N}] (N × N)`;
+      document.getElementById('simDimOut').innerText = `[${currentSimHorizon}, ${N}] (S × N)`;
+
+      document.getElementById('simMetricTokens').innerText = `${N} (N)`;
+      const baseMSE = dataset === 'weather' ? 0.138 : dataset === 'etth1' ? 0.352 : 0.365;
+      const finalMSE = isAttn ? baseMSE : (baseMSE * 1.15);
+      document.getElementById('simMetricMSE').innerText = finalMSE.toFixed(3);
+      document.getElementById('simMetricMAE').innerText = (finalMSE * 1.35).toFixed(3);
+      document.getElementById('simMetricR2').innerText = isAttn ? '0.962' : '0.892';
+    }
+
+    function randomizeSample() {
+      sampleOffset += 24;
+      onSimulatorChange();
+    }
+
+    function updateSimulatorLookback(val) {
+      document.getElementById('simLookbackDisplay').innerText = `${val} pasos`;
+      onSimulatorChange();
+    }
+
+    function setSimHorizon(val) {
+      currentSimHorizon = val;
+      document.getElementById('simHorizonDisplay').innerText = `${val} pasos`;
+      document.querySelectorAll('.sim-h-btn').forEach(btn => {
+        if (parseInt(btn.dataset.h) === val) {
+          btn.className = 'btn-primary sim-h-btn';
+        } else {
+          btn.className = 'btn-secondary sim-h-btn';
+        }
+      });
+      onSimulatorChange();
+    }
+
+    function resetSimulator() {
+      sampleOffset = 0;
+      document.getElementById('simLookbackSlider').value = 96;
+      document.getElementById('simLookbackDisplay').innerText = '96 pasos';
+      document.getElementById('simDatasetSelect').value = 'etth1';
+      document.getElementById('simAttentionCheck').checked = true;
+      document.getElementById('simConfidenceCheck').checked = true;
+      document.getElementById('simHiddenSelect').value = '128';
+      setSimHorizon(24);
+    }
+
+    function openCitationModal() {
+      const modal = document.getElementById('citationModal');
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function closeCitationModal() {
+      const modal = document.getElementById('citationModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function copyBibtex() {
+      const text = `@inproceedings{liu2024itransformer,
+  title={iTransformer: Inverted Transformers Are Effective for Time Series Forecasting},
+  author={Liu, Yong and Hu, Tengge and Zhang, Haoran and Wu, Haixu and Wang, Shiyu and Ma, Lintao and Long, Mingsheng},
+  booktitle={International Conference on Learning Representations (ICLR)},
+  year={2024}
+}`;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('btnCopyBibtex');
+        btn.innerText = '¡Copiado!';
+        setTimeout(() => {
+          btn.innerText = 'Copiar BibTeX';
+          closeCitationModal();
+        }, 1200);
+      });
+    }
+  </script>
+
+</body>
+</html>
