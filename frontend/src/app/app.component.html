@@ -1,0 +1,1077 @@
+<!-- Reading progress bar -->
+<div id="reading-progress-bar" [style.width.%]="readingProgress"></div>
+
+<!-- ============================================================
+     TOP NAVBAR (Elegante, minimalista y sutil sobre fondo blanco)
+     ============================================================ -->
+<header class="glass-nav sticky top-0 z-40 w-full transition-all duration-300">
+  <div class="w-full max-w-[97%] 2xl:max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      
+      <!-- Left: Clean Title / Branding (Sin el logo antiguo de arXiv) -->
+      <div class="flex items-center gap-3">
+        <button (click)="isMobileTocOpen = !isMobileTocOpen" class="lg:hidden p-2 rounded-lg hover:bg-gray-100 text-gray-700">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        
+        <a href="#section-header" class="flex items-center gap-2 group">
+          <div class="flex flex-col">
+            <span class="font-bold text-gray-900 text-sm tracking-tight group-hover:text-black">Forecasting Meteorológico</span>
+            <span class="text-[11px] text-gray-500 font-normal">Seminario de Investigación · Modelos Arq</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Center: Quick Nav Links -->
+      <div class="hidden md:flex items-center gap-6 text-xs font-medium text-gray-600">
+        <a href="#section-abstract" class="hover:text-black transition-colors">Resumen</a>
+        <a href="#section-marco-conceptual" class="hover:text-black transition-colors">Marco Conceptual</a>
+        <a href="#section-comparativa" class="hover:text-black transition-colors">Comparativa</a>
+        <a href="#section-desarrollo" class="hover:text-black transition-colors">Metodología</a>
+        <a href="#section-referencias" class="hover:text-black transition-colors">Referencias</a>
+      </div>
+
+      <!-- Right: Actions (Botones estilo píldora elegantes) -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        
+        <!-- Search trigger -->
+        <button (click)="openSearch()" class="pill-badge hover:bg-gray-200/70 transition-all cursor-pointer text-xs" title="Buscar en el artículo (Ctrl+K)">
+          <svg class="w-3.5 h-3.5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <span class="hidden sm:inline">Buscar</span>
+          <kbd class="hidden sm:inline text-[10px] font-mono px-1 py-0.2 rounded bg-white border border-gray-200 text-gray-500">⌘K</kbd>
+        </button>
+
+        <!-- Citation Button -->
+        <button (click)="openCitation()" class="pill-badge hover:bg-gray-200/70 transition-all cursor-pointer text-xs" title="Citar este artículo (BibTeX / APA)">
+          <svg class="w-3.5 h-3.5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+          <span class="hidden sm:inline">Citar</span>
+        </button>
+
+        <!-- Download Article button (Estilo azul sutil como en el diseño) -->
+        <a href="/docs/Modelos_Arq_V1_2.docx" download="Modelos_Arq_V1_2.docx" class="btn-blue py-1.5 px-3.5 rounded-full text-xs flex items-center gap-1.5" title="Descargar artículo en formato Word (.docx)">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          <span>Descargar Artículo</span>
+        </a>
+
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile Sidebar Backdrop -->
+<div *ngIf="isMobileTocOpen" (click)="isMobileTocOpen = false" class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-40 lg:hidden"></div>
+
+<!-- ============================================================
+     MAIN LAYOUT CONTAINER
+     ============================================================ -->
+<div class="w-full max-w-[97%] 2xl:max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-white">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-10 items-start">
+
+    <!-- ============================================================
+         STICKY SIDEBAR (ÍNDICE INTERACTIVO DEL ARTÍCULO)
+         ============================================================ -->
+    <aside id="sidebar-toc" 
+      [class.hidden]="!isMobileTocOpen"
+      class="lg:block lg:col-span-4 xl:col-span-3 2xl:col-span-2 sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto no-scrollbar space-y-4 pr-1 z-50 lg:z-auto"
+      [ngClass]="isMobileTocOpen ? 'fixed inset-y-0 left-0 w-72 bg-white p-5 shadow-2xl border-r border-gray-200' : ''">
+      
+      <!-- Index Header & Quick Filter -->
+      <div class="subtle-card p-5">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-gray-900 flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+            Índice
+          </h3>
+          <span class="text-[11px] px-2 py-0.5 rounded-full bg-gray-100 text-gray-600 font-medium">
+            {{ readingMinutes }} min lectura
+          </span>
+        </div>
+
+        <!-- Quick Filter Input -->
+        <div class="relative mb-3">
+          <input [(ngModel)]="indexFilterQuery" type="text" placeholder="Filtrar temas..." class="w-full px-3 py-1.5 text-xs rounded-xl bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-gray-900 transition-colors">
+        </div>
+
+        <!-- Table of contents Navigation Links -->
+        <nav class="space-y-0.5 text-sm font-sans" id="toc-nav">
+          <ng-container *ngFor="let sec of sections">
+            
+            <a *ngIf="!indexFilterQuery || sec.title.toLowerCase().includes(indexFilterQuery.toLowerCase())"
+              (click)="jumpToSection(sec.id)"
+              [class.active]="activeSection === sec.id"
+              class="toc-link cursor-pointer">
+              <span class="text-xs opacity-50 font-mono">{{ sec.num }}</span>
+              <span>{{ sec.title }}</span>
+            </a>
+
+            <!-- Subsections -->
+            <div *ngIf="sec.children" class="pl-4 space-y-0.5 border-l border-gray-100 ml-2 my-1">
+              <ng-container *ngFor="let sub of sec.children">
+                <a *ngIf="!indexFilterQuery || sub.title.toLowerCase().includes(indexFilterQuery.toLowerCase())"
+                  (click)="jumpToSection(sub.id)"
+                  [class.active]="activeSection === sub.id"
+                  class="toc-link text-xs cursor-pointer">
+                  <span class="text-[10px] opacity-60">{{ sub.num }}</span>
+                  <span>{{ sub.title }}</span>
+                </a>
+              </ng-container>
+            </div>
+
+          </ng-container>
+        </nav>
+      </div>
+
+      <!-- Sidebar Widget: Ficha Técnica -->
+      <div class="subtle-card p-5 space-y-3">
+        <div class="text-xs font-bold uppercase tracking-wider text-gray-900 flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          Ficha Técnica
+        </div>
+        <div class="grid grid-cols-2 gap-2 text-[11px]">
+          <div class="p-2.5 rounded-xl bg-gray-50 border border-gray-100">
+            <div class="text-gray-500">Frecuencia</div>
+            <div class="font-bold text-gray-900">Cada 10 min</div>
+          </div>
+          <div class="p-2.5 rounded-xl bg-gray-50 border border-gray-100">
+            <div class="text-gray-500">Variables</div>
+            <div class="font-bold text-gray-900">Meteorológicas</div>
+          </div>
+          <div class="p-2.5 rounded-xl bg-gray-50 border border-gray-100">
+            <div class="text-gray-500">Metodología</div>
+            <div class="font-bold text-emerald-700">CRISP-DM</div>
+          </div>
+          <div class="p-2.5 rounded-xl bg-gray-50 border border-gray-100">
+            <div class="text-gray-500">Baseline</div>
+            <div class="font-bold text-blue-700">ARIMA</div>
+          </div>
+        </div>
+        <div class="flex flex-col gap-2 mt-2">
+          <a href="/docs/Modelos_Arq_V1_2.docx" download="Modelos_Arq_V1_2.docx" class="w-full py-2 px-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold transition-all flex items-center justify-center gap-2 shadow-sm">
+            <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            Descargar Artículo (.docx)
+          </a>
+          <button (click)="downloadPdf()" class="w-full py-1.5 px-3 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 text-[11px] font-medium transition-all flex items-center justify-center gap-2">
+            <svg class="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+            Imprimir / Guardar PDF
+          </button>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ============================================================
+         MAIN ARTICLE CONTAINER (Fondo blanco, diseño elegante)
+         ============================================================ -->
+    <main id="main-content" class="lg:col-span-8 xl:col-span-9 2xl:col-span-10 space-y-12">
+
+      <!-- ARTICLE HEADER (Estilo personal del autor, limpio y sutil) -->
+      <section id="section-header" class="article-section pt-2 pb-8 border-b border-gray-100">
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
+          
+          <!-- Left: Title, Authors, Buttons -->
+          <div class="xl:col-span-8 space-y-4">
+            <div class="flex items-center gap-2 flex-wrap mb-2">
+              <span class="pill-badge pill-green">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 inline-block"></span>
+                Seminario de Investigación 2026
+              </span>
+              <span class="pill-badge">Series Multivariadas</span>
+              <span class="pill-badge">Modelos Arq</span>
+            </div>
+
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-950 tracking-tight leading-tight">
+              Estudio comparativo de VAR, LSTM, TSMixer e iTransformer para el pronóstico de series de tiempo meteorológicas multivariadas
+            </h1>
+
+            <p class="text-sm sm:text-base text-gray-500 font-medium">
+              Investigación aplicada en Inteligencia Artificial y Modelado Predictivo
+            </p>
+
+            <div class="flex flex-wrap items-center gap-2 pt-1">
+              <span class="pill-badge bg-gray-100 text-gray-800 font-medium">Mira Ortega Miguel Angel</span>
+              <span class="pill-badge bg-gray-100 text-gray-800 font-medium">Arbelaez Contreras Santiago</span>
+              <span class="pill-badge bg-gray-100 text-gray-800 font-medium">Isaza Vergara Juan Manuel</span>
+              <span class="pill-badge text-gray-500">Facultad de Ingeniería · Repositorio Forecasting</span>
+            </div>
+
+            <div class="flex items-center gap-3 flex-wrap pt-3">
+              <a href="#section-abstract" class="btn-dark">Resumen</a>
+              <a href="#section-marco-conceptual" class="btn-outline">&lt;/&gt; Modelos</a>
+              <a href="#section-comparativa" class="btn-outline">Comparativa</a>
+              <button (click)="openCitation()" class="btn-outline">Citar</button>
+              <a href="/docs/Modelos_Arq_V1_2.docx" download="Modelos_Arq_V1_2.docx" class="btn-blue flex items-center gap-2">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                Descargar Artículo (.docx)
+              </a>
+              <button (click)="downloadPdf()" class="btn-outline flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                Imprimir / PDF
+              </button>
+            </div>
+          </div>
+
+          <!-- Right: Executive Highlight Card filling wide space -->
+          <div class="xl:col-span-4 subtle-card p-6 bg-gray-50/70 border border-gray-200/80 space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase tracking-wider text-gray-900">Resumen Técnico</span>
+              <span class="pill-badge pill-green text-[10px]">Pre-Print</span>
+            </div>
+            <div class="space-y-2.5 text-xs text-gray-600 leading-relaxed">
+              <div class="flex items-center justify-between py-1.5 border-b border-gray-200/60">
+                <span class="text-gray-500">Modelos Evaluados</span>
+                <span class="font-bold text-gray-900">VAR · LSTM · TSMixer · iTransformer</span>
+              </div>
+              <div class="flex items-center justify-between py-1.5 border-b border-gray-200/60">
+                <span class="text-gray-500">Muestreo Temporal</span>
+                <span class="font-bold text-gray-900">Cadencia estricta cada 10 min</span>
+              </div>
+              <div class="flex items-center justify-between py-1.5 border-b border-gray-200/60">
+                <span class="text-gray-500">Metodología Guía</span>
+                <span class="font-bold text-emerald-700">CRISP-DM</span>
+              </div>
+              <div class="flex items-center justify-between py-1.5">
+                <span class="text-gray-500">Validación Experimental</span>
+                <span class="font-bold text-blue-700">Partición cronológica sin fuga</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ARTICLE BODY CONTENT -->
+      <div id="main-article-content" class="space-y-12">
+
+        <!-- RESUMEN / ABSTRACT (Tarjeta sutil idéntica a la del perfil) -->
+        <section id="section-abstract" class="article-section">
+          <div class="subtle-card p-6 sm:p-8 bg-gray-50/60 border border-gray-200/80">
+            <div class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3">
+              Resumen (Abstract)
+            </div>
+
+            <div class="article-body">
+              <p class="text-justify leading-relaxed text-gray-700">
+                Este trabajo presenta un estudio comparativo de modelos estadísticos y arquitecturas de inteligencia artificial aplicados al pronóstico (<em>forecasting</em>) de series de tiempo multivariadas. La investigación tiene como objetivo analizar el comportamiento predictivo de diferentes enfoques de modelado y establecer una comparación bajo un conjunto común de datos y condiciones experimentales. Para ello, se emplea un conjunto de datos correspondiente a variables meteorológicas, sobre el cual se desarrolla un proceso de exploración, caracterización y análisis estadístico orientado a identificar sus principales propiedades y componentes temporales. En la etapa de modelado se consideran métodos estadísticos de pronóstico y arquitecturas de aprendizaje automático y aprendizaje profundo, entre ellas <strong>Long Short-Term Memory (LSTM)</strong>, <strong>TSMixer</strong>, <strong>iTransformer</strong> y <strong>Vector Autoregression (VAR)</strong>. El proceso experimental se estructura tomando como referencia la metodología <strong>CRISP-DM</strong>, incorporando las etapas de comprensión y preparación de los datos, modelado y evaluación. Finalmente, los modelos son comparados mediante métricas de desempeño predictivo, considerando las características de las series y las condiciones definidas para el experimento. Este enfoque busca proporcionar una evaluación sistemática de las alternativas analizadas e identificar las condiciones bajo las cuales cada modelo presenta un comportamiento predictivo adecuado.
+              </p>
+            </div>
+
+            <!-- Tags del artículo abajo del resumen -->
+            <div class="flex flex-wrap gap-2 mt-5 pt-4 border-t border-gray-200/70">
+              <span class="pill-badge cursor-pointer hover:bg-gray-200" (click)="quickSearch('Time series forecasting')">Time series forecasting</span>
+              <span class="pill-badge cursor-pointer hover:bg-gray-200" (click)="quickSearch('machine learning')">Machine learning</span>
+              <span class="pill-badge cursor-pointer hover:bg-gray-200" (click)="quickSearch('deep learning')">Deep learning</span>
+              <span class="pill-badge cursor-pointer hover:bg-gray-200" (click)="quickSearch('LSTM')">LSTM</span>
+              <span class="pill-badge cursor-pointer hover:bg-gray-200" (click)="quickSearch('TSMixer')">TSMixer</span>
+              <span class="pill-badge cursor-pointer hover:bg-gray-200" (click)="quickSearch('iTransformer')">iTransformer</span>
+              <span class="pill-badge cursor-pointer hover:bg-gray-200" (click)="quickSearch('VAR')">VAR</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECCIÓN 1: INTRODUCCIÓN -->
+        <section id="section-introduccion" class="article-section space-y-4">
+          <div class="border-b border-gray-100 pb-3 flex items-center justify-between">
+            <h2 class="text-2xl font-bold font-headline text-gray-900 tracking-tight flex items-center gap-2">
+              <span class="text-gray-400 font-mono text-lg">I.</span> Introducción
+            </h2>
+            <span class="text-xs text-gray-400 font-mono">Sección 1/6</span>
+          </div>
+
+          <div class="article-body">
+            <p>
+              La generación y disponibilidad de datos registrados temporalmente ha experimentado un crecimiento significativo en diversos dominios, entre ellos la meteorología, la economía, la energía, el transporte y la industria. El análisis de estos datos permite identificar patrones de comportamiento y obtener estimaciones sobre eventos futuros, convirtiendo el pronóstico de series de tiempo (<em>time series forecasting</em>) en una herramienta relevante para la planificación y la toma de decisiones. Sin embargo, el comportamiento temporal de los datos puede estar condicionado por diferentes componentes y características, como tendencias, estacionalidad, ciclos, variaciones aleatorias y relaciones entre múltiples variables. Estas particularidades representan un desafío para la construcción de modelos predictivos, debido a que el comportamiento de una serie puede variar dependiendo de su naturaleza, del horizonte de predicción y de las condiciones bajo las cuales se realiza el pronóstico. En consecuencia, el análisis previo de las series y la selección de métodos adecuados constituyen aspectos fundamentales para obtener modelos capaces de representar y predecir de manera apropiada su comportamiento.
+            </p>
+
+            <p>
+              Tradicionalmente, el pronóstico de series de tiempo ha sido abordado mediante métodos estadísticos que permiten modelar diferentes estructuras presentes en los datos. Entre estos se encuentran modelos como <em>Autoregressive Integrated Moving Average</em> (ARIMA), <em>Seasonal ARIMA</em> (SARIMA) y <em>Vector Autoregression</em> (VAR), los cuales han sido utilizados para representar dependencias temporales y relaciones entre variables. Paralelamente, el desarrollo de técnicas de aprendizaje automático y aprendizaje profundo ha permitido incorporar modelos con una mayor capacidad para aprender patrones complejos a partir de los datos. Dentro de estos enfoques se encuentran las redes <strong>Long Short-Term Memory (LSTM)</strong>, así como arquitecturas más recientes orientadas al procesamiento de series de tiempo, entre ellas <strong>TSMixer</strong> e <strong>iTransformer</strong>. La diversidad de alternativas disponibles plantea la necesidad de realizar evaluaciones comparativas que permitan analizar el comportamiento de diferentes enfoques bajo condiciones experimentales equivalentes. En este contexto, el desempeño predictivo de un modelo no depende exclusivamente de su arquitectura, sino también de las características de las series, el tratamiento y transformación de los datos, la configuración experimental, el horizonte de predicción y las métricas utilizadas para su evaluación.
+            </p>
+
+            <p>
+              En este trabajo se presenta un estudio comparativo de métodos estadísticos y arquitecturas de inteligencia artificial aplicados al pronóstico de series de tiempo multivariadas, utilizando un conjunto de datos correspondiente a variables meteorológicas. El estudio contempla un proceso de exploración y caracterización estadística de los datos con el propósito de identificar sus principales propiedades temporales y establecer las condiciones necesarias para su posterior modelado. A partir de estas características, se consideran diferentes estrategias de pronóstico, incluyendo métodos estadísticos y arquitecturas de aprendizaje automático y aprendizaje profundo como <strong>LSTM</strong>, <strong>TSMixer</strong>, <strong>iTransformer</strong> y <strong>VAR</strong>. El proceso experimental se estructura tomando como referencia las fases de la metodología <strong>CRISP-DM</strong> relacionadas con la comprensión, preparación y modelado de los datos, complementadas con procedimientos específicos para el análisis y evaluación de series de tiempo. Finalmente, los modelos son evaluados mediante métricas de desempeño predictivo y sus resultados son comparados bajo las condiciones definidas para el experimento. De esta manera, la investigación busca proporcionar una evaluación sistemática de los enfoques considerados y analizar las diferencias observadas en su comportamiento predictivo frente a las características del conjunto de datos empleado.
+            </p>
+          </div>
+        </section>
+
+        <!-- SECCIÓN 2: ESTADO DEL ARTE -->
+        <section id="section-estado-arte" class="article-section space-y-4">
+          <div class="border-b border-gray-100 pb-3 flex items-center justify-between">
+            <h2 class="text-2xl font-bold font-headline text-gray-900 tracking-tight flex items-center gap-2">
+              <span class="text-gray-400 font-mono text-lg">II.</span> Estado del Arte
+            </h2>
+            <span class="text-xs text-gray-400 font-mono">Sección 2/6</span>
+          </div>
+
+          <div class="article-body">
+            <p>
+              El pronóstico de series de tiempo ha sido abordado mediante métodos estadísticos y, posteriormente, mediante técnicas de aprendizaje automático y aprendizaje profundo. En este contexto, <strong>Parmezan et al.</strong> realizaron una evaluación experimental de 11 métodos de predicción sobre 95 conjuntos de datos, considerando diferentes características de las series, estrategias de predicción y métricas de evaluación. Los autores señalan la importancia de considerar las características particulares de los datos al seleccionar un modelo, evidenciando que no existe un método universalmente superior para todos los escenarios [1]. De manera complementaria, <strong>Oztekin et al.</strong> desarrollaron una metodología de análisis predictivo basada en <strong>CRISP-DM</strong>, integrando diferentes técnicas de modelado y etapas de preparación y evaluación de los datos, lo que demuestra la aplicabilidad de esta metodología como marco para estructurar proyectos de análisis predictivo [2].
+            </p>
+
+            <p>
+              En aplicaciones relacionadas con variables ambientales se han desarrollado estudios que comparan enfoques estadísticos y de aprendizaje profundo. <strong>Yang et al.</strong> evaluaron modelos para la predicción de temperatura y compararon, entre otros, LSTM, ARIMA y XGBoost, evidenciando la utilidad de contrastar metodologías con diferentes capacidades para representar las dinámicas temporales [3]. Asimismo, estudios orientados a la predicción de precipitaciones han empleado conjuntos de datos meteorológicos para comparar algoritmos de aprendizaje automático y redes LSTM [4], mientras que investigaciones recientes han combinado SARIMA y LSTM para analizar el comportamiento de la precipitación en diferentes escalas temporales [5]. Estos antecedentes muestran la pertinencia de establecer comparaciones entre métodos estadísticos tradicionales y modelos de aprendizaje automático y profundo en problemas de pronóstico ambiental.
+            </p>
+
+            <p>
+              En cuanto a arquitecturas recientes de aprendizaje profundo para series de tiempo, <strong>TSMixer</strong> propone una arquitectura basada exclusivamente en perceptrones multicapa que realiza operaciones de mezcla tanto en la dimensión temporal como en la dimensión de variables, con resultados altamente competitivos en diferentes conjuntos de datos multivariados [6]. Por su parte, <strong>iTransformer</strong> modifica el uso convencional de los Transformers para series de tiempo mediante una representación invertida de las dimensiones, utilizando las variables como tokens para capturar dependencias multivariadas [7]. A partir de estos antecedentes, el presente trabajo plantea una evaluación comparativa de métodos estadísticos y arquitecturas de aprendizaje automático y profundo sobre un conjunto de datos meteorológicos multivariados, incorporando etapas de caracterización estadística, preparación de los datos, modelado y evaluación.
+            </p>
+          </div>
+        </section>
+
+        <!-- SECCIÓN 3: MARCO CONCEPTUAL (Estilo tarjetas de Experiencia) -->
+        <section id="section-marco-conceptual" class="article-section space-y-6">
+          <div class="border-b border-gray-100 pb-3 flex items-center justify-between">
+            <h2 class="text-2xl font-bold font-headline text-gray-900 tracking-tight flex items-center gap-2">
+              <span class="text-gray-400 font-mono text-lg">III.</span> Marco Conceptual
+            </h2>
+            <span class="text-xs text-gray-400 font-mono">Sección 3/6</span>
+          </div>
+
+          <div class="article-body">
+            <p>
+              El pronóstico de series de tiempo puede abordarse mediante modelos con diferentes mecanismos para representar la dependencia temporal y las relaciones entre variables: <strong>Vector Autoregression (VAR)</strong>, <strong>Long Short-Term Memory (LSTM)</strong>, <strong>TSMixer</strong> e <strong>iTransformer</strong>. A continuación se describe la estructura general y la formulación analítica de cada modelo.
+            </p>
+          </div>
+
+          <!-- SUBSECCIÓN 3.1: VAR (Tarjeta elegante) -->
+          <div id="section-var" class="subtle-card p-6 sm:p-8 space-y-4">
+            <div class="flex items-center justify-between flex-wrap gap-2 mb-2">
+              <span class="pill-badge pill-green">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 inline-block"></span>
+                Modelo Estadístico Lineal
+              </span>
+              <span class="text-xs text-gray-400 font-mono">III.A</span>
+            </div>
+
+            <h3 class="text-xl font-bold font-headline text-gray-900">Vector Autoregression (VAR)</h3>
+
+            <div class="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
+              <div class="xl:col-span-7 space-y-4 article-body">
+                <p>
+                  Vector Autoregression (VAR) es un modelo estadístico diseñado para representar la dependencia temporal conjunta de un conjunto de variables. A diferencia de los modelos autorregresivos univariados, en los que una variable se explica principalmente a partir de sus propios valores pasados, VAR considera simultáneamente los valores históricos de todas las variables incluidas en el sistema. De esta manera, cada variable puede depender tanto de sus propios valores anteriores como de los valores pasados de las demás variables.
+                </p>
+
+                <p>
+                  Para un conjunto de \(K\) variables y un orden autorregresivo \(p\), la serie se representa mediante el vector \(y_t\), expresado formalmente como:
+                </p>
+
+                <div class="equation-card">
+                  <div class="font-mono text-sm sm:text-base text-gray-900" [innerHTML]="math.eqVAR"></div>
+                  <span class="text-xs font-mono text-gray-400 font-bold ml-4 whitespace-nowrap">(1)</span>
+                </div>
+
+                <p>
+                  donde \(c\) corresponde al término constante, \(A_i\) son matrices de coeficientes que cuantifican la influencia dinámica de los rezagos históricos sobre el estado actual, y \(arepsilon_t\) representa el vector de ruido blanco o error.
+                </p>
+              </div>
+
+              <div class="xl:col-span-5 figure-wrapper m-0">
+                <div class="figure-img-container" (click)="openLightbox('/images/fig1_var.png', 'Fig. 1. Estructura conceptual del modelo arquitectónico VAR')">
+                  <img src="/images/fig1_var.png" alt="Estructura conceptual del modelo arquitectónico VAR" class="max-h-72 w-auto object-contain rounded">
+                </div>
+                <div class="figure-caption">
+                  <span><strong>Fig. 1.</strong> Estructura conceptual de VAR.</span>
+                  <span class="text-xs text-blue-600 font-medium cursor-pointer hover:underline" (click)="openLightbox('/images/fig1_var.png', 'Fig. 1. Estructura conceptual del modelo arquitectónico VAR')">
+                    Ampliar
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SUBSECCIÓN 3.2: LSTM (Tarjeta elegante) -->
+          <div id="section-lstm" class="subtle-card p-6 sm:p-8 space-y-4">
+            <div class="flex items-center justify-between flex-wrap gap-2 mb-2">
+              <span class="pill-badge pill-blue">
+                <span class="w-1.5 h-1.5 rounded-full bg-blue-600 inline-block"></span>
+                Red Neuronal Recurrente (RNN)
+              </span>
+              <span class="text-xs text-gray-400 font-mono">III.B</span>
+            </div>
+
+            <h3 class="text-xl font-bold font-headline text-gray-900">Long Short-Term Memory (LSTM)</h3>
+
+            <div class="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
+              <div class="xl:col-span-7 space-y-4 article-body">
+                <p>
+                  Las redes Long Short-Term Memory (LSTM) pertenecen a la familia de redes neuronales recurrentes (<em>Recurrent Neural Networks</em>, RNN), diseñadas para procesar información secuencial manteniendo un estado que se actualiza a medida que se recorren los diferentes instantes de una serie. <span [innerHTML]="math.lstmStateText"></span>
+                </p>
+
+                <div class="equation-card">
+                  <div class="font-mono text-sm sm:text-base text-gray-900" [innerHTML]="math.eqRNN"></div>
+                  <span class="text-xs font-mono text-gray-400 font-bold ml-4 whitespace-nowrap">(2)</span>
+                </div>
+
+                <p>
+                  LSTM introduce una celda de memoria regulada por compuertas:
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 my-2">
+                  <div class="equation-card m-0 py-2.5 px-3">
+                    <div class="font-mono text-xs text-gray-900" [innerHTML]="math.eqLSTM_f"></div>
+                    <span class="text-[11px] font-mono text-gray-400 font-bold ml-2">(3)</span>
+                  </div>
+                  <div class="equation-card m-0 py-2.5 px-3">
+                    <div class="font-mono text-xs text-gray-900" [innerHTML]="math.eqLSTM_i"></div>
+                    <span class="text-[11px] font-mono text-gray-400 font-bold ml-2">(4)</span>
+                  </div>
+                  <div class="equation-card m-0 py-2.5 px-3">
+                    <div class="font-mono text-xs text-gray-900" [innerHTML]="math.eqLSTM_c_tilde"></div>
+                    <span class="text-[11px] font-mono text-gray-400 font-bold ml-2">(5)</span>
+                  </div>
+                  <div class="equation-card m-0 py-2.5 px-3">
+                    <div class="font-mono text-xs text-gray-900" [innerHTML]="math.eqLSTM_c"></div>
+                    <span class="text-[11px] font-mono text-gray-400 font-bold ml-2">(6)</span>
+                  </div>
+                  <div class="equation-card m-0 py-2.5 px-3">
+                    <div class="font-mono text-xs text-gray-900" [innerHTML]="math.eqLSTM_o"></div>
+                    <span class="text-[11px] font-mono text-gray-400 font-bold ml-2">(7)</span>
+                  </div>
+                  <div class="equation-card m-0 py-2.5 px-3">
+                    <div class="font-mono text-xs text-gray-900" [innerHTML]="math.eqLSTM_h"></div>
+                    <span class="text-[11px] font-mono text-gray-400 font-bold ml-2">(8)</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="xl:col-span-5 figure-wrapper m-0">
+                <div class="figure-img-container" (click)="openLightbox('/images/fig2_lstm.png', 'Fig. 2. Estructura conceptual del modelo arquitectónico LSTM')">
+                  <img src="/images/fig2_lstm.png" alt="Estructura conceptual del modelo arquitectónico LSTM" class="max-h-72 w-auto object-contain rounded">
+                </div>
+                <div class="figure-caption">
+                  <span><strong>Fig. 2.</strong> Celda de memoria LSTM y compuertas.</span>
+                  <span class="text-xs text-blue-600 font-medium cursor-pointer hover:underline" (click)="openLightbox('/images/fig2_lstm.png', 'Fig. 2. Estructura conceptual del modelo arquitectónico LSTM')">
+                    Ampliar
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SUBSECCIÓN 3.3: TSMIXER (Tarjeta elegante) -->
+          <div id="section-tsmixer" class="subtle-card p-6 sm:p-8 space-y-4">
+            <div class="flex items-center justify-between flex-wrap gap-2 mb-2">
+              <span class="pill-badge bg-amber-50 text-amber-800 border border-amber-200">
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-600 inline-block"></span>
+                Arquitectura All-MLP
+              </span>
+              <span class="text-xs text-gray-400 font-mono">III.C</span>
+            </div>
+
+            <h3 class="text-xl font-bold font-headline text-gray-900">TSMixer</h3>
+
+            <div class="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
+              <div class="xl:col-span-7 space-y-4 article-body">
+                <p>
+                  <strong>TSMixer</strong> es una arquitectura basada exclusivamente en capas de perceptrones multicapa (<em>Multi-Layer Perceptrons</em>, MLP) que aborda el pronóstico de series de tiempo mediante la mezcla independiente de información a lo largo de las dimensiones temporal y de características.
+                </p>
+
+                <p>
+                  La entrada de TSMixer se representa como una matriz <span [innerHTML]="math.tsmixerMatrix"></span>, donde \(L\) denota la longitud de la ventana histórica (dimensión temporal) y \(K\) el número de variables meteorológicas. El procesamiento se divide en dos bloques principales:
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-3">
+                  <div class="p-4 rounded-xl bg-gray-50 border border-gray-100">
+                    <h4 class="text-sm font-bold text-gray-900 mb-1">Time Mixing Block</h4>
+                    <p class="text-xs text-gray-600 leading-relaxed mb-0">
+                      Aplica un MLP transversal a lo largo de la dimensión temporal (\(L\)) para combinar patrones dinámicos en la secuencia.
+                    </p>
+                  </div>
+                  <div class="p-4 rounded-xl bg-gray-50 border border-gray-100">
+                    <h4 class="text-sm font-bold text-gray-900 mb-1">Feature Mixing Block</h4>
+                    <p class="text-xs text-gray-600 leading-relaxed mb-0">
+                      Aplica un MLP sobre la dimensión de características (\(K\)) para capturar correlaciones multivariadas cruzadas.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="xl:col-span-5 figure-wrapper m-0">
+                <div class="figure-img-container" (click)="openLightbox('/images/fig3_tsmixer.png', 'Fig. 3. Estructura conceptual del modelo arquitectónico TSMixer')">
+                  <img src="/images/fig3_tsmixer.png" alt="Estructura conceptual del modelo arquitectónico TSMixer" class="max-h-80 w-auto object-contain rounded">
+                </div>
+                <div class="figure-caption">
+                  <span><strong>Fig. 3.</strong> Arquitectura TSMixer (Time & Feature Mixing).</span>
+                  <span class="text-xs text-blue-600 font-medium cursor-pointer hover:underline" (click)="openLightbox('/images/fig3_tsmixer.png', 'Fig. 3. Estructura conceptual del modelo arquitectónico TSMixer')">
+                    Ampliar
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SUBSECCIÓN 3.4: iTRANSFORMER (Tarjeta elegante) -->
+          <div id="section-itransformer" class="subtle-card p-6 sm:p-8 space-y-4">
+            <div class="flex items-center justify-between flex-wrap gap-2 mb-2">
+              <span class="pill-badge bg-purple-50 text-purple-800 border border-purple-200">
+                <span class="w-1.5 h-1.5 rounded-full bg-purple-600 inline-block"></span>
+                Inverted Attention Architecture
+              </span>
+              <span class="text-xs text-gray-400 font-mono">III.D</span>
+            </div>
+
+            <h3 class="text-xl font-bold font-headline text-gray-900">iTransformer</h3>
+
+            <div class="article-body">
+              <p>
+                <strong>iTransformer</strong> es una arquitectura basada en Transformers diseñada para el pronóstico multivariado. En lugar de considerar cada paso temporal como un token, <strong>invierte la representación y utiliza cada serie temporal de una variable individual como un token completo</strong>.
+              </p>
+
+              <!-- Figure 4 -->
+              <div class="figure-wrapper">
+                <div class="figure-img-container" (click)="openLightbox('/images/fig4_itransformer_compare.png', 'Fig. 4. Comparación de representación convencional vs invertida en iTransformer')">
+                  <img src="/images/fig4_itransformer_compare.png" alt="Comparación convencional vs invertida" class="max-h-96 w-auto object-contain rounded">
+                </div>
+                <div class="figure-caption">
+                  <span><strong>Fig. 4.</strong> Representación convencional frente a la representación invertida de variables como tokens.</span>
+                  <span class="text-xs text-blue-600 font-medium cursor-pointer hover:underline" (click)="openLightbox('/images/fig4_itransformer_compare.png', 'Fig. 4. Comparación de representación convencional vs invertida en iTransformer')">
+                    Ampliar imagen
+                  </span>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-4">
+                <!-- Figure 5 -->
+                <div class="figure-wrapper m-0">
+                  <div class="figure-img-container" (click)="openLightbox('/images/fig5_itransformer_encoder.png', 'Fig. 5. Bloque encoder de iTransformer')">
+                    <img src="/images/fig5_itransformer_encoder.png" alt="Bloque encoder de iTransformer" class="max-h-80 w-auto object-contain rounded">
+                  </div>
+                  <div class="figure-caption">
+                    <span><strong>Fig. 5.</strong> Bloque Encoder de iTransformer.</span>
+                  </div>
+                </div>
+
+                <!-- Figure 6 -->
+                <div class="figure-wrapper m-0">
+                  <div class="figure-img-container" (click)="openLightbox('/images/fig6_itransformer_arch.png', 'Fig. 6. Estructura conceptual del modelo arquitectónico iTransformer')">
+                    <img src="/images/fig6_itransformer_arch.png" alt="Estructura conceptual iTransformer" class="max-h-80 w-auto object-contain rounded">
+                  </div>
+                  <div class="figure-caption">
+                    <span><strong>Fig. 6.</strong> Pipeline arquitectónico de iTransformer.</span>
+                  </div>
+                </div>
+              </div>
+
+              <p>
+                Esta inversión arquitectónica resuelve una de las mayores debilidades de los Transformers tradicionales aplicados a series temporales: al usar las variables como tokens, el número de tokens es \(K\) (habitualmente pequeño y constante), mientras que la longitud temporal \(L\) se procesa eficientemente dentro del embedding lineal, evitando la complejidad temporal cuadrática <span [innerHTML]="math.itransformerComplexity"></span>.
+              </p>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- MATRIZ COMPARATIVA DE MODELOS (Tabla limpia) -->
+        <section id="section-comparativa" class="article-section space-y-4">
+          <div class="border-b border-gray-100 pb-3 flex items-center justify-between">
+            <h2 class="text-2xl font-bold font-headline text-gray-900 tracking-tight flex items-center gap-2">
+              <span class="text-gray-400 font-mono text-lg">★</span> Matriz Comparativa de Modelos
+            </h2>
+            <span class="pill-badge">Síntesis</span>
+          </div>
+
+          <div class="overflow-x-auto subtle-card">
+            <table class="w-full text-left text-xs sm:text-sm">
+              <thead class="border-b border-gray-200 bg-gray-50 text-gray-700 font-headline uppercase text-[11px] tracking-wider">
+                <tr>
+                  <th class="p-4">Modelo</th>
+                  <th class="p-4">Paradigma</th>
+                  <th class="p-4">Dependencia Temporal</th>
+                  <th class="p-4">Interacción Multivariada</th>
+                  <th class="p-4">Complejidad</th>
+                  <th class="p-4">Ventaja Principal en Meteorología</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100 font-sans">
+                <tr class="hover:bg-gray-50/70 transition-colors">
+                  <td class="p-4 font-bold text-gray-900">VAR (p)</td>
+                  <td class="p-4 text-gray-600">Estadístico Lineal</td>
+                  <td class="p-4 text-gray-600">Rezagos autorregresivos \(p\)</td>
+                  <td class="p-4 text-gray-600">Matrices de coeficientes \(A_i\)</td>
+                  <td class="p-4 font-mono text-xs" [innerHTML]="math.complexityVAR"></td>
+                  <td class="p-4 text-gray-600">Alta interpretabilidad matemática y estimación directa.</td>
+                </tr>
+                <tr class="hover:bg-gray-50/70 transition-colors">
+                  <td class="p-4 font-bold text-gray-900">LSTM</td>
+                  <td class="p-4 text-gray-600">Red Recurrente (RNN)</td>
+                  <td class="p-4 text-gray-600">Estado de celda \(C_t\)</td>
+                  <td class="p-4 text-gray-600">Concatenación de entradas</td>
+                  <td class="p-4 font-mono text-xs" [innerHTML]="math.complexityLSTM"></td>
+                  <td class="p-4 text-gray-600">Captura dependencias dinámicas no lineales secuenciales.</td>
+                </tr>
+                <tr class="hover:bg-gray-50/70 transition-colors">
+                  <td class="p-4 font-bold text-gray-900">TSMixer</td>
+                  <td class="p-4 text-gray-600">All-MLP</td>
+                  <td class="p-4 text-gray-600">Time Mixing Block</td>
+                  <td class="p-4 text-gray-600">Feature Mixing Block</td>
+                  <td class="p-4 font-mono text-xs" [innerHTML]="math.complexityTSMixer"></td>
+                  <td class="p-4 text-gray-600">Desacopla tiempo y variables con extrema rapidez.</td>
+                </tr>
+                <tr class="hover:bg-gray-50/70 transition-colors">
+                  <td class="p-4 font-bold text-gray-900">iTransformer</td>
+                  <td class="p-4 text-gray-600">Inverted Attention</td>
+                  <td class="p-4 text-gray-600">Inverted Embedding</td>
+                  <td class="p-4 text-gray-600">Self-Attention entre variables</td>
+                  <td class="p-4 font-mono text-xs" [innerHTML]="math.complexityITransformer"></td>
+                  <td class="p-4 text-gray-600">Atención óptima en correlaciones climáticas complejas.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- SECCIÓN 4: DESARROLLO EXPERIMENTAL -->
+        <section id="section-desarrollo" class="article-section space-y-8">
+          <div class="border-b border-gray-100 pb-3 flex items-center justify-between">
+            <h2 class="text-2xl font-bold font-headline text-gray-900 tracking-tight flex items-center gap-2">
+              <span class="text-gray-400 font-mono text-lg">IV.</span> Desarrollo Experimental
+            </h2>
+            <span class="text-xs text-gray-400 font-mono">Sección 4/7</span>
+          </div>
+
+          <!-- Subsección A: Preprocesamiento de Datos -->
+          <div id="section-preproc" class="space-y-4">
+            <div class="flex items-center gap-2">
+              <span class="pill-badge pill-green text-xs font-semibold">IV.A</span>
+              <h3 class="text-lg font-bold text-gray-900">Preprocesamiento y Acondicionamiento del Dataset</h3>
+            </div>
+
+            <div class="article-body">
+              <p class="text-justify leading-relaxed text-gray-700">
+                Tras realizar un análisis de las características del dataset, se hicieron los cambios respectivos para poder entrenar correctamente los modelos. Se descartaron los valores nulos, pero tras verificar los datos se encontraron datos con valores inconsistentes; se identificó que en varias variables se encontraban datos que carecen de un sentido, específicamente todos con el valor <strong>-9999</strong>, por lo que se interpretaron estos valores como una forma que tiene el dataset para indicar la falta de un valor, por lo que para una futura imputación de datos estos valores se reemplazaron por valores nulos.
+              </p>
+              <p class="text-justify leading-relaxed text-gray-700 mt-3">
+                Se verificó que no hubiera saltos en el tiempo comparando cada registro con el siguiente para determinar si el siguiente pasa 10 minutos después. De esta forma se encontraron dos registros que rompen la secuencia de los 10 minutos: una fila duplicada y un agujero temporal de 1 hora y 40 minutos, por lo que se procedió a eliminar la fila duplicada y, al ser un agujero pequeño, se rellenó con datos sintéticos por medio de interpolación. Como último paso en lo que respecta a modificar el dataset, se cambió una de las variables: la dirección del viento dada en grados en el sistema sexagesimal (\(0^\circ\) a \(360^\circ\)), por lo que se transformaron sus valores en sus componentes senoidales y cosenoidales, permitiendo a los modelos interpretar de mejor forma la continuidad angular.
+              </p>
+            </div>
+
+            <!-- Cards Resumen Preprocesamiento -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+              <div class="subtle-card p-5">
+                <div class="pill-badge bg-rose-50 text-rose-700 border-rose-200 mb-2.5">
+                  Centinela -9999
+                </div>
+                <h4 class="text-sm font-bold text-gray-900 mb-1">Tratamiento de Nulos</h4>
+                <p class="text-xs text-gray-600 leading-relaxed mb-0">
+                  Detección de códigos de error de sensor y conversión a NaN para imputación controlada.
+                </p>
+              </div>
+
+              <div class="subtle-card p-5">
+                <div class="pill-badge pill-green mb-2.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 inline-block"></span>
+                  Cadencia Regular
+                </div>
+                <h4 class="text-sm font-bold text-gray-900 mb-1">Continuidad Temporal</h4>
+                <p class="text-xs text-gray-600 leading-relaxed mb-0">
+                  Eliminación de duplicados y resolución de salto de 1h 40min mediante interpolación sintética.
+                </p>
+              </div>
+
+              <div class="subtle-card p-5">
+                <div class="pill-badge pill-blue mb-2.5">
+                  Descomposición Angular
+                </div>
+                <h4 class="text-sm font-bold text-gray-900 mb-1">Dirección del Viento</h4>
+                <p class="text-xs text-gray-600 leading-relaxed mb-0">
+                  Mapeo ortogonal trigonométrico continuo:
+                  <span class="block mt-1 font-mono text-[11px] text-gray-800" [innerHTML]="math.windFormula"></span>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Subsección B: Implementación LSTM -->
+          <div id="section-impl-lstm" class="space-y-4 pt-6 border-t border-gray-100">
+            <div class="flex items-center gap-2">
+              <span class="pill-badge pill-blue text-xs font-semibold">IV.B</span>
+              <h3 class="text-lg font-bold text-gray-900">Implementación de la Arquitectura LSTM</h3>
+            </div>
+
+            <div class="article-body">
+              <p class="text-justify leading-relaxed text-gray-700">
+                La implementación de la LSTM se realizó mediante una arquitectura recurrente de dos capas, configurada para procesar las <strong>22 variables meteorológicas</strong> en cada uno de los <strong>96 instantes</strong> que conforman la ventana de entrada. Se utilizaron <strong>128 unidades en el estado oculto</strong> y un dropout de 0.2 entre las capas recurrentes. Para generar el pronóstico, el estado oculto correspondiente al último instante de la secuencia se utilizó como representación de la información temporal procesada, a partir de la cual una capa totalmente conectada genera directamente los valores correspondientes a los <strong>96 pasos futuros de las 22 variables</strong>, produciendo una salida de 96 observaciones para cada variable.
+              </p>
+              <p class="text-justify leading-relaxed text-gray-700 mt-3">
+                Durante el entrenamiento se empleó el error cuadrático medio (MSE) como función de pérdida y el optimizador <strong>AdamW</strong>. El entrenamiento se estableció con un máximo de <strong>10 épocas</strong> y se incorporó early stopping con una paciencia de 5 épocas, conservando los parámetros correspondientes al mejor desempeño observado sobre el conjunto de validación.
+              </p>
+            </div>
+
+            <!-- Figura 7: LSTM Implementación -->
+            <div class="subtle-card p-4 sm:p-6 bg-gray-50/60 border border-gray-200/80">
+              <div class="relative group cursor-zoom-in overflow-hidden rounded-xl bg-white border border-gray-100 flex justify-center p-3"
+                   (click)="openLightbox('/images/fig7_lstm_impl.png', 'Fig. 7. Estructura conceptual de la implementación de LSTM.')">
+                <img src="/images/fig7_lstm_impl.png" alt="Fig. 7. Estructura conceptual de la implementación de LSTM" class="w-full max-w-2xl h-auto object-contain transition-transform duration-300 group-hover:scale-[1.01]">
+                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors flex items-center justify-center">
+                  <span class="opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 backdrop-blur-sm text-gray-900 text-xs px-3 py-1.5 rounded-full shadow-md font-medium">Ampliar Figura 7</span>
+                </div>
+              </div>
+              <div class="mt-3 text-xs text-center text-gray-600 font-sans">
+                <strong class="text-gray-900">Fig. 7.</strong> Estructura conceptual de la implementación de LSTM para 22 variables meteorológicas a 96 pasos.
+              </div>
+            </div>
+          </div>
+
+          <!-- Subsección C: Implementación TSMixer -->
+          <div id="section-impl-tsmixer" class="space-y-4 pt-6 border-t border-gray-100">
+            <div class="flex items-center gap-2">
+              <span class="pill-badge bg-amber-50 text-amber-700 border-amber-200 text-xs font-semibold">IV.C</span>
+              <h3 class="text-lg font-bold text-gray-900">Implementación de la Arquitectura TSMixer</h3>
+            </div>
+
+            <div class="article-body">
+              <p class="text-justify leading-relaxed text-gray-700">
+                La implementación de TSMixer se realizó mediante <strong>cuatro bloques consecutivos</strong>, cada uno compuesto por mecanismos de mezcla temporal (Time Mixing) y mezcla entre variables (Feature Mixing). Para la mezcla temporal se emplearon capas con una dimensión interna de <strong>128 unidades</strong>, mientras que la mezcla entre las 22 variables también utilizó una dimensión interna de 128 unidades. Cada bloque incorpora normalización mediante Layer Normalization, activaciones GELU, dropout de 0.2 y conexiones residuales, permitiendo combinar la información original con la información transformada en cada etapa.
+              </p>
+              <p class="text-justify leading-relaxed text-gray-700 mt-3">
+                Después de los cuatro bloques, una capa lineal transforma la representación temporal de los 96 instantes históricos en los 96 instantes correspondientes al horizonte de predicción. El modelo fue entrenado utilizando el error cuadrático medio y el optimizador <strong>AdamW</strong>. Se estableció un máximo de 10 épocas con early stopping de paciencia 5, seleccionando los parámetros asociados a la menor pérdida en validación.
+              </p>
+            </div>
+
+            <!-- Figura 8: TSMixer Implementación -->
+            <div class="subtle-card p-4 sm:p-6 bg-gray-50/60 border border-gray-200/80">
+              <div class="relative group cursor-zoom-in overflow-hidden rounded-xl bg-white border border-gray-100 flex justify-center p-3"
+                   (click)="openLightbox('/images/fig8_tsmixer_impl.png', 'Fig. 8. Estructura conceptual de la implementación de TSMixer.')">
+                <img src="/images/fig8_tsmixer_impl.png" alt="Fig. 8. Estructura conceptual de la implementación de TSMixer" class="w-full max-w-2xl h-auto object-contain transition-transform duration-300 group-hover:scale-[1.01]">
+                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors flex items-center justify-center">
+                  <span class="opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 backdrop-blur-sm text-gray-900 text-xs px-3 py-1.5 rounded-full shadow-md font-medium">Ampliar Figura 8</span>
+                </div>
+              </div>
+              <div class="mt-3 text-xs text-center text-gray-600 font-sans">
+                <strong class="text-gray-900">Fig. 8.</strong> Estructura conceptual de la implementación de TSMixer (4 bloques residuales MLP con Time & Feature Mixing).
+              </div>
+            </div>
+          </div>
+
+          <!-- Subsección D: Implementación iTransformer -->
+          <div id="section-impl-itransformer" class="space-y-4 pt-6 border-t border-gray-100">
+            <div class="flex items-center gap-2">
+              <span class="pill-badge bg-indigo-50 text-indigo-700 border-indigo-200 text-xs font-semibold">IV.D</span>
+              <h3 class="text-lg font-bold text-gray-900">Implementación de la Arquitectura iTransformer</h3>
+            </div>
+
+            <div class="article-body">
+              <p class="text-justify leading-relaxed text-gray-700">
+                La implementación del iTransformer se configuró para trabajar con las <strong>22 variables meteorológicas</strong> y una ventana de <strong>96 observaciones históricas</strong>, utilizando una representación interna de <strong>128 dimensiones</strong>. En esta configuración, cada variable es proyectada a un espacio de características de 128 dimensiones a partir de sus observaciones históricas completas (tokenización invertida), de manera que las diferentes variables constituyen los tokens sobre los cuales se aplica posteriormente el mecanismo de atención multidimensional.
+              </p>
+              <p class="text-justify leading-relaxed text-gray-700 mt-3">
+                El codificador Transformer está compuesto por <strong>tres capas</strong>, cada una con <strong>8 cabezas de atención</strong>, una dimensión interna de 512 unidades para la red feed-forward, activación GELU, pre-Layer Normalization y dropout de 0.1. Finalmente, la representación obtenida para cada variable es transformada por una capa lineal para producir sus 96 valores futuros. El entrenamiento se realizó con MSE y el optimizador <strong>AdamW</strong>, máximo de 10 épocas y early stopping con paciencia de 5 épocas sobre el conjunto de validación.
+              </p>
+            </div>
+
+            <!-- Figura 9: iTransformer Implementación -->
+            <div class="subtle-card p-4 sm:p-6 bg-gray-50/60 border border-gray-200/80">
+              <div class="relative group cursor-zoom-in overflow-hidden rounded-xl bg-white border border-gray-100 flex justify-center p-3"
+                   (click)="openLightbox('/images/fig9_itransformer_impl.png', 'Fig. 9. Estructura conceptual de la implementación de iTransformer.')">
+                <img src="/images/fig9_itransformer_impl.png" alt="Fig. 9. Estructura conceptual de la implementación de iTransformer" class="w-full max-w-2xl h-auto object-contain transition-transform duration-300 group-hover:scale-[1.01]">
+                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors flex items-center justify-center">
+                  <span class="opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 backdrop-blur-sm text-gray-900 text-xs px-3 py-1.5 rounded-full shadow-md font-medium">Ampliar Figura 9</span>
+                </div>
+              </div>
+              <div class="mt-3 text-xs text-center text-gray-600 font-sans">
+                <strong class="text-gray-900">Fig. 9.</strong> Estructura conceptual de la implementación de iTransformer (Inverted Tokenization, 3 capas encoder, 8 cabezas de atención).
+              </div>
+            </div>
+          </div>
+
+          <!-- Subsección E: Implementación VAR -->
+          <div id="section-impl-var" class="space-y-4 pt-6 border-t border-gray-100">
+            <div class="flex items-center gap-2">
+              <span class="pill-badge pill-blue text-xs font-semibold">IV.E</span>
+              <h3 class="text-lg font-bold text-gray-900">Implementación del Modelo Estadístico VAR</h3>
+            </div>
+
+            <div class="article-body">
+              <p class="text-justify leading-relaxed text-gray-700">
+                La implementación del modelo <strong>Vector Autoregression (VAR)</strong> se realizó utilizando las <strong>22 variables meteorológicas normalizadas</strong> y el conjunto de entrenamiento. Se estableció un máximo de <strong>96 retardos</strong>, equivalente a considerar hasta 16 horas de información histórica debido a la frecuencia de muestreo de 10 minutos. Este valor representa el límite superior de retardos considerados durante la selección del modelo, mientras que el orden autorregresivo final \(p\) se determinó mediante el <strong>criterio de información de Akaike (AIC)</strong>, buscando establecer un equilibrio óptimo entre el ajuste predictivo y la complejidad paramétrica del modelo.
+              </p>
+              <p class="text-justify leading-relaxed text-gray-700 mt-3">
+                Además, se incorporó un término constante en la especificación del modelo. Una vez realizado el ajuste, el modelo se utilizó para generar un pronóstico multivariante de 96 pasos futuros, manteniendo el mismo horizonte de predicción empleado por las arquitecturas de inteligencia artificial. De esta manera, el VAR fue evaluado bajo las mismas condiciones temporales generales que los demás modelos, permitiendo una comparación común y rigurosa entre los diferentes enfoques.
+              </p>
+            </div>
+
+            <!-- Figura 10: VAR Implementación -->
+            <div class="subtle-card p-4 sm:p-6 bg-gray-50/60 border border-gray-200/80">
+              <div class="relative group cursor-zoom-in overflow-hidden rounded-xl bg-white border border-gray-100 flex justify-center p-3"
+                   (click)="openLightbox('/images/fig10_var_impl.png', 'Fig. 10. Estructura conceptual de la implementación de VAR.')">
+                <img src="/images/fig10_var_impl.png" alt="Fig. 10. Estructura conceptual de la implementación de VAR" class="w-full max-w-2xl h-auto object-contain transition-transform duration-300 group-hover:scale-[1.01]">
+                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors flex items-center justify-center">
+                  <span class="opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 backdrop-blur-sm text-gray-900 text-xs px-3 py-1.5 rounded-full shadow-md font-medium">Ampliar Figura 10</span>
+                </div>
+              </div>
+              <div class="mt-3 text-xs text-center text-gray-600 font-sans">
+                <strong class="text-gray-900">Fig. 10.</strong> Estructura conceptual de la implementación de VAR (Selección por criterio AIC con hasta 96 retardos).
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- SECCIÓN 5: CONCLUSIONES -->
+        <section id="section-conclusiones" class="article-section space-y-4 pt-4">
+          <div class="border-b border-gray-100 pb-3 flex items-center justify-between">
+            <h2 class="text-2xl font-bold font-headline text-gray-900 tracking-tight flex items-center gap-2">
+              <span class="text-gray-400 font-mono text-lg">V.</span> Conclusiones
+            </h2>
+            <span class="text-xs text-gray-400 font-mono">Sección 5/7</span>
+          </div>
+
+          <div class="article-body">
+            <p class="text-justify leading-relaxed text-gray-700">
+              El estudio comparativo desarrollado sobre las 22 variables meteorológicas evidencia que no existe una única arquitectura óptima para todos los regímenes temporales, sino que la selección depende de la naturaleza física de cada variable y del horizonte considerado:
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
+            <div class="subtle-card p-6">
+              <div class="pill-badge pill-green mb-2.5">Modelos Lineales & Parsimonia</div>
+              <h4 class="text-base font-bold text-gray-900 mb-2">VAR y Eficiencia Paramétrica</h4>
+              <p class="text-xs text-gray-600 leading-relaxed text-justify mb-0">
+                El modelo VAR ofrece una base analítica rigurosa con orden seleccionado por AIC. Sin embargo, su crecimiento cuadrático en parámetros frente al número de variables impone límites prácticos que las arquitecturas neuronales logran mitigar eficazmente.
+              </p>
+            </div>
+
+            <div class="subtle-card p-6">
+              <div class="pill-badge pill-blue mb-2.5">Representaciones Invertidas</div>
+              <h4 class="text-base font-bold text-gray-900 mb-2">iTransformer y TSMixer</h4>
+              <p class="text-xs text-gray-600 leading-relaxed text-justify mb-0">
+                La tokenización invertida en iTransformer y la separación estricta de Time Mixing y Feature Mixing en TSMixer proporcionan ventajas notables para modelar correlaciones cruzadas en series multivariadas de alta dimensionalidad sin degradar la coherencia temporal individual.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECCIÓN 6: TRABAJO FUTURO -->
+        <section id="section-futuros" class="article-section space-y-4 pt-4">
+          <div class="border-b border-gray-100 pb-3 flex items-center justify-between">
+            <h2 class="text-2xl font-bold font-headline text-gray-900 tracking-tight flex items-center gap-2">
+              <span class="text-gray-400 font-mono text-lg">VI.</span> Trabajo Futuro
+            </h2>
+            <span class="text-xs text-gray-400 font-mono">Sección 6/7</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div class="subtle-card p-6">
+              <h4 class="text-base font-bold text-gray-900 mb-2">Horizontes Extendidos (Long-term)</h4>
+              <p class="text-xs text-gray-600 leading-relaxed mb-0">
+                Extensión del análisis experimental a pronósticos de largo plazo (de 24 horas hasta 7 días) y estudio sistemático de la degradación del error acumulado en cada arquitectura.
+              </p>
+            </div>
+            <div class="subtle-card p-6">
+              <h4 class="text-base font-bold text-gray-900 mb-2">Ensamble Híbrido & Conformal Prediction</h4>
+              <p class="text-xs text-gray-600 leading-relaxed mb-0">
+                Integración de ensambles híbridos entre modelos estadísticos y de deep learning, complementados con cuantificación de intervalos de confianza mediante inferencia conforme (<em>Conformal Prediction</em>).
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECCIÓN 7: REFERENCIAS BIBLIOGRÁFICAS (10 Referencias Oficiales) -->
+        <section id="section-referencias" class="article-section space-y-4 pt-6">
+          <div class="border-b border-gray-100 pb-3 flex items-center justify-between">
+            <h2 class="text-2xl font-bold font-headline text-gray-900 tracking-tight flex items-center gap-2">
+              <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+              Referencias Bibliográficas
+            </h2>
+            <span class="pill-badge">IEEE Standard · 10 Fuentes</span>
+          </div>
+
+          <ol class="space-y-3 text-xs text-gray-600 font-sans leading-relaxed list-none p-0">
+            <li class="p-4 rounded-xl bg-gray-50 border border-gray-100">
+              <span class="font-mono text-gray-900 font-bold mr-2">[1]</span>
+              A. R. S. Parmezan, V. M. A. de Souza, and G. E. A. P. A. Batista, “Evaluation of statistical and machine learning models for time series prediction: Identifying the state-of-the-art and the best conditions for the use of each model,” <em>Inf. Sci.</em>, vol. 484, pp. 302–337, May 2019, 
+              <a href="https://doi.org/10.1016/j.ins.2019.01.076" target="_blank" class="text-blue-600 hover:underline ml-1">doi: 10.1016/j.ins.2019.01.076</a>
+            </li>
+
+            <li class="p-4 rounded-xl bg-gray-50 border border-gray-100">
+              <span class="font-mono text-gray-900 font-bold mr-2">[2]</span>
+              A. Oztekin, R. Kizilaslan, S. Freund, and A. Iseri, “A data analytic approach to forecasting daily stock returns in an emerging market,” <em>Eur. J. Oper. Res.</em>, vol. 253, no. 3, pp. 697–710, Sep. 2016, 
+              <a href="https://doi.org/10.1016/j.ejor.2016.02.056" target="_blank" class="text-blue-600 hover:underline ml-1">doi: 10.1016/j.ejor.2016.02.056</a>
+            </li>
+
+            <li class="p-4 rounded-xl bg-gray-50 border border-gray-100">
+              <span class="font-mono text-gray-900 font-bold mr-2">[3]</span>
+              J. Yang, M. Yu, Q. Liu, Y. Li, D. Q. Duffy, and C. Yang, “A high spatiotemporal resolution framework for urban temperature prediction using IoT data,” <em>Comput. Geosci.</em>, vol. 159, Art. no. 104991, Feb. 2022, 
+              <a href="https://doi.org/10.1016/j.cageo.2021.104991" target="_blank" class="text-blue-600 hover:underline ml-1">doi: 10.1016/j.cageo.2021.104991</a>
+            </li>
+
+            <li class="p-4 rounded-xl bg-gray-50 border border-gray-100">
+              <span class="font-mono text-gray-900 font-bold mr-2">[4]</span>
+              A. Y. Barrera-Animas, L. O. Oyedele, M. Bilal, T. D. Akinosho, J. M. Davila Delgado, and L. A. Akanbi, “Rainfall prediction: A comparative analysis of modern machine learning algorithms for time-series forecasting,” <em>Mach. Learn. Appl.</em>, vol. 7, Art. no. 100204, Mar. 2022, 
+              <a href="https://doi.org/10.1016/j.mlwa.2021.100204" target="_blank" class="text-blue-600 hover:underline ml-1">doi: 10.1016/j.mlwa.2021.100204</a>
+            </li>
+
+            <li class="p-4 rounded-xl bg-gray-50 border border-gray-100">
+              <span class="font-mono text-gray-900 font-bold mr-2">[5]</span>
+              “AI-Based Daily, Weekly and Monthly Rain Forecasting by using Different Time Series Models,” in <em>Proc. 2nd World Conference on Communication & Computing (WCONF)</em>, 2024, 
+              <a href="https://doi.org/10.1109/WCONF61366.2024.10692235" target="_blank" class="text-blue-600 hover:underline ml-1">doi: 10.1109/WCONF61366.2024.10692235</a>
+            </li>
+
+            <li class="p-4 rounded-xl bg-gray-50 border border-gray-100">
+              <span class="font-mono text-gray-900 font-bold mr-2">[6]</span>
+              S.-A. Chen, C.-L. Li, N. Yoder, S. O. Arik, and T. Pfister, “TSMixer: An All-MLP Architecture for Time Series Forecasting,” <em>Trans. Mach. Learn. Res.</em>, 2023, arXiv:2303.06053.
+            </li>
+
+            <li class="p-4 rounded-xl bg-gray-50 border border-gray-100">
+              <span class="font-mono text-gray-900 font-bold mr-2">[7]</span>
+              Y. Liu, T. Hu, H. Zhang, H. Wu, S. Wang, L. Ma, and M. Long, “iTransformer: Inverted Transformers Are Effective for Time Series Forecasting,” in <em>Proc. Int. Conf. Learn. Represent. (ICLR)</em>, 2024, arXiv:2310.06625.
+            </li>
+
+            <li class="p-4 rounded-xl bg-gray-50 border border-gray-100">
+              <span class="font-mono text-gray-900 font-bold mr-2">[8]</span>
+              C. A. Sims, “Macroeconomics and reality,” <em>Econometrica</em>, vol. 48, no. 1, pp. 1–48, Jan. 1980, 
+              <a href="https://doi.org/10.2307/1912017" target="_blank" class="text-blue-600 hover:underline ml-1">doi: 10.2307/1912017</a>
+            </li>
+
+            <li class="p-4 rounded-xl bg-gray-50 border border-gray-100">
+              <span class="font-mono text-gray-900 font-bold mr-2">[9]</span>
+              S. Hochreiter and J. Schmidhuber, “Long short-term memory,” <em>Neural Comput.</em>, vol. 9, no. 8, pp. 1735–1780, Dec. 1997, 
+              <a href="https://doi.org/10.1162/neco.1997.9.8.1735" target="_blank" class="text-blue-600 hover:underline ml-1">doi: 10.1162/neco.1997.9.8.1735</a>
+            </li>
+
+            <li class="p-4 rounded-xl bg-gray-50 border border-gray-100">
+              <span class="font-mono text-gray-900 font-bold mr-2">[10]</span>
+              A. Vaswani et al., “Attention is all you need,” in <em>Advances in Neural Information Processing Systems (NeurIPS)</em>, 2017, pp. 5998–6008, arXiv:1706.03762.
+            </li>
+          </ol>
+        </section>
+
+      </div>
+
+      <!-- FOOTER -->
+      <footer class="pt-12 pb-8 border-t border-gray-100 text-center text-xs text-gray-500 font-sans">
+        <p class="mb-2">
+          Desarrollado para el Seminario de Investigación · Modelado de Series de Tiempo Meteorológicas
+        </p>
+        <div class="flex items-center justify-center gap-4 text-gray-600 text-xs">
+          <span>Mira Ortega Miguel Angel · Arbelaez Contreras Santiago · Isaza Vergara Juan Manuel</span>
+          <span>•</span>
+          <a href="/docs/Modelos_Arq_V1_2.docx" download="Modelos_Arq_V1_2.docx" class="hover:text-black font-semibold text-blue-600 underline">Descargar artículo (.docx)</a>
+          <span>•</span>
+          <button (click)="downloadPdf()" class="hover:text-black underline">Imprimir / PDF</button>
+          <span>•</span>
+          <a href="#section-header" class="hover:text-black underline">Volver arriba &uarr;</a>
+        </div>
+      </footer>
+
+    </main>
+  </div>
+</div>
+
+<!-- ============================================================
+     MODAL 1: SEARCH MODAL (Ctrl+K)
+     ============================================================ -->
+<div *ngIf="isSearchOpen" (click)="closeSearch()" class="modal-backdrop">
+  <div (click)="$event.stopPropagation()" class="subtle-card w-full max-w-xl p-6 bg-white border border-gray-200 shadow-2xl relative">
+    <div class="flex items-center justify-between pb-3 border-b border-gray-100">
+      <div class="flex items-center gap-2 text-gray-900">
+        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <span class="font-headline font-bold text-sm uppercase tracking-wider">Buscar en el Artículo</span>
+      </div>
+      <button (click)="closeSearch()" class="p-1 rounded-lg hover:bg-gray-100 text-gray-500 hover:text-gray-900">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <div class="mt-4">
+      <input id="search-modal-input" 
+        [ngModel]="searchQuery" 
+        (ngModelChange)="onSearchInput($event)"
+        type="text" 
+        placeholder="Escribe un concepto (ej. VAR, LSTM, TSMixer, interpolación, -9999)..." 
+        class="w-full px-4 py-2.5 rounded-xl bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-gray-900 text-sm">
+    </div>
+
+    <div class="mt-4 max-h-80 overflow-y-auto pr-1">
+      <div *ngIf="!searchQuery || searchQuery.length < 2" class="py-8 text-center text-xs text-gray-500">
+        <p>Escribe al menos 2 letras para buscar en el artículo...</p>
+        <div class="mt-3 flex justify-center gap-2 flex-wrap text-xs">
+          <span class="pill-badge cursor-pointer hover:bg-gray-200" (click)="quickSearch('VAR')">VAR</span>
+          <span class="pill-badge cursor-pointer hover:bg-gray-200" (click)="quickSearch('LSTM')">LSTM</span>
+          <span class="pill-badge cursor-pointer hover:bg-gray-200" (click)="quickSearch('TSMixer')">TSMixer</span>
+          <span class="pill-badge cursor-pointer hover:bg-gray-200" (click)="quickSearch('iTransformer')">iTransformer</span>
+          <span class="pill-badge cursor-pointer hover:bg-gray-200" (click)="quickSearch('-9999')">-9999</span>
+        </div>
+      </div>
+
+      <div *ngIf="searchQuery && searchQuery.length >= 2 && searchResults.length === 0" class="py-8 text-center text-xs text-gray-500">
+        No se encontraron coincidencias para: <span class="font-bold text-gray-900" [textContent]="searchQuery"></span>
+      </div>
+
+      <div *ngIf="searchResults.length > 0" class="space-y-2">
+        <div class="text-[11px] font-semibold uppercase tracking-wider text-gray-500 px-1">
+          {{ searchResults.length }} coincidencia(s)
+        </div>
+        <div *ngFor="let m of searchResults" 
+          (click)="jumpToSection(m.sectionId)"
+          class="p-3 rounded-xl bg-gray-50 hover:bg-gray-100 border border-gray-200/80 cursor-pointer transition-all">
+          <div class="flex items-center justify-between text-xs text-gray-900 font-bold mb-1">
+            <span>{{ m.sectionTitle }}</span>
+            <span class="text-blue-600 text-[11px]">Saltar &rarr;</span>
+          </div>
+          <div class="text-xs text-gray-600 leading-relaxed font-sans">{{ m.snippet }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     MODAL 2: CITATION MODAL (BibTeX / IEEE)
+     ============================================================ -->
+<div *ngIf="isCitationOpen" (click)="closeCitation()" class="modal-backdrop">
+  <div (click)="$event.stopPropagation()" class="subtle-card w-full max-w-lg p-6 bg-white border border-gray-200 shadow-2xl relative">
+    <div class="flex items-center justify-between pb-3 border-b border-gray-100">
+      <div class="flex items-center gap-2 text-gray-900">
+        <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+        <span class="font-headline font-bold text-sm uppercase tracking-wider">Citar Artículo</span>
+      </div>
+      <button (click)="closeCitation()" class="p-1 rounded-lg hover:bg-gray-100 text-gray-500 hover:text-gray-900">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <div class="mt-4 space-y-4">
+      <div>
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-xs font-semibold uppercase text-gray-500">Formato BibTeX</span>
+          <button (click)="copyBibtex()" class="text-xs text-blue-600 hover:underline flex items-center gap-1 font-medium">
+            {{ bibtexFeedback }}
+          </button>
+        </div>
+        <pre class="p-3 rounded-xl bg-gray-50 border border-gray-200 text-[11px] font-mono text-gray-800 overflow-x-auto whitespace-pre">{{ bibtexTemplate }}</pre>
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-xs font-semibold uppercase text-gray-500">Formato IEEE</span>
+          <button (click)="copyIeee()" class="text-xs text-blue-600 hover:underline flex items-center gap-1 font-medium">
+            {{ ieeeFeedback }}
+          </button>
+        </div>
+        <p class="p-3 rounded-xl bg-gray-50 border border-gray-200 text-xs text-gray-700 font-sans">
+          M. A. Mira Ortega, S. Arbelaez Contreras, and J. M. Isaza Vergara, "Estudio comparativo de VAR, LSTM, TSMixer e iTransformer para el pronóstico de series de tiempo meteorológicas multivariadas," <em>Seminario de Investigación · Modelos Arq</em>, 2026.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     MODAL 3: FIGURE LIGHTBOX (ZOOM)
+     ============================================================ -->
+<div *ngIf="isLightboxOpen" (click)="closeLightbox()" class="modal-backdrop">
+  <div (click)="$event.stopPropagation()" class="subtle-card relative max-w-4xl w-full p-5 bg-white border border-gray-200 shadow-2xl flex flex-col items-center">
+    <div class="flex items-center justify-between w-full mb-3 text-gray-900 border-b border-gray-100 pb-2">
+      <span class="text-sm font-semibold text-gray-800">{{ lightboxCaption }}</span>
+      <div class="flex items-center gap-2">
+        <a [href]="lightboxImg" download class="btn-outline py-1 px-3 text-xs">
+          Descargar Imagen
+        </a>
+        <button (click)="closeLightbox()" class="p-1 rounded-lg hover:bg-gray-100 text-gray-500 hover:text-gray-900">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="w-full flex justify-center bg-gray-50 rounded-xl p-4 border border-gray-100 max-h-[75vh] overflow-auto">
+      <img [src]="lightboxImg" [alt]="lightboxCaption" class="max-h-[70vh] w-auto object-contain">
+    </div>
+  </div>
+</div>
