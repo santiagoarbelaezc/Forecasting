@@ -50,6 +50,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   isLightboxOpen = false;
   isWhyHtmlOpen = false;
   isMobileTocOpen = false;
+  showBackToTop = false;
 
   // Search state
   searchQuery = '';
@@ -174,6 +175,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     const scrollTop = window.scrollY;
     const docHeight = document.documentElement.scrollHeight - window.innerHeight;
     this.readingProgress = docHeight > 0 ? Math.min(100, Math.max(0, (scrollTop / docHeight) * 100)) : 0;
+    this.showBackToTop = scrollTop > 350;
 
     // Detect active section
     const sectionEls = document.querySelectorAll('.article-section');
@@ -323,6 +325,11 @@ export class AppComponent implements OnInit, AfterViewInit {
     } else {
       if (document.exitFullscreen) document.exitFullscreen();
     }
+  }
+
+  scrollToTop() {
+    if (!isPlatformBrowser(this.platformId)) return;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   closeAllModals() {

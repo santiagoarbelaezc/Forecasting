@@ -5,25 +5,25 @@
      TOP NAVBAR (Elegante, minimalista y sutil sobre fondo blanco)
      ============================================================ -->
 <header class="glass-nav sticky top-0 z-40 w-full transition-all duration-300">
-  <div class="w-full max-w-[97%] 2xl:max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="w-full max-w-[97%] 2xl:max-w-[1800px] mx-auto px-3.5 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16">
       
-      <!-- Left: Clean Title / Branding (Sin el logo antiguo de arXiv) -->
-      <div class="flex items-center gap-3">
-        <button (click)="isMobileTocOpen = !isMobileTocOpen" class="lg:hidden p-2 rounded-lg hover:bg-gray-100 text-gray-700">
+      <!-- Left: Clean Title / Branding -->
+      <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+        <button (click)="isMobileTocOpen = !isMobileTocOpen" class="lg:hidden p-2 -ml-1 rounded-lg hover:bg-gray-100 text-gray-700 flex-shrink-0" title="Abrir índice">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
         </button>
         
-        <a href="#section-header" class="flex items-center gap-2.5 group">
-          <img src="/logo.svg" alt="Forecasting Logo" class="w-8 h-8 rounded-lg shadow-sm border border-black/5 group-hover:scale-105 transition-all duration-200" />
-          <div class="flex flex-col">
-            <span class="font-bold text-gray-900 text-sm tracking-tight group-hover:text-black">Forecasting Meteorológico</span>
-            <span class="text-[11px] text-gray-500 font-normal">Seminario de Investigación · Modelos Arq</span>
+        <a href="#section-header" class="flex items-center gap-2 sm:gap-2.5 group min-w-0">
+          <img src="/logo.svg" alt="Forecasting Logo" class="w-7 h-7 sm:w-8 sm:h-8 flex-shrink-0 rounded-lg shadow-sm border border-black/5 group-hover:scale-105 transition-all duration-200" />
+          <div class="flex flex-col min-w-0">
+            <span class="font-bold text-gray-900 text-xs sm:text-sm tracking-tight truncate group-hover:text-black">Forecasting Meteorológico</span>
+            <span class="text-[10px] sm:text-[11px] text-gray-500 font-normal truncate hidden xs:block sm:block">Seminario de Investigación · Modelos Arq</span>
           </div>
         </a>
       </div>
 
-      <!-- Center: Quick Nav Links -->
+      <!-- Center: Quick Nav Links (Solo Desktop) -->
       <div class="hidden md:flex items-center gap-6 text-xs font-medium text-gray-600">
         <a href="#section-abstract" class="hover:text-black transition-colors">Resumen</a>
         <a href="#section-marco-conceptual" class="hover:text-black transition-colors">Marco Conceptual</a>
@@ -33,25 +33,26 @@
       </div>
 
       <!-- Right: Actions (Botones estilo píldora elegantes) -->
-      <div class="flex items-center gap-2 sm:gap-3">
+      <div class="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
         
         <!-- Search trigger -->
-        <button (click)="openSearch()" class="pill-badge hover:bg-gray-200/70 transition-all cursor-pointer text-xs" title="Buscar en el artículo (Ctrl+K)">
+        <button (click)="openSearch()" class="pill-badge hover:bg-gray-200/70 transition-all cursor-pointer text-xs px-2.5 sm:px-3 py-1.5" title="Buscar en el artículo (Ctrl+K)">
           <svg class="w-3.5 h-3.5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
           <span class="hidden sm:inline">Buscar</span>
           <kbd class="hidden sm:inline text-[10px] font-mono px-1 py-0.2 rounded bg-white border border-gray-200 text-gray-500">⌘K</kbd>
         </button>
 
         <!-- Citation Button -->
-        <button (click)="openCitation()" class="pill-badge hover:bg-gray-200/70 transition-all cursor-pointer text-xs" title="Citar este artículo (BibTeX / APA)">
+        <button (click)="openCitation()" class="pill-badge hover:bg-gray-200/70 transition-all cursor-pointer text-xs px-2.5 sm:px-3 py-1.5" title="Citar este artículo (BibTeX / APA)">
           <svg class="w-3.5 h-3.5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
           <span class="hidden sm:inline">Citar</span>
         </button>
 
         <!-- Download Article button (Estilo azul sutil como en el diseño) -->
-        <a href="/docs/Modelos_Arq_V1_2.docx" download="Modelos_Arq_V1_2.docx" class="btn-blue py-1.5 px-3.5 rounded-full text-xs flex items-center gap-1.5" title="Descargar artículo en formato Word (.docx)">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-          <span>Descargar Artículo</span>
+        <a href="/docs/Modelos_Arq_V1_2.docx" download="Modelos_Arq_V1_2.docx" class="btn-blue py-1.5 px-2.5 sm:px-3.5 rounded-full text-xs flex items-center gap-1.5" title="Descargar artículo en formato Word (.docx)">
+          <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          <span class="hidden sm:inline">Descargar Artículo</span>
+          <span class="sm:hidden text-[11px] font-semibold">Docx</span>
         </a>
 
       </div>
@@ -60,12 +61,12 @@
 </header>
 
 <!-- Mobile Sidebar Backdrop -->
-<div *ngIf="isMobileTocOpen" (click)="isMobileTocOpen = false" class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-40 lg:hidden"></div>
+<div *ngIf="isMobileTocOpen" (click)="isMobileTocOpen = false" class="fixed inset-0 bg-gray-950/50 backdrop-blur-sm z-50 lg:hidden transition-opacity duration-300"></div>
 
 <!-- ============================================================
      MAIN LAYOUT CONTAINER
      ============================================================ -->
-<div class="w-full max-w-[97%] 2xl:max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-white">
+<div class="w-full max-w-[97%] 2xl:max-w-[1800px] mx-auto px-3.5 sm:px-6 lg:px-8 py-5 sm:py-8 bg-white">
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 xl:gap-10 items-start">
 
     <!-- ============================================================
@@ -73,11 +74,22 @@
          ============================================================ -->
     <aside id="sidebar-toc" 
       [class.hidden]="!isMobileTocOpen"
-      class="lg:block lg:col-span-4 xl:col-span-3 2xl:col-span-2 sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto no-scrollbar space-y-4 pr-1 z-50 lg:z-auto"
-      [ngClass]="isMobileTocOpen ? 'fixed inset-y-0 left-0 w-72 bg-white p-5 shadow-2xl border-r border-gray-200' : ''">
+      class="lg:block lg:col-span-4 xl:col-span-3 2xl:col-span-2 sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto no-scrollbar space-y-4 pr-1 z-50 lg:z-auto transition-all duration-300"
+      [ngClass]="isMobileTocOpen ? 'fixed inset-y-0 left-0 w-[84vw] max-w-xs sm:w-80 bg-white p-4 sm:p-5 shadow-2xl border-r border-gray-200 z-50' : ''">
       
+      <!-- Mobile Drawer Close Header (Solo en móvil) -->
+      <div class="flex items-center justify-between pb-3 mb-2 border-b border-gray-100 lg:hidden">
+        <div class="flex items-center gap-2">
+          <img src="/logo.svg" alt="Forecasting Logo" class="w-6 h-6 rounded" />
+          <span class="font-bold text-xs text-gray-900">Navegación del Artículo</span>
+        </div>
+        <button (click)="isMobileTocOpen = false" class="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 hover:text-gray-900 transition-colors" title="Cerrar índice">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
       <!-- Index Header & Quick Filter -->
-      <div class="subtle-card p-5">
+      <div class="subtle-card p-4 sm:p-5">
         <div class="flex items-center justify-between mb-3">
           <h3 class="text-xs font-bold uppercase tracking-wider text-gray-900 flex items-center gap-1.5">
             <svg class="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
@@ -180,7 +192,7 @@
               <span class="pill-badge">Modelos Arq</span>
             </div>
 
-            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-950 tracking-tight leading-tight">
+            <h1 class="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-gray-950 tracking-tight leading-tight">
               Estudio comparativo de VAR, LSTM, TSMixer e iTransformer para el pronóstico de series de tiempo meteorológicas multivariadas
             </h1>
 
@@ -188,14 +200,14 @@
               Investigación aplicada en Inteligencia Artificial y Modelado Predictivo
             </p>
 
-            <div class="flex flex-wrap items-center gap-2 pt-1">
+            <div class="flex flex-wrap items-center gap-1.5 sm:gap-2 pt-1">
               <span class="pill-badge bg-gray-100 text-gray-800 font-medium">Mira Ortega Miguel Angel</span>
               <span class="pill-badge bg-gray-100 text-gray-800 font-medium">Arbelaez Contreras Santiago</span>
               <span class="pill-badge bg-gray-100 text-gray-800 font-medium">Isaza Vergara Juan Manuel</span>
               <span class="pill-badge text-gray-500">Facultad de Ingeniería · Repositorio Forecasting</span>
             </div>
 
-            <div class="flex items-center gap-3 flex-wrap pt-3">
+            <div class="flex items-center gap-2 sm:gap-3 flex-wrap pt-3">
               <a href="#section-abstract" class="btn-dark">Resumen</a>
               <a href="#section-marco-conceptual" class="btn-outline">&lt;/&gt; Modelos</a>
               <a href="#section-comparativa" class="btn-outline">Comparativa</a>
@@ -212,7 +224,7 @@
           </div>
 
           <!-- Right: Executive Highlight Card filling wide space -->
-          <div class="xl:col-span-4 subtle-card p-6 bg-gray-50/70 border border-gray-200/80 space-y-4">
+          <div class="xl:col-span-4 subtle-card p-4 sm:p-6 bg-gray-50/70 border border-gray-200/80 space-y-4 mt-2 xl:mt-0">
             <div class="flex items-center justify-between">
               <span class="text-xs font-bold uppercase tracking-wider text-gray-900">Resumen Técnico</span>
               <span class="pill-badge pill-green text-[10px]">Pre-Print</span>
@@ -245,7 +257,7 @@
 
         <!-- RESUMEN / ABSTRACT (Tarjeta sutil idéntica a la del perfil) -->
         <section id="section-abstract" class="article-section">
-          <div class="subtle-card p-6 sm:p-8 bg-gray-50/60 border border-gray-200/80">
+          <div class="subtle-card p-4 sm:p-6 lg:p-8 bg-gray-50/60 border border-gray-200/80">
             <div class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3">
               Resumen (Abstract)
             </div>
@@ -333,7 +345,7 @@
           </div>
 
           <!-- SUBSECCIÓN 3.1: VAR (Tarjeta elegante) -->
-          <div id="section-var" class="subtle-card p-6 sm:p-8 space-y-4">
+          <div id="section-var" class="subtle-card p-4 sm:p-6 lg:p-8 space-y-4">
             <div class="flex items-center justify-between flex-wrap gap-2 mb-2">
               <span class="pill-badge pill-green">
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 inline-block"></span>
@@ -379,7 +391,7 @@
           </div>
 
           <!-- SUBSECCIÓN 3.2: LSTM (Tarjeta elegante) -->
-          <div id="section-lstm" class="subtle-card p-6 sm:p-8 space-y-4">
+          <div id="section-lstm" class="subtle-card p-4 sm:p-6 lg:p-8 space-y-4">
             <div class="flex items-center justify-between flex-wrap gap-2 mb-2">
               <span class="pill-badge pill-blue">
                 <span class="w-1.5 h-1.5 rounded-full bg-blue-600 inline-block"></span>
@@ -448,7 +460,7 @@
           </div>
 
           <!-- SUBSECCIÓN 3.3: TSMIXER (Tarjeta elegante) -->
-          <div id="section-tsmixer" class="subtle-card p-6 sm:p-8 space-y-4">
+          <div id="section-tsmixer" class="subtle-card p-4 sm:p-6 lg:p-8 space-y-4">
             <div class="flex items-center justify-between flex-wrap gap-2 mb-2">
               <span class="pill-badge bg-amber-50 text-amber-800 border border-amber-200">
                 <span class="w-1.5 h-1.5 rounded-full bg-amber-600 inline-block"></span>
@@ -500,7 +512,7 @@
           </div>
 
           <!-- SUBSECCIÓN 3.4: iTRANSFORMER (Tarjeta elegante) -->
-          <div id="section-itransformer" class="subtle-card p-6 sm:p-8 space-y-4">
+          <div id="section-itransformer" class="subtle-card p-4 sm:p-6 lg:p-8 space-y-4">
             <div class="flex items-center justify-between flex-wrap gap-2 mb-2">
               <span class="pill-badge bg-purple-50 text-purple-800 border border-purple-200">
                 <span class="w-1.5 h-1.5 rounded-full bg-purple-600 inline-block"></span>
@@ -568,8 +580,14 @@
             <span class="pill-badge">Síntesis</span>
           </div>
 
+          <!-- Mobile scroll indicator (Solo visible en pantallas móviles) -->
+          <div class="lg:hidden flex items-center gap-2 px-3 py-2 text-xs text-gray-600 bg-gray-50 rounded-xl border border-gray-200/80 mb-2">
+            <svg class="w-4 h-4 text-blue-600 flex-shrink-0 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            <span>Desliza horizontalmente para comparar todas las columnas &rarr;</span>
+          </div>
+
           <div class="overflow-x-auto subtle-card">
-            <table class="w-full text-left text-xs sm:text-sm">
+            <table class="w-full min-w-[640px] text-left text-xs sm:text-sm">
               <thead class="border-b border-gray-200 bg-gray-50 text-gray-700 font-headline uppercase text-[11px] tracking-wider">
                 <tr>
                   <th class="p-4">Modelo</th>
@@ -957,10 +975,28 @@
 </div>
 
 <!-- ============================================================
+     MOBILE FLOATING QUICK ACTION BAR (Visible solo en móvil con scroll)
+     ============================================================ -->
+<div *ngIf="showBackToTop" class="lg:hidden fixed bottom-5 right-4 z-40 flex items-center gap-2 transition-all duration-300">
+  <button (click)="isMobileTocOpen = true" 
+          class="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white text-gray-900 text-xs font-semibold shadow-lg border border-gray-200/90 active:scale-95 transition-transform"
+          title="Ver índice">
+    <svg class="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    <span>Índice</span>
+  </button>
+
+  <button (click)="scrollToTop()" 
+          class="p-2.5 rounded-full bg-gray-950 text-white shadow-lg active:scale-95 transition-transform flex items-center justify-center"
+          title="Volver arriba">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+  </button>
+</div>
+
+<!-- ============================================================
      MODAL 1: SEARCH MODAL (Ctrl+K)
      ============================================================ -->
 <div *ngIf="isSearchOpen" (click)="closeSearch()" class="modal-backdrop">
-  <div (click)="$event.stopPropagation()" class="subtle-card w-full max-w-xl p-6 bg-white border border-gray-200 shadow-2xl relative">
+  <div (click)="$event.stopPropagation()" class="subtle-card w-full max-w-xl p-4 sm:p-6 bg-white border border-gray-200 shadow-2xl relative">
     <div class="flex items-center justify-between pb-3 border-b border-gray-100">
       <div class="flex items-center gap-2 text-gray-900">
         <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
@@ -976,14 +1012,14 @@
         [ngModel]="searchQuery" 
         (ngModelChange)="onSearchInput($event)"
         type="text" 
-        placeholder="Escribe un concepto (ej. VAR, LSTM, TSMixer, interpolación, -9999)..." 
-        class="w-full px-4 py-2.5 rounded-xl bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-gray-900 text-sm">
+        placeholder="Escribe un concepto (ej. VAR, LSTM, TSMixer, interpolación)..." 
+        class="w-full px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-gray-900 text-sm">
     </div>
 
     <div class="mt-4 max-h-80 overflow-y-auto pr-1">
-      <div *ngIf="!searchQuery || searchQuery.length < 2" class="py-8 text-center text-xs text-gray-500">
+      <div *ngIf="!searchQuery || searchQuery.length < 2" class="py-6 sm:py-8 text-center text-xs text-gray-500">
         <p>Escribe al menos 2 letras para buscar en el artículo...</p>
-        <div class="mt-3 flex justify-center gap-2 flex-wrap text-xs">
+        <div class="mt-3 flex justify-center gap-1.5 sm:gap-2 flex-wrap text-xs">
           <span class="pill-badge cursor-pointer hover:bg-gray-200" (click)="quickSearch('VAR')">VAR</span>
           <span class="pill-badge cursor-pointer hover:bg-gray-200" (click)="quickSearch('LSTM')">LSTM</span>
           <span class="pill-badge cursor-pointer hover:bg-gray-200" (click)="quickSearch('TSMixer')">TSMixer</span>
@@ -992,7 +1028,7 @@
         </div>
       </div>
 
-      <div *ngIf="searchQuery && searchQuery.length >= 2 && searchResults.length === 0" class="py-8 text-center text-xs text-gray-500">
+      <div *ngIf="searchQuery && searchQuery.length >= 2 && searchResults.length === 0" class="py-6 sm:py-8 text-center text-xs text-gray-500">
         No se encontraron coincidencias para: <span class="font-bold text-gray-900" [textContent]="searchQuery"></span>
       </div>
 
@@ -1018,7 +1054,7 @@
      MODAL 2: CITATION MODAL (BibTeX / IEEE)
      ============================================================ -->
 <div *ngIf="isCitationOpen" (click)="closeCitation()" class="modal-backdrop">
-  <div (click)="$event.stopPropagation()" class="subtle-card w-full max-w-lg p-6 bg-white border border-gray-200 shadow-2xl relative">
+  <div (click)="$event.stopPropagation()" class="subtle-card w-full max-w-lg p-4 sm:p-6 bg-white border border-gray-200 shadow-2xl relative">
     <div class="flex items-center justify-between pb-3 border-b border-gray-100">
       <div class="flex items-center gap-2 text-gray-900">
         <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
@@ -1059,19 +1095,19 @@
      MODAL 3: FIGURE LIGHTBOX (ZOOM)
      ============================================================ -->
 <div *ngIf="isLightboxOpen" (click)="closeLightbox()" class="modal-backdrop">
-  <div (click)="$event.stopPropagation()" class="subtle-card relative max-w-4xl w-full p-5 bg-white border border-gray-200 shadow-2xl flex flex-col items-center">
+  <div (click)="$event.stopPropagation()" class="subtle-card relative max-w-4xl w-full p-3 sm:p-5 bg-white border border-gray-200 shadow-2xl flex flex-col items-center">
     <div class="flex items-center justify-between w-full mb-3 text-gray-900 border-b border-gray-100 pb-2">
-      <span class="text-sm font-semibold text-gray-800">{{ lightboxCaption }}</span>
-      <div class="flex items-center gap-2">
-        <a [href]="lightboxImg" download class="btn-outline py-1 px-3 text-xs">
-          Descargar Imagen
+      <span class="text-xs sm:text-sm font-semibold text-gray-800 truncate mr-2">{{ lightboxCaption }}</span>
+      <div class="flex items-center gap-2 flex-shrink-0">
+        <a [href]="lightboxImg" download class="btn-outline py-1 px-2.5 sm:px-3 text-[11px] sm:text-xs">
+          Descargar
         </a>
         <button (click)="closeLightbox()" class="p-1 rounded-lg hover:bg-gray-100 text-gray-500 hover:text-gray-900">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
       </div>
     </div>
-    <div class="w-full flex justify-center bg-gray-50 rounded-xl p-4 border border-gray-100 max-h-[75vh] overflow-auto">
+    <div class="w-full flex justify-center bg-gray-50 rounded-xl p-2 sm:p-4 border border-gray-100 max-h-[75vh] overflow-auto">
       <img [src]="lightboxImg" [alt]="lightboxCaption" class="max-h-[70vh] w-auto object-contain">
     </div>
   </div>

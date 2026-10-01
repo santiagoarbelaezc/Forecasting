@@ -317,6 +317,45 @@ h1, h2, h3, h4 {
   transition: width 0.1s linear;
 }
 
+/* ============================================================
+   OPTIMIZACIONES ESPECÍFICAS PARA DISPOSITIVOS MÓVILES (< 768px)
+   (Desktop permanece 100% idéntico e intacto)
+   ============================================================ */
+@media (max-width: 767px) {
+  .figure-img-container {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .figure-caption {
+    padding: 0.75rem 1rem;
+    font-size: 0.8125rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+
+  .equation-card {
+    padding: 0.85rem 1rem;
+    margin: 1rem 0;
+    font-size: 0.875rem;
+  }
+
+  .modal-backdrop {
+    padding: 0.75rem !important;
+  }
+
+  .article-body p {
+    text-align: left;
+    font-size: 0.975rem;
+    line-height: 1.75;
+    margin-bottom: 1.15rem;
+  }
+
+  #search-modal-input {
+    font-size: 16px !important;
+  }
+}
+
 /* Estilos de Impresión (PDF Limpio) */
 @media print {
   body {
