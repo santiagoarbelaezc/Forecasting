@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#101317" />
+      <stop offset="100%" stop-color="#07080a" />
+    </linearGradient>
+  </defs>
+
+  <!-- Obsidian squircle background with subtle border -->
+  <rect x="24" y="24" width="464" height="464" rx="116" fill="url(#bg)" stroke="#ffffff" stroke-opacity="0.10" stroke-width="2.5" />
+
+  <!-- Time Series Wave 1 (Upper stream) -->
+  <path d="M 105 235 C 145 175, 185 175, 225 235 C 260 285, 295 285, 330 245 C 360 210, 375 185, 390 160" 
+        fill="none" stroke="#FFFFFF" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" />
+
+  <!-- Time Series Wave 2 (Center stream) -->
+  <path d="M 105 275 C 145 215, 185 215, 225 275 C 260 325, 295 325, 330 280 C 362 235, 382 195, 398 168" 
+        fill="none" stroke="#FFFFFF" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" />
+
+  <!-- Time Series Wave 3 (Lower stream) -->
+  <path d="M 105 315 C 145 255, 185 255, 225 315 C 260 365, 295 365, 330 320 C 365 265, 388 215, 406 176" 
+        fill="none" stroke="#FFFFFF" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" />
+
+  <!-- Forecast Vector Arrow -->
+  <polygon points="434,122 372,152 404,202" fill="#FFFFFF" />
+
+  <!-- Time Horizon Baseline -->
+  <line x1="245" y1="366" x2="370" y2="366" stroke="#FFFFFF" stroke-opacity="0.32" stroke-width="4" stroke-dasharray="8 6" stroke-linecap="round" />
+  <circle cx="395" cy="366" r="7" fill="#FFFFFF" fill-opacity="0.85" />
+</svg>
