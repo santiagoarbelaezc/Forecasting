@@ -309,14 +309,70 @@ img, svg, canvas {
 }
 
 .figure-caption {
-  padding: 1rem 1.5rem;
+  padding: 0.875rem 1.25rem;
   font-size: 0.875rem;
   color: #4b5563;
   background: #ffffff;
   display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.figure-caption-header {
+  width: 100%;
+  display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+}
+
+.figure-source-footer {
+  width: 100%;
+  padding-top: 0.45rem;
+  border-top: 1px solid #f3f4f6;
+  font-size: 0.75rem;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.figure-source-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.figure-source-tag.tag-ai {
+  background-color: #f5f3ff;
+  color: #7c3aed;
+  border: 1px solid #ddd6fe;
+}
+
+.figure-source-tag.tag-adapted {
+  background-color: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+}
+
+.figure-source-tag.tag-reproduced {
+  background-color: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+}
+
+.figure-source-tag.tag-data {
+  background-color: #f8fafc;
+  color: #475569;
+  border: 1px solid #e2e8f0;
 }
 
 /* Sidebar Navigation Links */
