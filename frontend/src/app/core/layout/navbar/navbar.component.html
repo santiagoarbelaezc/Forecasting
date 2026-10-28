@@ -1,59 +1,206 @@
 <!-- ============================================================
-     NAVBAR - Glassmorphism dark, sticky
+     NAVBAR - Modern, Solid White, Sticky with Mobile Drawer
      ============================================================ -->
-<nav [class.scrolled-nav]="scrolled"
-     class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
-     [ngClass]="'bg-white border-b border-gray-200 shadow-sm'">
+<nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white border-b border-gray-200 shadow-sm">
 
   <!-- Announcement strip -->
-  <div class="w-full bg-crimson-accent text-white text-[11px] font-bold text-center py-1.5 tracking-wide">
-    Seminario de Grado 2026 &nbsp;·&nbsp; Artículo &nbsp;
-    <a routerLink="/articulo" class="underline hover:no-underline">Leer ahora →</a>
+  <div class="w-full bg-crimson-accent text-white text-[11px] font-bold text-center py-1.5 px-3 tracking-wide flex items-center justify-center gap-1.5">
+    <span>Seminario de Grado 2026 &nbsp;·&nbsp; Artículo</span>
+    <a routerLink="/articulo" (click)="closeMobileMenu()" class="underline hover:no-underline font-extrabold ml-1">Leer ahora →</a>
   </div>
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16">
 
       <!-- Logo / Brand -->
-      <a routerLink="/" class="flex items-center gap-2.5 group">
-        <div class="w-9 h-9 rounded-xl bg-crimson-accent flex items-center justify-center font-headline font-black text-white text-sm shadow-lg group-hover:scale-105 transition-transform">FC</div>
+      <a routerLink="/" (click)="closeMobileMenu()" class="flex items-center gap-2.5 group">
+        <div class="w-9 h-9 rounded-xl bg-crimson-accent flex items-center justify-center font-headline font-black text-white text-sm shadow-md group-hover:scale-105 transition-transform">FC</div>
         <div class="flex flex-col leading-tight">
           <span class="font-headline font-bold text-obsidian-950 text-sm tracking-tight">Forecasting</span>
           <span class="text-[10px] text-gray-500 hidden sm:block">Meteorológico · Multivariado</span>
         </div>
       </a>
 
-      <!-- Center nav links -->
+      <!-- Center nav links (Desktop) -->
       <div class="hidden md:flex items-center gap-6 text-[13px] font-semibold text-gray-600">
         <a routerLink="/" routerLinkActive="text-obsidian-950" [routerLinkActiveOptions]="{exact:true}"
-           class="hover:text-obsidian-950 transition-colors">Inicio</a>
-        <a routerLink="/articulo" routerLinkActive="text-crimson-accent"
-           class="hover:text-crimson-accent transition-colors">Artículo</a>
-        <a routerLink="/diccionario" routerLinkActive="text-crimson-accent"
-           class="hover:text-crimson-accent transition-colors">Diccionario</a>
-        <a routerLink="/modelos" routerLinkActive="text-crimson-accent"
-           class="hover:text-crimson-accent transition-colors">Modelos</a>
+           class="hover:text-obsidian-950 transition-colors py-1">Inicio</a>
+        <a routerLink="/articulo" routerLinkActive="text-crimson-accent font-bold"
+           class="hover:text-crimson-accent transition-colors py-1">Artículo</a>
+        <a routerLink="/diccionario" routerLinkActive="text-crimson-accent font-bold"
+           class="hover:text-crimson-accent transition-colors py-1">Diccionario</a>
+        <a routerLink="/modelos" routerLinkActive="text-crimson-accent font-bold"
+           class="hover:text-crimson-accent transition-colors py-1">Modelos</a>
       </div>
 
-      <!-- Actions -->
+      <!-- Actions (Desktop & Mobile) -->
       <div class="flex items-center gap-2">
+        <!-- Desktop Search & Citation -->
         <button (click)="ui.openSearch()"
           class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 text-xs font-semibold hover:bg-gray-200 transition-all border border-gray-200">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
           <span>Buscar</span>
           <kbd class="text-[10px] font-mono px-1 rounded bg-white border border-gray-300 text-gray-500">⌘K</kbd>
         </button>
+
         <button (click)="ui.openCitation()"
           class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 text-xs font-semibold hover:bg-gray-200 transition-all border border-gray-200">
           Citar
         </button>
+
         <a href="/docs/Modelos_Arq_V1_3.docx" download
-           class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-crimson-accent text-white text-xs font-bold hover:bg-crimson-700 transition-colors shadow-lg">
+           class="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-crimson-accent text-white text-xs font-bold hover:bg-crimson-700 transition-colors shadow-md">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-          <span class="hidden sm:inline">.docx v3</span>
-          <span class="sm:hidden">Docx</span>
+          <span>.docx v3</span>
         </a>
+
+        <!-- Mobile Search Button -->
+        <button (click)="ui.openSearch()"
+                class="sm:hidden p-2 rounded-xl text-gray-700 hover:text-obsidian-950 hover:bg-gray-100 transition-colors"
+                title="Buscar en el artículo">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        </button>
+
+        <!-- Mobile Hamburger Toggle Button -->
+        <button (click)="toggleMobileMenu()"
+                type="button"
+                aria-label="Abrir menú"
+                class="md:hidden p-2 rounded-xl text-gray-700 hover:text-obsidian-950 hover:bg-gray-100 transition-colors focus:outline-none flex items-center justify-center">
+          <svg *ngIf="!isMobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+          <svg *ngIf="isMobileMenuOpen" class="w-6 h-6 text-crimson-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
       </div>
     </div>
   </div>
+
+  <!-- Mobile Menu Dropdown -->
+  <div *ngIf="isMobileMenuOpen"
+       class="md:hidden border-t border-gray-100 bg-white/98 backdrop-blur-md shadow-2xl max-h-[calc(100vh-5.5rem)] overflow-y-auto">
+    
+    <div class="px-4 py-5 space-y-5">
+
+      <!-- Navigation links (big touch targets) -->
+      <div>
+        <p class="text-[10px] uppercase font-bold text-gray-400 tracking-wider mb-2">Páginas Principales</p>
+        <div class="grid grid-cols-2 gap-2">
+          
+          <a routerLink="/"
+             (click)="closeMobileMenu()"
+             routerLinkActive="bg-crimson-50 text-crimson-accent border-crimson-200"
+             [routerLinkActiveOptions]="{exact:true}"
+             class="flex flex-col p-3 rounded-2xl bg-gray-50 border border-gray-100 hover:bg-gray-100 transition-colors text-left">
+            <span class="text-xs font-bold text-obsidian-950 flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-crimson-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+              Inicio
+            </span>
+            <span class="text-[10px] text-gray-500 mt-1">Portada & Autores</span>
+          </a>
+
+          <a routerLink="/articulo"
+             (click)="closeMobileMenu()"
+             routerLinkActive="bg-crimson-50 text-crimson-accent border-crimson-200"
+             class="flex flex-col p-3 rounded-2xl bg-gray-50 border border-gray-100 hover:bg-gray-100 transition-colors text-left">
+            <span class="text-xs font-bold text-obsidian-950 flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-crimson-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              Artículo
+            </span>
+            <span class="text-[10px] text-gray-500 mt-1">Paper científico</span>
+          </a>
+
+          <a routerLink="/diccionario"
+             (click)="closeMobileMenu()"
+             routerLinkActive="bg-crimson-50 text-crimson-accent border-crimson-200"
+             class="flex flex-col p-3 rounded-2xl bg-gray-50 border border-gray-100 hover:bg-gray-100 transition-colors text-left">
+            <span class="text-xs font-bold text-obsidian-950 flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-crimson-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+              Diccionario
+            </span>
+            <span class="text-[10px] text-gray-500 mt-1">Conceptos & Vars</span>
+          </a>
+
+          <a routerLink="/modelos"
+             (click)="closeMobileMenu()"
+             routerLinkActive="bg-crimson-50 text-crimson-accent border-crimson-200"
+             class="flex flex-col p-3 rounded-2xl bg-gray-50 border border-gray-100 hover:bg-gray-100 transition-colors text-left">
+            <span class="text-xs font-bold text-obsidian-950 flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-crimson-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
+              Modelos
+            </span>
+            <span class="text-[10px] text-gray-500 mt-1">6 Arquitecturas</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick Section Jump in Article -->
+      <div>
+        <p class="text-[10px] uppercase font-bold text-gray-400 tracking-wider mb-2">Saltar a sección del artículo</p>
+        <div class="space-y-1">
+          <button (click)="goToSection('section-resumen')"
+                  class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-left text-xs text-gray-700 hover:bg-gray-50 font-medium transition-colors">
+            <span>I. Resumen & Abstract</span>
+            <span class="text-[11px] text-gray-400">→</span>
+          </button>
+          <button (click)="goToSection('section-introduccion')"
+                  class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-left text-xs text-gray-700 hover:bg-gray-50 font-medium transition-colors">
+            <span>II. Introducción & Justificación</span>
+            <span class="text-[11px] text-gray-400">→</span>
+          </button>
+          <button (click)="goToSection('section-metodologia')"
+                  class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-left text-xs text-gray-700 hover:bg-gray-50 font-medium transition-colors">
+            <span>IV. Metodología CRISP-DM</span>
+            <span class="text-[11px] text-gray-400">→</span>
+          </button>
+          <button (click)="goToSection('section-modelos')"
+                  class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-left text-xs text-gray-700 hover:bg-gray-50 font-medium transition-colors">
+            <span>IV.E Modelos (VAR, LSTM, TSMixer, iTransformer)</span>
+            <span class="text-[11px] text-gray-400">→</span>
+          </button>
+          <button (click)="goToSection('section-resultados')"
+                  class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-left text-xs text-gray-700 hover:bg-gray-50 font-medium transition-colors">
+            <span>IV.F Resultados & Análisis Comparativo</span>
+            <span class="text-[11px] text-crimson-accent font-bold">★ →</span>
+          </button>
+          <button (click)="goToSection('section-conclusiones')"
+                  class="w-full flex items-center justify-between px-3 py-2 rounded-xl text-left text-xs text-gray-700 hover:bg-gray-50 font-medium transition-colors">
+            <span>V. Conclusiones</span>
+            <span class="text-[11px] text-gray-400">→</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Actions (Search, Cite, Download) -->
+      <div class="pt-3 border-t border-gray-100 space-y-2">
+        <button (click)="triggerSearch()"
+                class="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-gray-100 text-gray-800 text-xs font-semibold hover:bg-gray-200 transition-colors">
+          <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          Buscar en el artículo (Ctrl+K)
+        </button>
+
+        <div class="grid grid-cols-2 gap-2">
+          <button (click)="triggerCitation()"
+                  class="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-gray-100 text-gray-800 text-xs font-semibold hover:bg-gray-200 transition-colors">
+            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+            Citar
+          </button>
+
+          <a href="/docs/Modelos_Arq_V1_3.docx" download
+             (click)="closeMobileMenu()"
+             class="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-crimson-accent text-white text-xs font-bold hover:bg-crimson-700 transition-colors shadow-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            .docx v3
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </nav>
+
+<!-- Mobile menu backdrop overlay -->
+<div *ngIf="isMobileMenuOpen"
+     (click)="closeMobileMenu()"
+     class="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden animate-fade-in"></div>

@@ -12,52 +12,52 @@
     <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/40 to-transparent"></div>
   </div>
 
-  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-24 w-full">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-32 pb-16 sm:pb-24 w-full">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 items-center">
 
       <!-- Left: main content -->
-      <div class="lg:col-span-7 space-y-8 hero-fade-up">
+      <div class="lg:col-span-7 space-y-6 sm:space-y-8 hero-fade-up">
 
-        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 backdrop-blur border border-white/30 text-white text-xs font-bold uppercase tracking-widest">
-          <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
-          Estudio Comparativo · Series de Tiempo Meteorológicas
+        <div class="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/15 backdrop-blur border border-white/30 text-white text-[11px] sm:text-xs font-bold uppercase tracking-wider sm:tracking-widest max-w-full">
+          <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse flex-shrink-0"></span>
+          <span class="truncate">Estudio Comparativo · Series Meteorológicas</span>
         </div>
 
-        <h1 class="font-headline font-extrabold text-white leading-[1.05] tracking-tight"
-            style="font-size: clamp(2.4rem, 5.5vw, 5rem); text-shadow: 0 2px 24px rgba(0,0,0,0.35);">
+        <h1 class="font-headline font-extrabold text-white leading-[1.08] sm:leading-[1.05] tracking-tight"
+            style="font-size: clamp(2.1rem, 5vw, 4.8rem); text-shadow: 0 2px 24px rgba(0,0,0,0.35);">
           Pronóstico<br>
           <span class="text-crimson-200">Meteorológico</span><br>
           Multivariado
         </h1>
 
         <div class="space-y-2">
-          <p class="text-white/80 text-xs uppercase tracking-widest font-semibold">Autores del estudio</p>
-          <div class="flex flex-wrap gap-2">
-            <span class="px-3 py-1.5 rounded-full bg-white/15 backdrop-blur border border-white/25 text-white text-sm font-medium">Miguel Ángel Mira Ortega</span>
-            <span class="px-3 py-1.5 rounded-full bg-white/15 backdrop-blur border border-white/25 text-white text-sm font-medium">Santiago Arbelaez Contreras</span>
-            <span class="px-3 py-1.5 rounded-full bg-white/15 backdrop-blur border border-white/25 text-white text-sm font-medium">Juan Manuel Isaza Vergara</span>
+          <p class="text-white/80 text-[11px] uppercase tracking-widest font-semibold">Autores del estudio</p>
+          <div class="flex flex-wrap gap-1.5 sm:gap-2">
+            <span class="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-white/15 backdrop-blur border border-white/25 text-white text-xs sm:text-sm font-medium">Miguel Ángel Mira Ortega</span>
+            <span class="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-white/15 backdrop-blur border border-white/25 text-white text-xs sm:text-sm font-medium">Santiago Arbelaez Contreras</span>
+            <span class="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-white/15 backdrop-blur border border-white/25 text-white text-xs sm:text-sm font-medium">Juan Manuel Isaza Vergara</span>
           </div>
           <p class="text-white/70 text-xs mt-1">Seminario de Grado · Repositorio Forecasting · Versión 3</p>
         </div>
 
-        <p class="text-white/90 text-base sm:text-lg leading-relaxed max-w-xl" style="text-shadow: 0 1px 12px rgba(0,0,0,0.3);">
+        <p class="text-white/90 text-sm sm:text-lg leading-relaxed max-w-xl" style="text-shadow: 0 1px 12px rgba(0,0,0,0.3);">
           Evaluación rigurosa de modelos estadísticos y Deep Learning sobre <strong class="text-white">52.696 observaciones meteorológicas</strong>, comparando VAR, ARIMA, LSTM, TSMixer e iTransformer bajo metodología CRISP-DM.
         </p>
 
-        <!-- CTA buttons -->
-        <div class="flex flex-wrap gap-4 pt-2">
+        <!-- CTA buttons (Responsive stack in mobile) -->
+        <div class="flex flex-col sm:flex-row flex-wrap gap-2.5 sm:gap-4 pt-2 w-full sm:w-auto">
           <a routerLink="/articulo"
-             class="group flex items-center gap-2.5 px-7 py-4 rounded-2xl bg-crimson-accent text-white font-bold text-sm shadow-2xl shadow-crimson-accent/30 hover:bg-crimson-700 transition-all duration-300 hover:-translate-y-0.5">
+             class="group flex items-center justify-center gap-2.5 px-6 sm:px-7 py-3.5 sm:py-4 rounded-2xl bg-crimson-accent text-white font-bold text-sm shadow-xl shadow-crimson-accent/30 hover:bg-crimson-700 transition-all duration-300 hover:-translate-y-0.5 w-full sm:w-auto">
             Ver Artículo
             <span class="group-hover:translate-x-1 transition-transform">→</span>
           </a>
           <a routerLink="/diccionario"
-             class="group flex items-center gap-2.5 px-7 py-4 rounded-2xl bg-white/15 border border-white/30 text-white font-bold text-sm hover:bg-white/25 transition-all duration-300 hover:-translate-y-0.5 backdrop-blur-sm">
+             class="group flex items-center justify-center gap-2.5 px-6 sm:px-7 py-3.5 sm:py-4 rounded-2xl bg-white/15 border border-white/30 text-white font-bold text-sm hover:bg-white/25 transition-all duration-300 hover:-translate-y-0.5 backdrop-blur-sm w-full sm:w-auto">
             Ver Diccionario
             <span class="group-hover:translate-x-1 transition-transform">→</span>
           </a>
           <a routerLink="/modelos"
-             class="group flex items-center gap-2.5 px-7 py-4 rounded-2xl bg-white/15 border border-white/30 text-white font-bold text-sm hover:bg-white/25 transition-all duration-300 hover:-translate-y-0.5 backdrop-blur-sm">
+             class="group flex items-center justify-center gap-2.5 px-6 sm:px-7 py-3.5 sm:py-4 rounded-2xl bg-white/15 border border-white/30 text-white font-bold text-sm hover:bg-white/25 transition-all duration-300 hover:-translate-y-0.5 backdrop-blur-sm w-full sm:w-auto">
             Ver Modelos
             <span class="group-hover:translate-x-1 transition-transform">→</span>
           </a>
