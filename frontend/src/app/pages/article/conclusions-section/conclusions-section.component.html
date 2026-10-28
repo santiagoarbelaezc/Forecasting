@@ -1,0 +1,55 @@
+        <!-- SECCIÓN 5: CONCLUSIONES -->
+        <section id="section-conclusiones" class="article-section space-y-4 pt-4">
+          <div class="border-b border-gray-100 pb-3 flex items-center justify-between">
+            <h2 class="text-2xl font-bold font-headline text-gray-900 tracking-tight flex items-center gap-2">
+              <span class="text-gray-400 font-mono text-lg">V.</span> Conclusiones
+            </h2>
+            <span class="text-xs text-gray-400 font-mono">Sección 5/7</span>
+          </div>
+
+          <div class="article-body">
+            <p class="text-justify leading-relaxed text-gray-700">
+              Se compararon <strong>VAR, ARIMA, LSTM, TSMixer e iTransformer</strong> en el pronóstico directo a 96 pasos (16 h) de 22 variables meteorológicas con resolución de 10 minutos, bajo una misma partición cronológica, un mismo preprocesamiento y las mismas métricas, sobre 7.714 ventanas de prueba:
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
+            <div class="subtle-card p-6 border-l-4 border-l-purple-600">
+              <div class="pill-badge bg-gray-50 text-gray-700 border-gray-300 mb-2.5">Liderazgo de iTransformer</div>
+              <h4 class="text-base font-bold text-gray-900 mb-2">Desempeño Global y Precisión Térmica</h4>
+              <p class="text-xs text-gray-600 leading-relaxed text-justify mb-0">
+                <strong>iTransformer obtuvo el menor error global</strong> (MAE de 12,77; RMSE de 47,26; RMSE normalizado medio de 0,76) y el menor RMSE en <strong>13 de las 22 variables</strong>, con reducciones de error del <strong>65 % en temperatura y 71 % en radiación de onda corta</strong> frente a VAR (34 % y 41 % frente a ARIMA). Su atención invertida captura eficazmente interdependencias multivariadas.
+              </p>
+            </div>
+
+            <div class="subtle-card p-6 border-l-4 border-l-amber-500">
+              <div class="pill-badge bg-gray-100 text-gray-700 border-gray-300 mb-2.5">Eficiencia Extrema con TSMixer</div>
+              <h4 class="text-base font-bold text-gray-900 mb-2">Compacidad Paramétrica (40K params)</h4>
+              <p class="text-xs text-gray-600 leading-relaxed text-justify mb-0">
+                <strong>TSMixer fue la alternativa más cercana</strong> (nRMSE medio de 0,84) utilizando únicamente <strong>40.188 parámetros</strong> (5 veces menos que iTransformer y 33 veces menos que LSTM). Demostró ser el modelo superior en velocidad del viento y en el coseno de su dirección angular.
+              </p>
+            </div>
+
+            <div class="subtle-card p-6 border-l-4 border-l-blue-600">
+              <div class="pill-badge pill-red mb-2.5">Ausencia de Modelo Universal</div>
+              <h4 class="text-base font-bold text-gray-900 mb-2">Fortalezas de Modelos Estadísticos</h4>
+              <p class="text-xs text-gray-600 leading-relaxed text-justify mb-0">
+                <strong>Ninguna familia domina todos los fenómenos físicos.</strong> ARIMA y VAR superaron a las redes neuronales en la <strong>presión atmosférica</strong> (RMSE de 2,52 y 2,55 mbar frente a 3,91 a 4,28 mbar) y fueron comparables en temperatura de rocío y variables de vapor. Fenómenos intermitentes como la lluvia y viento continúan siendo difíciles para todos (nRMSE entre 0,90 y 1,01).
+              </p>
+            </div>
+
+            <div class="subtle-card p-6 border-l-4 border-l-rose-500">
+              <div class="pill-badge bg-rose-50 text-rose-700 border-rose-200 mb-2.5">Complejidad vs Desempeño</div>
+              <h4 class="text-base font-bold text-gray-900 mb-2">Suavizado y Límites de Parámetros</h4>
+              <p class="text-xs text-gray-600 leading-relaxed text-justify mb-0">
+                Una mayor complejidad arquitectónica no garantizó un mejor pronóstico: <strong>LSTM, con 1,36 millones de parámetros, quedó por detrás de TSMixer e iTransformer</strong>, debido a una configuración sin sintonizar (detención temprana en época 1). Todos los modelos neuronales suavizan las predicciones y subestiman la variabilidad real de picos climáticos.
+              </p>
+            </div>
+          </div>
+
+          <div class="article-body pt-2">
+            <p class="text-justify leading-relaxed text-gray-700">
+              En consecuencia, <strong>la selección del modelo debe realizarse por variable y contrastarse con referencias simples</strong>: iTransformer es el candidato por defecto para las variables térmicas, de vapor y de radiación, mientras que los modelos estadísticos sencillos resultan suficientes y óptimos para la presión atmosférica.
+            </p>
+          </div>
+        </section>

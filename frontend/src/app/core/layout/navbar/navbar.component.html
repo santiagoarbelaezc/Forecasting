@@ -1,0 +1,59 @@
+<!-- ============================================================
+     NAVBAR - Glassmorphism dark, sticky
+     ============================================================ -->
+<nav [class.scrolled-nav]="scrolled"
+     class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+     [ngClass]="'bg-white border-b border-gray-200 shadow-sm'">
+
+  <!-- Announcement strip -->
+  <div class="w-full bg-crimson-accent text-white text-[11px] font-bold text-center py-1.5 tracking-wide">
+    Seminario de Grado 2026 &nbsp;·&nbsp; Artículo &nbsp;
+    <a routerLink="/articulo" class="underline hover:no-underline">Leer ahora →</a>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+
+      <!-- Logo / Brand -->
+      <a routerLink="/" class="flex items-center gap-2.5 group">
+        <div class="w-9 h-9 rounded-xl bg-crimson-accent flex items-center justify-center font-headline font-black text-white text-sm shadow-lg group-hover:scale-105 transition-transform">FC</div>
+        <div class="flex flex-col leading-tight">
+          <span class="font-headline font-bold text-obsidian-950 text-sm tracking-tight">Forecasting</span>
+          <span class="text-[10px] text-gray-500 hidden sm:block">Meteorológico · Multivariado</span>
+        </div>
+      </a>
+
+      <!-- Center nav links -->
+      <div class="hidden md:flex items-center gap-6 text-[13px] font-semibold text-gray-600">
+        <a routerLink="/" routerLinkActive="text-obsidian-950" [routerLinkActiveOptions]="{exact:true}"
+           class="hover:text-obsidian-950 transition-colors">Inicio</a>
+        <a routerLink="/articulo" routerLinkActive="text-crimson-accent"
+           class="hover:text-crimson-accent transition-colors">Artículo</a>
+        <a routerLink="/diccionario" routerLinkActive="text-crimson-accent"
+           class="hover:text-crimson-accent transition-colors">Diccionario</a>
+        <a routerLink="/modelos" routerLinkActive="text-crimson-accent"
+           class="hover:text-crimson-accent transition-colors">Modelos</a>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex items-center gap-2">
+        <button (click)="ui.openSearch()"
+          class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 text-xs font-semibold hover:bg-gray-200 transition-all border border-gray-200">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <span>Buscar</span>
+          <kbd class="text-[10px] font-mono px-1 rounded bg-white border border-gray-300 text-gray-500">⌘K</kbd>
+        </button>
+        <button (click)="ui.openCitation()"
+          class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 text-xs font-semibold hover:bg-gray-200 transition-all border border-gray-200">
+          Citar
+        </button>
+        <a href="/docs/Modelos_Arq_V1_3.docx" download
+           class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-crimson-accent text-white text-xs font-bold hover:bg-crimson-700 transition-colors shadow-lg">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+          <span class="hidden sm:inline">.docx v3</span>
+          <span class="sm:hidden">Docx</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>

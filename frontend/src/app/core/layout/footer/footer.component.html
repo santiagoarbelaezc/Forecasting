@@ -1,0 +1,119 @@
+<!-- ============================================================
+     FOOTER - Dark multi-column + AI declaration
+     ============================================================ -->
+<footer class="bg-obsidian-950 text-gray-400 border-t border-white/5">
+
+  <!-- Main footer content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+
+      <!-- Col 1: Description -->
+      <div class="lg:col-span-1">
+        <div class="flex items-center gap-2.5 mb-4">
+          <div class="w-9 h-9 rounded-xl bg-crimson-accent flex items-center justify-center font-headline font-black text-white text-sm">FC</div>
+          <span class="font-headline font-bold text-white text-sm">Forecasting Meteorológico</span>
+        </div>
+        <p class="text-xs leading-relaxed text-gray-500">
+          Estudio comparativo de VAR, LSTM, TSMixer e iTransformer para el pronóstico multivariado de series de tiempo meteorológicas. Seminario de Grado 2026.
+        </p>
+        <div class="mt-5 flex flex-wrap gap-1.5">
+          <span class="px-2 py-1 rounded-md bg-white/5 text-[10px] text-gray-500">Angular 18</span>
+          <span class="px-2 py-1 rounded-md bg-white/5 text-[10px] text-gray-500">Tailwind 3</span>
+          <span class="px-2 py-1 rounded-md bg-white/5 text-[10px] text-gray-500">KaTeX</span>
+          <span class="px-2 py-1 rounded-md bg-crimson-accent/20 text-[10px] text-crimson-accent border border-crimson-accent/30">v3 · 2026</span>
+        </div>
+      </div>
+
+      <!-- Col 2: Navegación -->
+      <div>
+        <h4 class="text-white font-bold text-sm mb-5 uppercase tracking-wider">Navegación</h4>
+        <ul class="space-y-3 text-sm">
+          <li><a routerLink="/" class="hover:text-white transition-colors flex items-center gap-2"><span class="text-crimson-accent">→</span> Inicio</a></li>
+          <li><a routerLink="/articulo" class="hover:text-white transition-colors flex items-center gap-2"><span class="text-crimson-accent">→</span> Artículo Científico</a></li>
+          <li><a routerLink="/diccionario" class="hover:text-white transition-colors flex items-center gap-2"><span class="text-crimson-accent">→</span> Diccionario de Conceptos</a></li>
+          <li><a routerLink="/modelos" class="hover:text-white transition-colors flex items-center gap-2"><span class="text-crimson-accent">→</span> 6 Modelos Ilustrados</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 3: Recursos -->
+      <div>
+        <h4 class="text-white font-bold text-sm mb-5 uppercase tracking-wider">Recursos</h4>
+        <ul class="space-y-3 text-sm">
+          <li>
+            <a href="/docs/Modelos_Arq_V1_3.docx" download
+               class="hover:text-white transition-colors flex items-center gap-2">
+              <svg class="w-4 h-4 text-crimson-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+              Descargar artículo (.docx v3)
+            </a>
+          </li>
+          <li>
+            <button (click)="ui.openCitation()"
+               class="hover:text-white transition-colors flex items-center gap-2 w-full text-left">
+              <svg class="w-4 h-4 text-crimson-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+              Citar (BibTeX / IEEE)
+            </button>
+          </li>
+          <li>
+            <button (click)="ui.downloadPdf()"
+               class="hover:text-white transition-colors flex items-center gap-2 w-full text-left">
+              <svg class="w-4 h-4 text-crimson-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+              Imprimir / Guardar PDF
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Col 4: Estudio -->
+      <div>
+        <h4 class="text-white font-bold text-sm mb-5 uppercase tracking-wider">Estudio</h4>
+        <ul class="space-y-2.5 text-xs text-gray-500">
+          <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-crimson-accent"></span>52.696 observaciones</li>
+          <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-gray-600"></span>22 variables meteorológicas</li>
+          <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-gray-600"></span>Horizonte de 96 pasos (16 h)</li>
+          <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-gray-600"></span>Metodología CRISP-DM</li>
+          <li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-crimson-accent"></span>Ganador: iTransformer (nRMSE 0.76)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Declaration -->
+  <div class="border-t border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="rounded-2xl bg-white/[0.03] border border-white/10 p-5 sm:p-6 space-y-3">
+        <div class="flex items-center justify-between gap-2 flex-wrap">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-crimson-accent animate-pulse"></span>
+            <span class="font-headline font-bold text-xs uppercase tracking-wider text-white">
+              Declaración de Transparencia y Uso de Inteligencia Artificial
+            </span>
+          </div>
+          <span class="px-2 py-0.5 rounded-full bg-crimson-accent/20 border border-crimson-accent/30 text-crimson-accent text-[10px] font-bold uppercase">Ética en Investigación</span>
+        </div>
+        <p class="text-gray-400 leading-relaxed text-xs">
+          En concordancia con los principios de reproducibilidad científica y transparencia académica, se declara que este sitio web y sus herramientas interactivas fueron desarrollados con asistencia de
+          <strong class="text-gray-200">sistemas de inteligencia artificial generativa (Google Gemini y Antigravity)</strong>.
+          La IA fue utilizada para la maquetación y refactorización del frontend (Angular 18), la generación esquemática de las infografías didácticas de las arquitecturas predictivas (VAR, ARIMA, ARIMAX, LSTM, TSMixer e iTransformer) y la estructuración del diccionario de conceptos.
+        </p>
+        <p class="text-gray-500 leading-relaxed text-[11px] border-t border-white/5 pt-3">
+          <strong class="text-gray-400">Responsabilidad de autoría:</strong> El protocolo experimental (CRISP-DM), la preparación y partición cronológica del conjunto de datos meteorológicos, el entrenamiento de los modelos y las conclusiones científicas presentadas en el artículo son de autoría y validación íntegra de los investigadores firmantes.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom bar -->
+  <div class="border-t border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-600">
+      <div class="text-center sm:text-left">
+        <p class="font-semibold text-gray-500">Miguel Angel Mira Ortega · Santiago Arbelaez Contreras · Juan Manuel Isaza Vergara</p>
+        <p>Seminario de Grado · Modelos de IA y Series Temporales · {{ year }}</p>
+      </div>
+      <button (click)="ui.scrollToTop()"
+        class="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:bg-white/10 transition-all text-xs font-semibold">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+        Volver arriba
+      </button>
+    </div>
+  </div>
+</footer>

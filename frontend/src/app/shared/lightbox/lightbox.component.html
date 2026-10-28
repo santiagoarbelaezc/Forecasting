@@ -1,0 +1,21 @@
+<!-- ============================================================
+     MODAL 3: FIGURE LIGHTBOX (ZOOM)
+     ============================================================ -->
+<div *ngIf="ui.isLightboxOpen" (click)="ui.closeLightbox()" class="modal-backdrop">
+  <div (click)="$event.stopPropagation()" class="subtle-card relative max-w-4xl w-full p-3 sm:p-5 bg-white border border-gray-200 shadow-2xl flex flex-col items-center">
+    <div class="flex items-center justify-between w-full mb-3 text-gray-900 border-b border-gray-100 pb-2">
+      <span class="text-xs sm:text-sm font-semibold text-gray-800 truncate mr-2">{{ ui.lightboxCaption }}</span>
+      <div class="flex items-center gap-2 flex-shrink-0">
+        <a [href]="ui.lightboxImg" download class="btn-outline py-1 px-2.5 sm:px-3 text-[11px] sm:text-xs">
+          Descargar Figura
+        </a>
+        <button (click)="ui.closeLightbox()" class="p-1 rounded-lg hover:bg-gray-100 text-gray-500 hover:text-gray-900">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="w-full flex justify-center bg-gray-50 rounded-xl p-2 sm:p-4 border border-gray-100 max-h-[75vh] overflow-auto">
+      <img [src]="ui.lightboxImg" [alt]="ui.lightboxCaption" class="max-h-[70vh] w-auto object-contain rounded-lg">
+    </div>
+  </div>
+</div>

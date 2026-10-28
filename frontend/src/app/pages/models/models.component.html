@@ -1,0 +1,64 @@
+<!-- ============================================================
+     MODELS PAGE — minimalist
+     ============================================================ -->
+<div class="min-h-screen bg-white pt-24 pb-20">
+
+  <!-- Header -->
+  <header class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-10">
+    <p class="reveal text-crimson-accent text-sm font-semibold uppercase tracking-[0.2em] mb-4">6 arquitecturas</p>
+    <h1 class="reveal text-5xl sm:text-6xl font-extrabold text-obsidian-950 font-headline tracking-tight" style="animation-delay:.08s">Modelos</h1>
+    <p class="reveal text-gray-500 text-lg mt-4 max-w-xl" style="animation-delay:.16s">
+      Del enfoque estadístico al Deep Learning, explicados de forma visual.
+    </p>
+  </header>
+
+  <!-- Filter -->
+  <div class="sticky top-[88px] z-30 bg-white/90 backdrop-blur border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center gap-2 flex-wrap">
+      <button *ngFor="let f of [
+        {key:'todos', label:'Todos'},
+        {key:'estadistico', label:'Estadísticos'},
+        {key:'deep-learning', label:'Deep Learning'}
+      ]"
+        (click)="modelFilter = f.key"
+        [ngClass]="modelFilter === f.key ? 'bg-obsidian-950 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'"
+        class="px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 hover:-translate-y-0.5">
+        {{ f.label }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Cards -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <button *ngFor="let m of filteredModels; let i = index"
+           (click)="openModal(m)"
+           (mousemove)="onMove($event)"
+           class="mcard reveal text-left"
+           [style.animation-delay]="(i * 70) + 'ms'">
+        <span class="mcard-num">{{ (i + 1) < 10 ? '0' + (i + 1) : (i + 1) }}</span>
+        <div class="relative">
+          <div class="flex items-center justify-between mb-8">
+            <span class="font-mono font-bold text-sm px-3 py-1 rounded-full"
+                  [ngClass]="m.type === 'deep-learning' ? 'bg-obsidian-950 text-white' : 'bg-gray-100 text-gray-800'">
+              {{ m.acronym }}
+            </span>
+            <span class="text-xs text-gray-400 font-medium">{{ m.type === 'deep-learning' ? 'Deep Learning' : 'Estadístico' }}</span>
+          </div>
+          <h2 class="mcard-title text-2xl font-bold text-obsidian-950 font-headline tracking-tight">{{ m.name }}</h2>
+          <p class="text-gray-500 text-base mt-2 line-clamp-2">{{ m.tagline }}</p>
+          <div class="mcard-more mt-8 flex items-center gap-2 text-sm font-semibold text-obsidian-950">
+            Ver más <span class="mcard-arrow">→</span>
+          </div>
+        </div>
+        <span class="mcard-line"></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Model detail modal -->
+<app-model-detail-modal *ngIf="selectedModel"
+  [model]="selectedModel"
+  (close)="selectedModel = null">
+</app-model-detail-modal>

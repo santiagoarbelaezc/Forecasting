@@ -1,0 +1,284 @@
+        <!-- SECCIÓN 3: MARCO CONCEPTUAL -->
+        <section id="section-marco-conceptual" class="article-section space-y-6">
+          <div class="border-b border-gray-100 pb-3 flex items-center justify-between">
+            <h2 class="text-2xl font-bold font-headline text-gray-900 tracking-tight flex items-center gap-2">
+              <span class="text-gray-400 font-mono text-lg">III.</span> Marco Conceptual
+            </h2>
+            <span class="text-xs text-gray-400 font-mono">Sección 3/7</span>
+          </div>
+
+          <div class="article-body">
+            <p>
+              El pronóstico de series de tiempo puede abordarse mediante modelos con diferentes mecanismos para representar la dependencia temporal y las relaciones entre variables. En este estudio se consideran modelos estadísticos y arquitecturas de aprendizaje profundo que presentan diferencias importantes en la forma en que representan y procesan la información temporal. En particular, se analizan <strong>Vector Autoregression (VAR)</strong>, <strong>Long Short-Term Memory (LSTM)</strong>, <strong>TSMixer</strong> e <strong>iTransformer</strong>. Para facilitar la comparación conceptual entre estos enfoques, a continuación se describe la estructura general de cada modelo, su representación de entrada, los componentes principales que intervienen en el procesamiento y la forma en que se obtiene la salida de pronóstico.
+            </p>
+          </div>
+
+          <!-- SUBSECCIÓN 3.1: VAR -->
+          <div id="section-var" class="subtle-card p-4 sm:p-6 lg:p-8 space-y-4">
+            <div class="flex items-center justify-between flex-wrap gap-2 mb-2">
+              <span class="pill-badge pill-dark">
+                <span class="w-1.5 h-1.5 rounded-full bg-gray-100 inline-block"></span>
+                Modelo Estadístico Lineal Multivariado
+              </span>
+              <span class="text-xs text-gray-400 font-mono">III.A</span>
+            </div>
+
+            <h3 class="text-xl font-bold font-headline text-gray-900">Vector Autoregression (VAR)</h3>
+
+            <div class="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
+              <div class="xl:col-span-7 space-y-4 article-body">
+                <p>
+                  Vector Autoregression (VAR) es un modelo estadístico, propuesto originalmente por Sims [8], diseñado para representar la dependencia temporal conjunta de un conjunto de variables. A diferencia de los modelos autorregresivos univariados, en los que una variable se explica principalmente a partir de sus propios valores pasados, VAR considera simultáneamente los valores históricos de todas las variables incluidas en el sistema. De esta manera, cada variable puede depender tanto de sus propios valores anteriores como de los valores pasados de las demás variables.
+                </p>
+
+                <p>
+                  Para un conjunto de \(K\) variables y un orden autorregresivo \(p\), la serie puede representarse mediante el vector \(y_t\), que contiene los valores observados en el instante \(t\). La estructura general de un modelo VAR(\(p\)) puede expresarse como:
+                </p>
+
+                <div class="equation-card">
+                  <div class="font-mono text-sm sm:text-base text-gray-900" [innerHTML]="math.eqVAR"></div>
+                  <span class="text-xs font-mono text-gray-400 font-bold ml-4 whitespace-nowrap">(1)</span>
+                </div>
+
+                <p>
+                  donde \(c\) corresponde al término constante, \(A_i\) son matrices de coeficientes que representan la influencia de los valores anteriores sobre el estado actual y \(\varepsilon_t\) representa el término de error.
+                </p>
+
+                <p>
+                  La entrada del modelo está constituida por una ventana de observaciones históricas de las variables. Para producir una predicción, VAR utiliza los valores correspondientes a los \(p\) instantes anteriores y los combina mediante las matrices de coeficientes estimadas durante el ajuste. El resultado es un nuevo vector que contiene las predicciones para las variables consideradas. En consecuencia, el flujo de procesamiento puede entenderse como una transformación de un conjunto de observaciones históricas multivariadas hacia una nueva observación futura.
+                </p>
+
+                <p>
+                  Desde una perspectiva estructural, VAR se distingue de las arquitecturas de aprendizaje profundo consideradas en este estudio por representar explícitamente las dependencias temporales y las relaciones entre variables mediante valores rezagados y matrices de coeficientes. De esta manera, el modelo establece cómo los valores pasados de las diferentes variables contribuyen a la estimación de sus valores actuales y futuros, proporcionando una formulación estadística para el análisis y pronóstico de series temporales multivariadas.
+                </p>
+              </div>
+
+              <!-- Figura 1 -->
+              <div class="xl:col-span-5 figure-wrapper m-0">
+                <div class="figure-img-container cursor-zoom-in" (click)="ui.openLightbox('/images/fig1_var.png', 'Fig. 1. Estructura conceptual del modelo VAR.')">
+                  <img src="/images/fig1_var.png" alt="Fig. 1. Estructura conceptual del modelo VAR" class="max-h-80 w-auto object-contain rounded">
+                </div>
+                <div class="figure-caption">
+                  <span><strong>Fig. 1.</strong> Estructura conceptual del modelo VAR.</span>
+                  <span class="text-xs text-crimson-accent font-medium cursor-pointer hover:underline" (click)="ui.openLightbox('/images/fig1_var.png', 'Fig. 1. Estructura conceptual del modelo VAR.')">
+                    Ampliar
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SUBSECCIÓN 3.2: LSTM -->
+          <div id="section-lstm" class="subtle-card p-4 sm:p-6 lg:p-8 space-y-4">
+            <div class="flex items-center justify-between flex-wrap gap-2 mb-2">
+              <span class="pill-badge pill-red">
+                <span class="w-1.5 h-1.5 rounded-full bg-crimson-accent inline-block"></span>
+                Red Neuronal Recurrente (RNN)
+              </span>
+              <span class="text-xs text-gray-400 font-mono">III.B</span>
+            </div>
+
+            <h3 class="text-xl font-bold font-headline text-gray-900">Long Short-Term Memory (LSTM)</h3>
+
+            <div class="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
+              <div class="xl:col-span-7 space-y-4 article-body">
+                <p>
+                  Las redes Long Short-Term Memory (LSTM) pertenecen a la familia de redes neuronales recurrentes (<em>Recurrent Neural Networks</em>, RNN), diseñadas para procesar información secuencial manteniendo un estado que se actualiza a medida que se recorren los diferentes instantes de una serie. <span [innerHTML]="math.lstmStateText"></span>
+                </p>
+
+                <div class="equation-card">
+                  <div class="font-mono text-sm sm:text-base text-gray-900" [innerHTML]="math.eqRNN"></div>
+                  <span class="text-xs font-mono text-gray-400 font-bold ml-4 whitespace-nowrap">(2)</span>
+                </div>
+
+                <p>
+                  Esta estructura permite incorporar información histórica en el procesamiento de nuevas observaciones. Sin embargo, durante el entrenamiento de secuencias largas, las RNN convencionales pueden presentar dificultades para conservar información relevante durante muchos pasos temporales, debido principalmente a problemas de desvanecimiento y explosión del gradiente [9]. LSTM fue propuesta por Hochreiter y Schmidhuber [9] precisamente para abordar esta limitación.
+                </p>
+
+                <p>
+                  LSTM introduce una estructura de memoria que permite controlar qué información debe conservarse, incorporarse o descartarse durante el procesamiento de una secuencia. Para ello, cada unidad LSTM dispone de un estado de celda \(C_t\) y un estado oculto \(h_t\), además de tres compuertas principales:
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 my-2">
+                  <div class="equation-card m-0 py-2 px-3">
+                    <div class="font-mono text-xs text-gray-900" [innerHTML]="math.eqLSTM_f"></div>
+                    <span class="text-[11px] font-mono text-gray-400 font-bold ml-2">(3)</span>
+                  </div>
+                  <div class="equation-card m-0 py-2 px-3">
+                    <div class="font-mono text-xs text-gray-900" [innerHTML]="math.eqLSTM_i"></div>
+                    <span class="text-[11px] font-mono text-gray-400 font-bold ml-2">(4)</span>
+                  </div>
+                  <div class="equation-card m-0 py-2 px-3">
+                    <div class="font-mono text-xs text-gray-900" [innerHTML]="math.eqLSTM_c_tilde"></div>
+                    <span class="text-[11px] font-mono text-gray-400 font-bold ml-2">(5)</span>
+                  </div>
+                  <div class="equation-card m-0 py-2 px-3">
+                    <div class="font-mono text-xs text-gray-900" [innerHTML]="math.eqLSTM_c"></div>
+                    <span class="text-[11px] font-mono text-gray-400 font-bold ml-2">(6)</span>
+                  </div>
+                  <div class="equation-card m-0 py-2 px-3">
+                    <div class="font-mono text-xs text-gray-900" [innerHTML]="math.eqLSTM_o"></div>
+                    <span class="text-[11px] font-mono text-gray-400 font-bold ml-2">(7)</span>
+                  </div>
+                  <div class="equation-card m-0 py-2 px-3">
+                    <div class="font-mono text-xs text-gray-900" [innerHTML]="math.eqLSTM_h"></div>
+                    <span class="text-[11px] font-mono text-gray-400 font-bold ml-2">(8)</span>
+                  </div>
+                </div>
+
+                <p>
+                  De esta forma, el procesamiento de una secuencia mediante LSTM puede interpretarse como un flujo recurrente en el que cada observación es incorporada de manera progresiva. El estado de celda permite transportar información a través de diferentes instantes, mientras que las puertas regulan la actualización de dicha información. En el contexto de series de tiempo multivariadas, cada entrada \(x_t\) contiene simultáneamente los valores de las 22 variables correspondientes a un mismo instante.
+                </p>
+              </div>
+
+              <!-- Figura 2 -->
+              <div class="xl:col-span-5 figure-wrapper m-0">
+                <div class="figure-img-container cursor-zoom-in" (click)="ui.openLightbox('/images/fig2_lstm.png', 'Fig. 2. Estructura conceptual del modelo LSTM.')">
+                  <img src="/images/fig2_lstm.png" alt="Fig. 2. Estructura conceptual del modelo LSTM" class="max-h-80 w-auto object-contain rounded">
+                </div>
+                <div class="figure-caption">
+                  <span><strong>Fig. 2.</strong> Estructura conceptual del modelo LSTM.</span>
+                  <span class="text-xs text-crimson-accent font-medium cursor-pointer hover:underline" (click)="ui.openLightbox('/images/fig2_lstm.png', 'Fig. 2. Estructura conceptual del modelo LSTM.')">
+                    Ampliar
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SUBSECCIÓN 3.3: TSMIXER -->
+          <div id="section-tsmixer" class="subtle-card p-4 sm:p-6 lg:p-8 space-y-4">
+            <div class="flex items-center justify-between flex-wrap gap-2 mb-2">
+              <span class="pill-badge bg-gray-100 text-gray-700 border border-gray-300">
+                <span class="w-1.5 h-1.5 rounded-full bg-gray-100 inline-block"></span>
+                Arquitectura Basada Exclusivamente en MLPs
+              </span>
+              <span class="text-xs text-gray-400 font-mono">III.C</span>
+            </div>
+
+            <h3 class="text-xl font-bold font-headline text-gray-900">TSMixer</h3>
+
+            <div class="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
+              <div class="xl:col-span-7 space-y-4 article-body">
+                <p>
+                  <strong>TSMixer</strong> es una arquitectura basada exclusivamente en capas de perceptrones multicapa (<em>Multi-Layer Perceptrons</em>, MLP) que aborda el pronóstico de series de tiempo mediante la mezcla independiente de información a lo largo de las dimensiones temporal y de características. En lugar de utilizar mecanismos recurrentes o mecanismos de atención, la arquitectura aplica transformaciones MLP sobre diferentes dimensiones de la representación de entrada.
+                </p>
+
+                <p>
+                  La entrada de TSMixer puede representarse como una matriz que contiene una ventana temporal de observaciones multivariadas. Una dimensión representa los diferentes instantes de la ventana (\(L=96\)) y la otra las variables o características disponibles (\(K=22\)). A partir de esta representación, la arquitectura organiza su procesamiento alrededor de dos operaciones principales:
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-3">
+                  <div class="p-4 rounded-xl bg-gray-50 border border-gray-100">
+                    <h4 class="text-sm font-bold text-gray-900 mb-1 flex items-center gap-1.5">
+                      <span class="w-2 h-2 rounded-full bg-gray-100"></span>
+                      Time Mixing Block
+                    </h4>
+                    <p class="text-xs text-gray-600 leading-relaxed mb-0">
+                      Tiene como objetivo combinar información entre diferentes posiciones temporales. La transformación se aplica sobre la dimensión correspondiente al tiempo, permitiendo que la representación de cada variable incorpore información procedente de diferentes instantes de la ventana de entrada.
+                    </p>
+                  </div>
+                  <div class="p-4 rounded-xl bg-gray-50 border border-gray-100">
+                    <h4 class="text-sm font-bold text-gray-900 mb-1 flex items-center gap-1.5">
+                      <span class="w-2 h-2 rounded-full bg-crimson-500"></span>
+                      Feature Mixing Block
+                    </h4>
+                    <p class="text-xs text-gray-600 leading-relaxed mb-0">
+                      Realiza una transformación sobre la dimensión de características. La información correspondiente a las diferentes variables se combina para generar representaciones que incorporan relaciones entre ellas, separando conceptualmente la mezcla temporal de la mezcla de variables.
+                    </p>
+                  </div>
+                </div>
+
+                <p>
+                  Los bloques de TSMixer pueden apilarse para incrementar la profundidad de la arquitectura. Las conexiones residuales permiten combinar la representación obtenida después de una transformación con la disponible antes de ella, mientras que las operaciones de normalización (LayerNorm) contribuyen a estabilizar el procesamiento. Una vez procesada la representación, una capa lineal proyecta los valores correspondientes al horizonte de pronóstico.
+                </p>
+              </div>
+
+              <!-- Figura 3 -->
+              <div class="xl:col-span-5 figure-wrapper m-0">
+                <div class="figure-img-container cursor-zoom-in" (click)="ui.openLightbox('/images/fig3_tsmixer.png', 'Fig. 3. Estructura conceptual del modelo TSMixer. Adaptada de [6].')">
+                  <img src="/images/fig3_tsmixer.png" alt="Fig. 3. Estructura conceptual del modelo TSMixer" class="max-h-80 w-auto object-contain rounded">
+                </div>
+                <div class="figure-caption">
+                  <span><strong>Fig. 3.</strong> Estructura conceptual del modelo TSMixer. Adaptada de [6].</span>
+                  <span class="text-xs text-crimson-accent font-medium cursor-pointer hover:underline" (click)="ui.openLightbox('/images/fig3_tsmixer.png', 'Fig. 3. Estructura conceptual del modelo TSMixer. Adaptada de [6].')">
+                    Ampliar
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SUBSECCIÓN 3.4: iTRANSFORMER -->
+          <div id="section-itransformer" class="subtle-card p-4 sm:p-6 lg:p-8 space-y-4">
+            <div class="flex items-center justify-between flex-wrap gap-2 mb-2">
+              <span class="pill-badge bg-gray-50 text-gray-800 border border-gray-300">
+                <span class="w-1.5 h-1.5 rounded-full bg-purple-600 inline-block"></span>
+                Inverted Attention Architecture
+              </span>
+              <span class="text-xs text-gray-400 font-mono">III.D</span>
+            </div>
+
+            <h3 class="text-xl font-bold font-headline text-gray-900">iTransformer</h3>
+
+            <div class="article-body">
+              <p>
+                <strong>iTransformer</strong> es una arquitectura basada en Transformers [10] diseñada para el pronóstico de series de tiempo multivariadas. Su principal diferencia estructural respecto a la aplicación convencional de Transformers a series temporales se encuentra en la forma en que representa la información antes de aplicar el mecanismo de atención. En lugar de considerar cada instante temporal como un token, <strong>iTransformer invierte esta representación y utiliza cada variable como una unidad de representación (token)</strong>.
+              </p>
+
+              <p>
+                En una serie multivariada, la entrada puede organizarse como una matriz en la que una dimensión corresponde a los instantes de una ventana histórica y la otra a las diferentes variables. En la representación utilizada por iTransformer, cada variable se considera de manera individual a lo largo de toda la ventana temporal. Por tanto, cada variable contiene como representación inicial la secuencia completa de sus observaciones históricas.
+              </p>
+
+              <!-- Figura 4 -->
+              <div class="figure-wrapper my-6">
+                <div class="figure-img-container cursor-zoom-in" (click)="ui.openLightbox('/images/fig4_itransformer_compare.png', 'Fig. 4. Comparación entre la representación convencional de un Transformer y la representación invertida de iTransformer.')">
+                  <img src="/images/fig4_itransformer_compare.png" alt="Fig. 4. Comparación entre Transformer convencional e invertido" class="max-h-96 w-auto object-contain rounded">
+                </div>
+                <div class="figure-caption">
+                  <span><strong>Fig. 4.</strong> Comparación entre la representación convencional de un Transformer y la representación invertida de iTransformer.</span>
+                  <span class="text-xs text-crimson-accent font-medium cursor-pointer hover:underline" (click)="ui.openLightbox('/images/fig4_itransformer_compare.png', 'Fig. 4. Comparación entre la representación convencional de un Transformer y la representación invertida de iTransformer.')">
+                    Ampliar imagen
+                  </span>
+                </div>
+              </div>
+
+              <p>
+                Para convertir estas secuencias en representaciones adecuadas para el procesamiento mediante el Transformer, iTransformer utiliza un mecanismo de <strong>Inverted Embedding</strong>. Cada serie correspondiente a una variable es proyectada hacia un espacio de representación de mayor dimensión (128 dimensiones). Como resultado, cada variable queda representada mediante un vector que resume la información temporal disponible en la ventana de entrada.
+              </p>
+
+              <p>
+                Una vez obtenidas estas representaciones, los vectores correspondientes a las diferentes variables se procesan mediante un <strong>encoder Transformer</strong>. Su estructura incluye mecanismos de atención, conexiones residuales, normalización y redes de alimentación hacia adelante (<em>Feed-Forward Networks</em>, FFN). El mecanismo de autoatención opera sobre los tokens asociados a las diferentes variables, permitiendo que la representación de una variable incorpore información relacionada con las demás variables presentes en la entrada.
+              </p>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+                <!-- Figura 5 -->
+                <div class="figure-wrapper m-0">
+                  <div class="figure-img-container cursor-zoom-in" (click)="ui.openLightbox('/images/fig5_itransformer_encoder.png', 'Fig. 5. Bloque encoder de iTransformer.')">
+                    <img src="/images/fig5_itransformer_encoder.png" alt="Fig. 5. Bloque encoder de iTransformer" class="max-h-80 w-auto object-contain rounded">
+                  </div>
+                  <div class="figure-caption">
+                    <span><strong>Fig. 5.</strong> Bloque encoder de iTransformer.</span>
+                    <span class="text-xs text-crimson-accent font-medium cursor-pointer hover:underline" (click)="ui.openLightbox('/images/fig5_itransformer_encoder.png', 'Fig. 5. Bloque encoder de iTransformer.')">Ampliar</span>
+                  </div>
+                </div>
+
+                <!-- Figura 6 -->
+                <div class="figure-wrapper m-0">
+                  <div class="figure-img-container cursor-zoom-in" (click)="ui.openLightbox('/images/fig6_itransformer_arch.png', 'Fig. 6. Estructura conceptual del modelo iTransformer.')">
+                    <img src="/images/fig6_itransformer_arch.png" alt="Fig. 6. Estructura conceptual del modelo iTransformer" class="max-h-80 w-auto object-contain rounded">
+                  </div>
+                  <div class="figure-caption">
+                    <span><strong>Fig. 6.</strong> Estructura conceptual del modelo iTransformer.</span>
+                    <span class="text-xs text-crimson-accent font-medium cursor-pointer hover:underline" (click)="ui.openLightbox('/images/fig6_itransformer_arch.png', 'Fig. 6. Estructura conceptual del modelo iTransformer.')">Ampliar</span>
+                  </div>
+                </div>
+              </div>
+
+              <p>
+                La atención constituye uno de los elementos centrales de esta arquitectura. Dado que cada token representa una variable completa en la ventana temporal, la atención se utiliza principalmente para modelar las relaciones entre las diferentes variables. De esta manera, la información temporal de cada variable se incorpora inicialmente dentro de su representación y posteriormente se permite que estas representaciones interactúen entre sí mediante el mecanismo de autoatención.
+              </p>
+            </div>
+          </div>
+
+        </section>

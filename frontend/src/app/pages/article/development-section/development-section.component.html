@@ -1,0 +1,308 @@
+        <!-- SECCIÓN 4: DESARROLLO EXPERIMENTAL -->
+        <section id="section-desarrollo" class="article-section space-y-8">
+          <div class="border-b border-gray-100 pb-3 flex items-center justify-between">
+            <h2 class="text-2xl font-bold font-headline text-gray-900 tracking-tight flex items-center gap-2">
+              <span class="text-gray-400 font-mono text-lg">IV.</span> Desarrollo Experimental
+            </h2>
+            <span class="text-xs text-gray-400 font-mono">Sección 4/7</span>
+          </div>
+
+          <div class="article-body">
+            <p>
+              El desarrollo sigue las fases de comprensión y preparación de los datos, modelado y evaluación de la metodología <strong>CRISP-DM</strong> [11]; la fase de despliegue queda fuera del alcance del estudio. La implementación se realizó en <strong>Python</strong>, con <strong>PyTorch</strong> para LSTM, TSMixer e iTransformer y <strong>statsmodels</strong> para VAR y ARIMA.
+            </p>
+
+            <!-- Figura 7: CRISP-DM Workflow -->
+            <div class="figure-wrapper my-6">
+              <div class="figure-img-container cursor-zoom-in" (click)="ui.openLightbox('/images/fig7_crisp_dm.png', 'Fig. 7. Estructura conceptual del desarrollo del proyecto.')">
+                <img src="/images/fig7_crisp_dm.png" alt="Fig. 7. Estructura conceptual del desarrollo del proyecto" class="max-h-96 w-auto object-contain rounded">
+              </div>
+              <div class="figure-caption">
+                <span><strong>Fig. 7.</strong> Estructura conceptual del desarrollo del proyecto bajo la metodología CRISP-DM.</span>
+                <span class="text-xs text-crimson-accent font-medium cursor-pointer hover:underline" (click)="ui.openLightbox('/images/fig7_crisp_dm.png', 'Fig. 7. Estructura conceptual del desarrollo del proyecto.')">
+                  Ampliar imagen
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Subsección IV.A: Conjunto de datos -->
+          <div id="section-dataset" class="space-y-4 pt-4 border-t border-gray-100">
+            <div class="flex items-center gap-2">
+              <span class="pill-badge pill-dark text-xs font-semibold">IV.A</span>
+              <h3 class="text-lg font-bold text-gray-900">Conjunto de Datos Meteorológicos</h3>
+            </div>
+
+            <div class="article-body">
+              <p class="text-justify leading-relaxed text-gray-700">
+                Se emplea un registro meteorológico de <strong>52.696 observaciones</strong> con resolución de <strong>10 minutos</strong>, comprendidas entre el <strong>1 de enero de 2020 y el 1 de enero de 2021</strong> proporcionado por los autores de iTransformer [7] y distribuido a través de su repositorio oficial [12]. Cada registro contiene <strong>21 variables numéricas</strong>: presión atmosférica, temperatura, temperatura potencial, temperatura de rocío, humedad relativa, presión de vapor de saturación, presión de vapor real, déficit de presión de vapor, humedad específica, concentración de vapor de agua, densidad del aire, velocidad media y máxima del viento, dirección del viento, precipitación, duración de la lluvia, radiación de onda corta, radiación fotosintéticamente activa (PAR) y su máximo, temperatura de registro y concentración de CO₂ (unidades detalladas en la Tabla IV).
+              </p>
+              <p class="text-justify leading-relaxed text-gray-700 mt-2">
+                El problema se formula como <strong>pronóstico multivariado multipaso</strong>: todas las variables actúan simultáneamente como entrada y como salida.
+              </p>
+            </div>
+          </div>
+
+          <!-- Subsección IV.B: Preparación de los datos -->
+          <div id="section-preproc" class="space-y-4 pt-4 border-t border-gray-100">
+            <div class="flex items-center gap-2">
+              <span class="pill-badge pill-dark text-xs font-semibold">IV.B</span>
+              <h3 class="text-lg font-bold text-gray-900">Preparación de los Datos y Partición Cronológica</h3>
+            </div>
+
+            <div class="article-body">
+              <p class="text-justify leading-relaxed text-gray-700">
+                Los registros se ordenaron cronológicamente y se particionaron, <strong>sin mezcla aleatoria</strong>, en <strong>70 % para entrenamiento, 15 % para validación y 15 % para prueba</strong> (Tabla I). La partición se realizó antes de cualquier transformación que dependa de los datos: limpieza, imputación y escalado se aplicaron sin emplear información de los subconjuntos posteriores, garantizando una estricta ausencia de fuga de datos (<em>data leakage</em>).
+              </p>
+            </div>
+
+            <!-- TABLA I: Partición cronológica de los datos -->
+            <div class="subtle-card overflow-hidden my-4 border border-gray-200">
+              <div class="p-4 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
+                <div>
+                  <span class="text-xs font-bold uppercase tracking-wider text-gray-900 block">TABLA I</span>
+                  <span class="text-xs text-gray-600 font-medium">Partición cronológica de los datos</span>
+                </div>
+                <span class="pill-badge text-[10px]">Sin Fuga de Datos</span>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs sm:text-sm">
+                  <thead class="bg-gray-50/50 text-gray-700 font-semibold border-b border-gray-200 text-xs">
+                    <tr>
+                      <th class="p-3.5">Subconjunto</th>
+                      <th class="p-3.5">Periodo</th>
+                      <th class="p-3.5">Observaciones</th>
+                      <th class="p-3.5">Ventanas Generadas</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-100 font-sans">
+                    <tr class="hover:bg-gray-50/50">
+                      <td class="p-3.5 font-bold text-gray-900">Entrenamiento</td>
+                      <td class="p-3.5 text-gray-600">1 ene. – 13 sep. 2020</td>
+                      <td class="p-3.5 font-mono text-gray-800">36.895</td>
+                      <td class="p-3.5 font-mono font-semibold text-gray-900">36.704</td>
+                    </tr>
+                    <tr class="hover:bg-gray-50/50">
+                      <td class="p-3.5 font-bold text-gray-900">Validación</td>
+                      <td class="p-3.5 text-gray-600">13 sep. – 7 nov. 2020</td>
+                      <td class="p-3.5 font-mono text-gray-800">7.904</td>
+                      <td class="p-3.5 font-mono font-semibold text-gray-900">7.713</td>
+                    </tr>
+                    <tr class="hover:bg-gray-50/50 bg-gray-50/20">
+                      <td class="p-3.5 font-bold text-obsidian-900">Prueba (Test)</td>
+                      <td class="p-3.5 text-crimson-700">7 nov. 2020 – 1 ene. 2021</td>
+                      <td class="p-3.5 font-mono text-obsidian-950 font-bold">7.905</td>
+                      <td class="p-3.5 font-mono font-bold text-obsidian-950">7.714</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="p-3 bg-gray-50/50 border-t border-gray-100 text-[11px] text-gray-500 font-sans">
+                <em>Nota:</em> Observaciones tras la limpieza y la imputación. Las ventanas (96 pasos de entrada y 96 de salida, paso 1) se construyen dentro de cada subconjunto.
+              </div>
+            </div>
+
+            <div class="article-body">
+              <p class="text-justify leading-relaxed text-gray-700">
+                La dirección del viento, expresada en grados (0–360°), se reemplazó por su <strong>seno y su coseno</strong>, ya que la escala angular introduce una discontinuidad artificial entre 359° y 1°; con ello el número de canales asciende a <strong>22</strong>. Las variables se estandarizaron con la media y la desviación típica del conjunto de entrenamiento, reutilizadas en validación y prueba. Antes de evaluar, las predicciones se transformaron a las unidades físicas originales, por lo que todas las métricas se expresan en dichas unidades. Se conservaron las 22 variables aunque varias están ligadas por relaciones físicas (por ejemplo, temperatura y temperatura potencial, o presión de vapor, humedad específica y concentración de vapor de agua), lo que introduce una <strong>alta colinealidad</strong> relevante, en particular, para VAR.
+              </p>
+              <p class="text-justify leading-relaxed text-gray-700 mt-2">
+                Cada ejemplo se construyó con una <strong>ventana deslizante de paso 1</strong> dentro de cada subconjunto: 96 observaciones históricas (16 h) de las 22 variables como entrada y las 96 siguientes (16 h) como salida. Ninguna ventana cruza los límites entre subconjuntos. Se obtuvieron 36.704, 7.713 y 7.714 ventanas de entrenamiento, validación y prueba. Por solaparse, las ventanas de prueba no son independientes entre sí.
+              </p>
+            </div>
+          </div>
+
+          <!-- Subsección IV.C: Análisis exploratorio y pruebas estadísticas -->
+          <div id="section-analisis-estadistico" class="space-y-4 pt-4 border-t border-gray-100">
+            <div class="flex items-center gap-2">
+              <span class="pill-badge pill-dark text-xs font-semibold">IV.C</span>
+              <h3 class="text-lg font-bold text-gray-900">Análisis Exploratorio y Pruebas Estadísticas</h3>
+            </div>
+
+            <div class="article-body">
+              <p class="text-justify leading-relaxed text-gray-700">
+                Con fines descriptivos se examinaron las series de la partición de entrenamiento completa (gráficos temporales y media móvil de 24 h); ninguna decisión de modelado se derivó de este examen. Las variables de temperatura, vapor de agua y radiación presentan un ciclo anual, con valores máximos hacia mitad del año, y la radiación exhibe además un ciclo diario marcado. La velocidad del viento y el CO₂ oscilan alrededor de un nivel relativamente estable, con picos y valores atípicos.
+              </p>
+              <p class="text-justify leading-relaxed text-gray-700 mt-2">
+                La precipitación y la duración de la lluvia son altamente intermitentes: en el conjunto de entrenamiento <strong>la mediana y el tercer cuartil de ambas son nulos</strong>, con máximos de 11,2 mm y 600 s. Todas estas pruebas se realizaron sobre una copia del dataset de entrenamiento con valores interpretados como nulos eliminados.
+              </p>
+              <p class="text-justify leading-relaxed text-gray-700 mt-2">
+                Se aplicó el contraste de <strong>Dickey-Fuller Aumentada (ADF) [13]</strong>. Dado que ADF solo contrasta la existencia de raíz unitaria y no descarta estacionalidad determinista ni cambios de varianza, este resultado <strong>respalda el ajuste de VAR en niveles</strong>, pero no implica ausencia de los ciclos diario y anual descritos.
+              </p>
+            </div>
+          </div>
+
+          <!-- Subsección IV.D: Modelos y configuración experimental -->
+          <div id="section-modelos-config" class="space-y-4 pt-4 border-t border-gray-100">
+            <div class="flex items-center gap-2">
+              <span class="pill-badge pill-red text-xs font-semibold">IV.D</span>
+              <h3 class="text-lg font-bold text-gray-900">Modelos y Configuración Experimental</h3>
+            </div>
+
+            <div class="article-body">
+              <p class="text-justify leading-relaxed text-gray-700">
+                Los cinco modelos se evalúan sobre las mismas ventanas de prueba. <strong>LSTM, TSMixer e iTransformer generan los 96 pasos en una sola pasada (estrategia directa)</strong>, mientras que <strong>VAR y ARIMA pronostican de forma recursiva</strong>. VAR, LSTM, TSMixer e iTransformer se describieron en la Sección III; ARIMA [14] se incorpora como referencia univariada adicional.
+              </p>
+            </div>
+
+            <!-- TABLA II: Configuración de los modelos -->
+            <div class="subtle-card overflow-hidden my-4 border border-gray-200">
+              <div class="p-4 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
+                <div>
+                  <span class="text-xs font-bold uppercase tracking-wider text-gray-900 block">TABLA II</span>
+                  <span class="text-xs text-gray-600 font-medium">Configuración de los modelos</span>
+                </div>
+                <span class="pill-badge text-[10px]">Hiperparámetros</span>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs sm:text-sm">
+                  <thead class="bg-gray-50/50 text-gray-700 font-semibold border-b border-gray-200 text-xs">
+                    <tr>
+                      <th class="p-3.5">Modelo</th>
+                      <th class="p-3.5">Configuración Arquitectónica</th>
+                      <th class="p-3.5">Tasa de Aprendizaje</th>
+                      <th class="p-3.5">Parámetros Entrenables</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-100 font-sans">
+                    <tr class="hover:bg-gray-50/50">
+                      <td class="p-3.5 font-bold text-gray-900">VAR</td>
+                      <td class="p-3.5 text-gray-600">Modelo lineal multivariado con selección de retardos mediante el criterio AIC (hasta 96 retardos, 16 h). Pronóstico recursivo a 96 pasos.</td>
+                      <td class="p-3.5 text-gray-400 font-mono">—</td>
+                      <td class="p-3.5 font-mono font-semibold text-gray-900">7.766</td>
+                    </tr>
+                    <tr class="hover:bg-gray-50/50">
+                      <td class="p-3.5 font-bold text-gray-900">ARIMA</td>
+                      <td class="p-3.5 text-gray-600">22 modelos ARIMA(2,1,2) univariados (uno por canal) ajustados con el conjunto de entrenamiento. El orden se fijó a priori, sin selección. Para cada ventana, los parámetros estimados se aplican sin reestimar al contexto de 96 pasos y se pronostican 96 pasos.</td>
+                      <td class="p-3.5 text-gray-400 font-mono">—</td>
+                      <td class="p-3.5 font-mono font-semibold text-gray-900">88</td>
+                    </tr>
+                    <tr class="hover:bg-gray-50/50">
+                      <td class="p-3.5 font-bold text-gray-900">LSTM</td>
+                      <td class="p-3.5 text-gray-600">Dos capas apiladas de 256 unidades ocultas, sin dropout. El estado oculto final de la última capa alimenta una capa lineal que produce 96 × 22 valores (estrategia directa).</td>
+                      <td class="p-3.5 text-gray-700 font-mono">5 × 10⁻⁴</td>
+                      <td class="p-3.5 font-mono font-semibold text-gray-900">1.355.840</td>
+                    </tr>
+                    <tr class="hover:bg-gray-50/50">
+                      <td class="p-3.5 font-bold text-gray-900">TSMixer</td>
+                      <td class="p-3.5 text-gray-600">Cuatro bloques residuales TSMixer con Time Mixing y Feature Mixing (dimensión interna de 128 unidades, LayerNorm, activaciones GELU, dropout 0,2). Capa lineal de proyección temporal a 96 pasos.</td>
+                      <td class="p-3.5 text-gray-700 font-mono">1 × 10⁻³</td>
+                      <td class="p-3.5 font-mono font-semibold text-gray-900">40.188</td>
+                    </tr>
+                    <tr class="hover:bg-gray-50/50 bg-gray-50/20">
+                      <td class="p-3.5 font-bold text-obsidian-950">iTransformer</td>
+                      <td class="p-3.5 text-gray-600">Inverted Embedding de 128 dimensiones (variables como tokens). Codificador Transformer de 3 capas, 8 cabezas de atención, FFN de 512 unidades, GELU, Pre-LN, dropout 0,1. Proyección lineal a 96 pasos.</td>
+                      <td class="p-3.5 text-obsidian-900 font-mono font-semibold">5 × 10⁻⁴</td>
+                      <td class="p-3.5 font-mono font-bold text-obsidian-950">212.384</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="p-3 bg-gray-50/50 border-t border-gray-100 text-[11px] text-gray-500 font-sans">
+                <em>Parámetros entrenables:</em> coeficientes del VAR (sin la matriz de covarianza) y cuatro coeficientes autorregresivos y de media móvil por serie en ARIMA. Los tres modelos neuronales se entrenaron minimizando el MSE sobre datos estandarizados con AdamW (decaimiento de pesos 10⁻⁴), lotes de 64, grad clip 1,0, máx 50 épocas y early stopping con paciencia de 10 épocas.
+              </div>
+            </div>
+
+            <!-- Figuras de Implementación 8, 9, 10, 11 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
+              
+              <!-- Figura 8: Implementación LSTM -->
+              <div class="subtle-card p-4 bg-gray-50/60 border border-gray-200">
+                <div class="figure-img-container cursor-zoom-in" (click)="ui.openLightbox('/images/fig8_lstm_impl.png', 'Fig. 8. Estructura conceptual de la implementación de LSTM.')">
+                  <img src="/images/fig8_lstm_impl.png" alt="Fig. 8. Estructura conceptual de la implementación de LSTM" class="max-h-72 w-auto object-contain rounded">
+                </div>
+                <div class="figure-caption mt-2">
+                  <span><strong>Fig. 8.</strong> Estructura conceptual de la implementación de LSTM.</span>
+                  <span class="text-xs text-crimson-accent font-medium cursor-pointer hover:underline" (click)="ui.openLightbox('/images/fig8_lstm_impl.png', 'Fig. 8. Estructura conceptual de la implementación de LSTM.')">Ampliar</span>
+                </div>
+              </div>
+
+              <!-- Figura 9: Implementación TSMixer -->
+              <div class="subtle-card p-4 bg-gray-50/60 border border-gray-200">
+                <div class="figure-img-container cursor-zoom-in" (click)="ui.openLightbox('/images/fig9_tsmixer_impl.png', 'Fig. 9. Estructura conceptual de la implementación de TSMixer.')">
+                  <img src="/images/fig9_tsmixer_impl.png" alt="Fig. 9. Estructura conceptual de la implementación de TSMixer" class="max-h-72 w-auto object-contain rounded">
+                </div>
+                <div class="figure-caption mt-2">
+                  <span><strong>Fig. 9.</strong> Estructura conceptual de la implementación de TSMixer.</span>
+                  <span class="text-xs text-crimson-accent font-medium cursor-pointer hover:underline" (click)="ui.openLightbox('/images/fig9_tsmixer_impl.png', 'Fig. 9. Estructura conceptual de la implementación de TSMixer.')">Ampliar</span>
+                </div>
+              </div>
+
+              <!-- Figura 10: Implementación iTransformer -->
+              <div class="subtle-card p-4 bg-gray-50/60 border border-gray-200">
+                <div class="figure-img-container cursor-zoom-in" (click)="ui.openLightbox('/images/fig10_itransformer_impl.png', 'Fig. 10. Estructura conceptual de la implementación de iTransformer.')">
+                  <img src="/images/fig10_itransformer_impl.png" alt="Fig. 10. Estructura conceptual de la implementación de iTransformer" class="max-h-72 w-auto object-contain rounded">
+                </div>
+                <div class="figure-caption mt-2">
+                  <span><strong>Fig. 10.</strong> Estructura conceptual de la implementación de iTransformer.</span>
+                  <span class="text-xs text-crimson-accent font-medium cursor-pointer hover:underline" (click)="ui.openLightbox('/images/fig10_itransformer_impl.png', 'Fig. 10. Estructura conceptual de la implementación de iTransformer.')">Ampliar</span>
+                </div>
+              </div>
+
+              <!-- Figura 11: Implementación VAR -->
+              <div class="subtle-card p-4 bg-gray-50/60 border border-gray-200">
+                <div class="figure-img-container cursor-zoom-in" (click)="ui.openLightbox('/images/fig11_var_impl.png', 'Fig. 11. Estructura conceptual de la implementación de VAR.')">
+                  <img src="/images/fig11_var_impl.png" alt="Fig. 11. Estructura conceptual de la implementación de VAR" class="max-h-72 w-auto object-contain rounded">
+                </div>
+                <div class="figure-caption mt-2">
+                  <span><strong>Fig. 11.</strong> Estructura conceptual de la implementación de VAR.</span>
+                  <span class="text-xs text-crimson-accent font-medium cursor-pointer hover:underline" (click)="ui.openLightbox('/images/fig11_var_impl.png', 'Fig. 11. Estructura conceptual de la implementación de VAR.')">Ampliar</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Subsección IV.E: Protocolo de evaluación y métricas -->
+          <div id="section-evaluacion-metricas" class="space-y-4 pt-4 border-t border-gray-100">
+            <div class="flex items-center gap-2">
+              <span class="pill-badge pill-dark text-xs font-semibold">IV.E</span>
+              <h3 class="text-lg font-bold text-gray-900">Protocolo de Evaluación y Métricas</h3>
+            </div>
+
+            <div class="article-body">
+              <p class="text-justify leading-relaxed text-gray-700">
+                El desempeño se evalúa sobre las <strong>7.714 ventanas de prueba</strong>, en <strong>unidades físicas</strong>, mediante el error absoluto medio (MAE), el error cuadrático medio (MSE) y su raíz (RMSE), calculados por variable y de forma global (sobre todas las ventanas, pasos del horizonte y variables), así como el RMSE por paso del horizonte:
+              </p>
+
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 my-3">
+                <div class="equation-card m-0 p-3">
+                  <div class="font-mono text-xs sm:text-sm text-gray-900" [innerHTML]="math.eqMAE"></div>
+                  <span class="text-[11px] font-mono text-gray-400 font-bold ml-2">(9)</span>
+                </div>
+                <div class="equation-card m-0 p-3">
+                  <div class="font-mono text-xs sm:text-sm text-gray-900" [innerHTML]="math.eqMSE"></div>
+                  <span class="text-[11px] font-mono text-gray-400 font-bold ml-2">(10)</span>
+                </div>
+                <div class="equation-card m-0 p-3">
+                  <div class="font-mono text-xs sm:text-sm text-gray-900" [innerHTML]="math.eqRMSE"></div>
+                  <span class="text-[11px] font-mono text-gray-400 font-bold ml-2">(11)</span>
+                </div>
+              </div>
+
+              <p class="text-justify leading-relaxed text-gray-700 mt-2">
+                Como las variables tienen escalas muy distintas (por ejemplo, el RMSE de la PAR máxima es del orden de 10² y el de la precipitación del orden de 10⁻²), las métricas globales en unidades físicas quedan dominadas por las variables de mayor magnitud. Por ello se reporta además el <strong>RMSE normalizado de la variable \(j\)</strong>:
+              </p>
+
+              <div class="equation-card my-3 p-3">
+                <div class="font-mono text-sm sm:text-base text-gray-900" [innerHTML]="math.eqnRMSE"></div>
+                <span class="text-xs font-mono text-gray-400 font-bold ml-4 whitespace-nowrap">(12)</span>
+              </div>
+
+              <p class="text-justify leading-relaxed text-gray-700">
+                donde \(\sigma_j\) es la desviación típica de la variable en el conjunto de prueba, y su promedio sobre las 22 variables. <strong>Un valor de nRMSE cercano a 1 indica que el error es comparable a la dispersión propia de la serie</strong> (equivalente a predecir la media empírica). Valores menores a 1 indican que el modelo realmente captura información temporal útil.
+              </p>
+
+              <p class="text-justify leading-relaxed text-gray-700">
+                Para cada variable se calculan además la correlación, la desviación típica de las predicciones y el RMSE centrado (<strong>diagramas de Taylor</strong> [17]). Se cumple la descomposición analítica:
+              </p>
+
+              <div class="equation-card my-3 p-3">
+                <div class="font-mono text-sm sm:text-base text-gray-900" [innerHTML]="math.eqTaylor"></div>
+              </div>
+            </div>
+          </div>
+
+<app-results-section></app-results-section>
+
+</section>

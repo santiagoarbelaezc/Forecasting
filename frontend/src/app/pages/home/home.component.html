@@ -1,0 +1,220 @@
+<!-- ============================================================
+     HOME PAGE
+     ============================================================ -->
+
+<!-- HERO -->
+<section class="relative min-h-screen flex items-center overflow-hidden bg-sky-200">
+
+  <!-- Background: natural landscape -->
+  <div class="absolute inset-0 z-0">
+    <img src="/images/home/hero-sky.jpg" alt="Paisaje con nubes" class="w-full h-full object-cover object-center">
+    <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-black/15"></div>
+    <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/40 to-transparent"></div>
+  </div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-24 w-full">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+
+      <!-- Left: main content -->
+      <div class="lg:col-span-7 space-y-8 hero-fade-up">
+
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 backdrop-blur border border-white/30 text-white text-xs font-bold uppercase tracking-widest">
+          <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+          Estudio Comparativo · Series de Tiempo Meteorológicas
+        </div>
+
+        <h1 class="font-headline font-extrabold text-white leading-[1.05] tracking-tight"
+            style="font-size: clamp(2.4rem, 5.5vw, 5rem); text-shadow: 0 2px 24px rgba(0,0,0,0.35);">
+          Pronóstico<br>
+          <span class="text-crimson-200">Meteorológico</span><br>
+          Multivariado
+        </h1>
+
+        <div class="space-y-2">
+          <p class="text-white/80 text-xs uppercase tracking-widest font-semibold">Autores del estudio</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="px-3 py-1.5 rounded-full bg-white/15 backdrop-blur border border-white/25 text-white text-sm font-medium">Miguel Ángel Mira Ortega</span>
+            <span class="px-3 py-1.5 rounded-full bg-white/15 backdrop-blur border border-white/25 text-white text-sm font-medium">Santiago Arbelaez Contreras</span>
+            <span class="px-3 py-1.5 rounded-full bg-white/15 backdrop-blur border border-white/25 text-white text-sm font-medium">Juan Manuel Isaza Vergara</span>
+          </div>
+          <p class="text-white/70 text-xs mt-1">Seminario de Grado · Repositorio Forecasting · Versión 3</p>
+        </div>
+
+        <p class="text-white/90 text-base sm:text-lg leading-relaxed max-w-xl" style="text-shadow: 0 1px 12px rgba(0,0,0,0.3);">
+          Evaluación rigurosa de modelos estadísticos y Deep Learning sobre <strong class="text-white">52.696 observaciones meteorológicas</strong>, comparando VAR, ARIMA, LSTM, TSMixer e iTransformer bajo metodología CRISP-DM.
+        </p>
+
+        <!-- CTA buttons -->
+        <div class="flex flex-wrap gap-4 pt-2">
+          <a routerLink="/articulo"
+             class="group flex items-center gap-2.5 px-7 py-4 rounded-2xl bg-crimson-accent text-white font-bold text-sm shadow-2xl shadow-crimson-accent/30 hover:bg-crimson-700 transition-all duration-300 hover:-translate-y-0.5">
+            Ver Artículo
+            <span class="group-hover:translate-x-1 transition-transform">→</span>
+          </a>
+          <a routerLink="/diccionario"
+             class="group flex items-center gap-2.5 px-7 py-4 rounded-2xl bg-white/15 border border-white/30 text-white font-bold text-sm hover:bg-white/25 transition-all duration-300 hover:-translate-y-0.5 backdrop-blur-sm">
+            Ver Diccionario
+            <span class="group-hover:translate-x-1 transition-transform">→</span>
+          </a>
+          <a routerLink="/modelos"
+             class="group flex items-center gap-2.5 px-7 py-4 rounded-2xl bg-white/15 border border-white/30 text-white font-bold text-sm hover:bg-white/25 transition-all duration-300 hover:-translate-y-0.5 backdrop-blur-sm">
+            Ver Modelos
+            <span class="group-hover:translate-x-1 transition-transform">→</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Right: model ticker (solid card) -->
+      <div class="lg:col-span-5 flex flex-col items-center lg:items-end hero-fade-up" style="animation-delay:.2s">
+        <div class="w-full max-w-sm rounded-3xl bg-white shadow-2xl shadow-black/30 overflow-hidden">
+
+          <div class="px-6 pt-6 pb-4 flex items-center justify-between">
+            <div>
+              <p class="text-[11px] uppercase tracking-[0.18em] font-bold text-crimson-accent">Modelos evaluados</p>
+              <p class="text-sm text-gray-500 mt-0.5">6 arquitecturas · 22 variables</p>
+            </div>
+            <span class="relative flex h-2.5 w-2.5">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-crimson-accent opacity-60"></span>
+              <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-crimson-accent"></span>
+            </span>
+          </div>
+
+          <div class="px-3 pb-3 space-y-1">
+            <div *ngFor="let m of models; let i = index"
+                 class="flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-500"
+                 [ngClass]="i === currentModelIdx ? 'bg-crimson-accent text-white shadow-lg shadow-crimson-accent/30 scale-[1.02]' : 'text-gray-700 hover:bg-gray-50'">
+              <div class="flex items-center gap-3">
+                <span class="text-[11px] font-mono w-5" [ngClass]="i === currentModelIdx ? 'text-white/70' : 'text-gray-400'">0{{ i + 1 }}</span>
+                <span class="font-mono font-bold text-sm">{{ m }}</span>
+              </div>
+              <span class="text-xs font-semibold" [ngClass]="i === currentModelIdx ? 'text-white' : 'text-transparent'">●</span>
+            </div>
+          </div>
+
+          <div class="bg-obsidian-950 px-6 py-5">
+            <p class="text-[11px] uppercase tracking-[0.18em] text-gray-400 font-semibold">Ganador global · nRMSE promedio</p>
+            <div class="flex items-end justify-between mt-2">
+              <p class="text-3xl font-extrabold text-white font-headline tracking-tight">iTransformer</p>
+              <p class="text-2xl font-extrabold text-crimson-glow font-headline">0.76</p>
+            </div>
+            <p class="text-xs text-gray-400 mt-1">Mejor en 13 de 22 variables</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-white/80 animate-bounce">
+    <span class="text-[10px] uppercase tracking-widest">Explorar</span>
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+  </div>
+</section>
+
+<!-- STATS BAND -->
+<section class="bg-white border-b border-gray-100 py-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+      <div *ngFor="let stat of [
+        {num: '52.696', label: 'Observaciones', sub: 'Cada 10 minutos'},
+        {num: '22', label: 'Variables', sub: 'Meteorológicas'},
+        {num: '96', label: 'Pasos de pronóstico', sub: '16 horas simultáneas'},
+        {num: '6', label: 'Modelos comparados', sub: 'VAR · ARIMA · ARIMAX · LSTM · TSMixer · iTransformer'}
+      ]" class="text-center group">
+        <div class="text-3xl sm:text-4xl font-extrabold text-obsidian-950 font-headline group-hover:text-crimson-accent transition-colors">{{ stat.num }}</div>
+        <div class="text-obsidian-950 font-bold text-sm mt-1">{{ stat.label }}</div>
+        <div class="text-gray-500 text-xs mt-0.5">{{ stat.sub }}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPLORE CARDS -->
+<section class="bg-white py-20 sm:py-28">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <div class="text-center mb-14">
+      <p class="text-crimson-accent text-xs font-bold uppercase tracking-widest mb-3">Tres formas de entender el estudio</p>
+      <h2 class="text-3xl sm:text-5xl font-extrabold text-obsidian-950 font-headline tracking-tight">Explora el contenido</h2>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+
+      <!-- Card Artículo -->
+      <a routerLink="/articulo"
+         class="group relative overflow-hidden rounded-3xl bg-obsidian-950 p-8 sm:p-10 flex flex-col justify-between min-h-[340px] cursor-pointer hover:-translate-y-2 transition-all duration-400 shadow-2xl">
+        <div class="absolute inset-0 bg-gradient-to-br from-crimson-accent/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400"></div>
+        <div class="relative">
+          <div class="w-12 h-12 rounded-2xl bg-crimson-accent/20 border border-crimson-accent/30 flex items-center justify-center mb-6">
+            <svg class="w-6 h-6 text-crimson-glow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          </div>
+          <h3 class="text-2xl font-extrabold text-white font-headline mb-3">Ver Artículo</h3>
+          <p class="text-gray-400 text-sm leading-relaxed">Artículo completo con índice interactivo, tablas, figuras, ecuaciones y buscador integrado.</p>
+        </div>
+        <div class="relative flex items-center justify-between mt-8">
+          <span class="text-xs text-gray-500">~16 min de lectura</span>
+          <span class="text-crimson-glow font-bold text-sm group-hover:translate-x-2 transition-transform">Leer →</span>
+        </div>
+      </a>
+
+      <!-- Card Diccionario -->
+      <a routerLink="/diccionario"
+         class="group relative overflow-hidden rounded-3xl bg-gray-50 border border-gray-200 p-8 sm:p-10 flex flex-col justify-between min-h-[340px] cursor-pointer hover:-translate-y-2 transition-all duration-400 hover:shadow-xl hover:border-gray-300">
+        <div class="relative">
+          <div class="w-12 h-12 rounded-2xl bg-obsidian-950/5 border border-obsidian-950/10 flex items-center justify-center mb-6">
+            <svg class="w-6 h-6 text-obsidian-950" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+          </div>
+          <h3 class="text-2xl font-extrabold text-obsidian-950 font-headline mb-3">Ver Diccionario</h3>
+          <p class="text-gray-500 text-sm leading-relaxed">Consulta rápida de términos, variables meteorológicas, métricas y conceptos. Filtrable por categoría.</p>
+        </div>
+        <div class="flex items-center justify-between mt-8">
+          <span class="text-xs text-gray-400">Consulta rápida</span>
+          <span class="text-obsidian-950 font-bold text-sm group-hover:translate-x-2 transition-transform">Explorar →</span>
+        </div>
+      </a>
+
+      <!-- Card Modelos -->
+      <a routerLink="/modelos"
+         class="group relative overflow-hidden rounded-3xl bg-gray-50 border border-gray-200 p-8 sm:p-10 flex flex-col justify-between min-h-[340px] cursor-pointer hover:-translate-y-2 transition-all duration-400 hover:shadow-xl hover:border-gray-300">
+        <div class="relative">
+          <div class="w-12 h-12 rounded-2xl bg-obsidian-950/5 border border-obsidian-950/10 flex items-center justify-center mb-6">
+            <svg class="w-6 h-6 text-obsidian-950" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/></svg>
+          </div>
+          <h3 class="text-2xl font-extrabold text-obsidian-950 font-headline mb-3">Ver Modelos</h3>
+          <p class="text-gray-500 text-sm leading-relaxed">Diagramas didácticos de los 6 modelos con analogías, fundamentos y resultados comparativos.</p>
+        </div>
+        <div class="flex items-center justify-between mt-8">
+          <span class="text-xs text-gray-400">6 arquitecturas explicadas</span>
+          <span class="text-obsidian-950 font-bold text-sm group-hover:translate-x-2 transition-transform">Explorar →</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- HIGHLIGHT BAND -->
+<section class="bg-obsidian-950 py-20">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8">
+    <p class="text-gray-500 text-xs uppercase tracking-widest font-semibold">Resultado principal</p>
+    <h2 class="font-headline font-extrabold text-white tracking-tight" style="font-size: clamp(2rem,5vw,4rem);">
+      iTransformer domina<br>
+      <span class="text-crimson-glow">13 de 22 variables</span>
+    </h2>
+    <p class="text-gray-400 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
+      Con un nRMSE promedio de <strong class="text-white">0.76</strong>, el modelo de atención invertida supera a todos los enfoques estadísticos y de Deep Learning evaluados, especialmente en variables de radiación solar y temperatura.
+    </p>
+    <div class="flex flex-wrap justify-center gap-4 pt-4">
+      <a routerLink="/articulo"
+         class="group inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-crimson-accent text-white font-bold text-sm shadow-2xl shadow-crimson-accent/30 hover:bg-crimson-700 transition-all hover:-translate-y-0.5">
+        Ver resultados completos
+        <span class="group-hover:translate-x-1 transition-transform">→</span>
+      </a>
+      <a routerLink="/modelos"
+         class="group inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-white/10 border border-white/15 text-white font-bold text-sm hover:bg-white/20 transition-all hover:-translate-y-0.5">
+        Explorar arquitecturas
+        <span class="group-hover:translate-x-1 transition-transform">→</span>
+      </a>
+    </div>
+  </div>
+</section>

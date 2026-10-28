@@ -1,0 +1,23 @@
+        <!-- SECCIÓN 2: ESTADO DEL ARTE -->
+        <section id="section-estado-arte" class="article-section space-y-4">
+          <div class="border-b border-gray-100 pb-3 flex items-center justify-between">
+            <h2 class="text-2xl font-bold font-headline text-gray-900 tracking-tight flex items-center gap-2">
+              <span class="text-gray-400 font-mono text-lg">II.</span> Estado del Arte
+            </h2>
+            <span class="text-xs text-gray-400 font-mono">Sección 2/7</span>
+          </div>
+
+          <div class="article-body">
+            <p>
+              El pronóstico de series de tiempo ha sido abordado mediante métodos estadísticos y, posteriormente, mediante técnicas de aprendizaje automático y aprendizaje profundo. En este contexto, <strong>Parmezan et al.</strong> realizaron una evaluación experimental de 11 métodos de predicción sobre 95 conjuntos de datos, considerando diferentes características de las series, estrategias de predicción y métricas de evaluación. Los autores señalan la importancia de considerar las características particulares de los datos al seleccionar un modelo, evidenciando que no existe un método universalmente superior para todos los escenarios [1]. De manera complementaria, <strong>Oztekin et al.</strong> desarrollaron una metodología de análisis predictivo basada en <strong>CRISP-DM</strong>, integrando diferentes técnicas de modelado y etapas de preparación y evaluación de los datos, lo que demuestra la aplicabilidad de esta metodología como marco para estructurar proyectos de análisis predictivo [2].
+            </p>
+
+            <p>
+              En aplicaciones relacionadas con variables ambientales se han desarrollado estudios que comparan enfoques estadísticos y de aprendizaje profundo. <strong>Yang et al.</strong> evaluaron modelos para la predicción de temperatura y compararon, entre otros, LSTM, ARIMA y XGBoost, evidenciando la utilidad de contrastar metodologías con diferentes capacidades para representar las dinámicas temporales [3]. Asimismo, estudios orientados a la predicción de precipitaciones han empleado conjuntos de datos meteorológicos para comparar algoritmos de aprendizaje automático y redes LSTM [4], mientras que investigaciones recientes han combinado SARIMA y LSTM para analizar el comportamiento de la precipitación en diferentes escalas temporales [5]. Estos antecedentes muestran la pertinencia de establecer comparaciones entre métodos estadísticos tradicionales y modelos de aprendizaje automático y profundo en problemas de pronóstico ambiental.
+            </p>
+
+            <p>
+              En cuanto a arquitecturas recientes de aprendizaje profundo para series de tiempo, <strong>TSMixer</strong> propone una arquitectura basada exclusivamente en perceptrones multicapa que realiza operaciones de mezcla tanto en la dimensión temporal como en la dimensión de variables, con resultados competitivos en diferentes conjuntos de datos multivariados [6]. Por su parte, <strong>iTransformer</strong> modifica el uso convencional de los Transformers para series de tiempo mediante una representación invertida de las dimensiones, utilizando las variables como tokens para capturar dependencias multivariadas [7]. A partir de estos antecedentes, el presente trabajo plantea una evaluación comparativa de métodos estadísticos y arquitecturas de aprendizaje automático y profundo sobre un conjunto de datos meteorológicos multivariados, incorporando etapas de caracterización estadística, preparación de los datos, modelado y evaluación. La comparación considera modelos tradicionales y arquitecturas recientes, con el propósito de analizar su comportamiento predictivo bajo condiciones experimentales comunes.
+            </p>
+          </div>
+        </section>

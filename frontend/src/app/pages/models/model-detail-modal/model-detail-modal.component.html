@@ -1,0 +1,75 @@
+<!-- ============================================================
+     MODAL 4: DETALLE DEL MODELO DIDÁCTICO
+     ============================================================ -->
+<div (click)="close.emit()" class="modal-backdrop">
+  <div id="model-detail-modal" (click)="$event.stopPropagation()" class="subtle-card relative max-w-2xl w-full p-5 sm:p-7 bg-white border border-gray-200 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+    
+    <div class="flex items-start justify-between pb-3 border-b border-gray-100 gap-3">
+      <div>
+        <div class="flex items-center gap-2 mb-1">
+          <span class="font-mono font-extrabold text-sm px-2 py-0.5 rounded bg-obsidian-950 text-white">
+            {{ model.acronym }}
+          </span>
+          <span class="pill-badge pill-red text-[10px]">{{ model.performanceBadge }}</span>
+        </div>
+        <h3 class="text-lg font-bold text-obsidian-950">{{ model.name }}</h3>
+      </div>
+      <button (click)="close.emit()" class="p-1 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-900">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <!-- Imagen ilustrativa -->
+    <div class="rounded-xl overflow-hidden bg-gray-50 border border-gray-100 p-2 cursor-zoom-in"
+      (click)="ui.openLightbox(model.imageSrc, model.imageCaption)">
+      <img [src]="model.imageSrc" [alt]="model.name" class="w-full h-52 object-contain rounded-lg">
+      <p class="text-[10px] text-gray-500 text-center mt-1 font-mono">Click para ver en pantalla completa</p>
+    </div>
+
+    <!-- Analogía -->
+    <div class="p-3.5 rounded-xl bg-crimson-50/40 border border-crimson-100 text-xs text-gray-800 space-y-1">
+      <div class="font-bold text-crimson-accent uppercase text-[10px] tracking-wider">Analogía del funcionamiento</div>
+      <p class="italic text-gray-700 leading-relaxed font-sans">"{{ model.analogia }}"</p>
+    </div>
+
+    <!-- Puntos clave -->
+    <div class="space-y-1.5">
+      <div class="text-xs font-bold uppercase tracking-wider text-gray-500">Fundamentos Arquitectónicos</div>
+      <ul class="space-y-1 text-xs text-gray-700 list-disc list-inside">
+        <li *ngFor="let p of model.keyPoints" class="leading-relaxed">{{ p }}</li>
+      </ul>
+    </div>
+
+    <!-- Ventajas y Limitaciones en el Estudio -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+      <div class="p-3 rounded-xl bg-gray-50 border border-gray-200">
+        <div class="text-[11px] font-bold text-gray-800 uppercase mb-1.5 flex items-center gap-1">
+          <span>✓</span> Fortalezas Observadas
+        </div>
+        <ul class="text-[11px] text-gray-700 space-y-1 list-disc list-inside">
+          <li *ngFor="let v of model.ventajas">{{ v }}</li>
+        </ul>
+      </div>
+
+      <div class="p-3 rounded-xl bg-gray-50 border border-gray-200">
+        <div class="text-[11px] font-bold text-crimson-accent uppercase mb-1.5 flex items-center gap-1">
+          <span>⚠</span> Limitaciones & Retos
+        </div>
+        <ul class="text-[11px] text-gray-700 space-y-1 list-disc list-inside">
+          <li *ngFor="let l of model.limitaciones">{{ l }}</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="p-3 bg-gray-50 rounded-xl border border-gray-200 text-xs text-gray-700 font-sans">
+      <span class="font-bold text-obsidian-950">Desempeño en este estudio:</span> {{ model.rolEnEstudio }}
+    </div>
+
+    <div class="pt-2 flex justify-end">
+      <button (click)="close.emit()" class="btn-dark py-1.5 px-4 text-xs">
+        Cerrar Detalle
+      </button>
+    </div>
+
+  </div>
+</div>

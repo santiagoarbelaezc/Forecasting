@@ -1,0 +1,43 @@
+        <!-- SECCIÓN 6: TRABAJO FUTURO -->
+        <section id="section-futuros" class="article-section space-y-4 pt-4">
+          <div class="border-b border-gray-100 pb-3 flex items-center justify-between">
+            <h2 class="text-2xl font-bold font-headline text-gray-900 tracking-tight flex items-center gap-2">
+              <span class="text-gray-400 font-mono text-lg">VI.</span> Trabajo Futuro
+            </h2>
+            <span class="text-xs text-gray-400 font-mono">Sección 6/7</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div class="subtle-card p-6">
+              <div class="pill-badge pill-red mb-2">Horizontes Extendidos</div>
+              <h4 class="text-base font-bold text-gray-900 mb-2">Predicción a Largo Plazo (192, 336 y 720 pasos)</h4>
+              <p class="text-xs text-gray-600 leading-relaxed mb-0 text-justify">
+                Ampliar la evaluación sistemática a los horizontes de predicción estándar utilizados en los experimentos de iTransformer (192, 336 y 720 observaciones, de 1 a varios días) para comprobar si la jerarquía de desempeño se mantiene a escalas temporales mayores.
+              </p>
+            </div>
+
+            <div class="subtle-card p-6">
+              <div class="pill-badge pill-dark mb-2">Optimización & Robustez</div>
+              <h4 class="text-base font-bold text-gray-900 mb-2">Sintonización Fina y Múltiples Semillas</h4>
+              <p class="text-xs text-gray-600 leading-relaxed mb-0 text-justify">
+                Ajustar con mayor granularidad hiperparámetros como longitud de contexto histórico, tamaño de capas y regularización, repitiendo entrenamientos con múltiples semillas aleatorias para validar la estabilidad estadística, en particular para el modelo LSTM.
+              </p>
+            </div>
+
+            <div class="subtle-card p-6">
+              <div class="pill-badge bg-gray-100 text-gray-700 border-gray-300 mb-2">Pérdidas Especializadas</div>
+              <h4 class="text-base font-bold text-gray-900 mb-2">Tratamiento de Variables Intermitentes</h4>
+              <p class="text-xs text-gray-600 leading-relaxed mb-0 text-justify">
+                Diseñar funciones de pérdida diferenciadas (como Tweedie o pérdidas asimétricas) y tratamientos específicos para variables meteorológicas con exceso de ceros e intermitencia extrema (precipitación y duración de la lluvia).
+              </p>
+            </div>
+
+            <div class="subtle-card p-6">
+              <div class="pill-badge bg-gray-50 text-gray-800 border-gray-300 mb-2">Ensamble & Generalización</div>
+              <h4 class="text-base font-bold text-gray-900 mb-2">Modelos Híbridos y Otros Climas</h4>
+              <p class="text-xs text-gray-600 leading-relaxed mb-0 text-justify">
+                Implementar esquemas de ensamble híbrido que seleccionen dinámicamente para cada variable el modelo óptimo en validación, y replicar el estudio sobre registros multianuales procedentes de diferentes zonas bioclimáticas del planeta.
+              </p>
+            </div>
+          </div>
+        </section>

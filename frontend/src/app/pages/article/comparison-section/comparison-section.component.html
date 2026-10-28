@@ -1,0 +1,78 @@
+        <!-- MATRIZ COMPARATIVA DE MODELOS -->
+        <section id="section-comparativa" class="article-section space-y-4">
+          <div class="border-b border-gray-100 pb-3 flex items-center justify-between">
+            <h2 class="text-2xl font-bold font-headline text-gray-900 tracking-tight flex items-center gap-2">
+              <span class="text-gray-400 font-mono text-lg">★</span> Matriz Comparativa de Modelos
+            </h2>
+            <span class="pill-badge">Síntesis Analítica</span>
+          </div>
+
+          <!-- Mobile scroll indicator -->
+          <div class="lg:hidden flex items-center gap-2 px-3 py-2 text-xs text-gray-600 bg-gray-50 rounded-xl border border-gray-200/80 mb-2">
+            <svg class="w-4 h-4 text-crimson-accent flex-shrink-0 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            <span>Desliza horizontalmente para comparar todas las columnas &rarr;</span>
+          </div>
+
+          <div class="overflow-x-auto subtle-card">
+            <table class="w-full min-w-[700px] text-left text-xs sm:text-sm">
+              <thead class="border-b border-gray-200 bg-gray-50 text-gray-700 font-headline uppercase text-[11px] tracking-wider">
+                <tr>
+                  <th class="p-4">Modelo</th>
+                  <th class="p-4">Paradigma</th>
+                  <th class="p-4">Dependencia Temporal</th>
+                  <th class="p-4">Interacción Multivariada</th>
+                  <th class="p-4">Estrategia</th>
+                  <th class="p-4">Complejidad</th>
+                  <th class="p-4">Comportamiento Observado</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100 font-sans">
+                <tr class="hover:bg-gray-50/70 transition-colors">
+                  <td class="p-4 font-bold text-gray-900">VAR (p)</td>
+                  <td class="p-4 text-gray-600">Estadístico Lineal</td>
+                  <td class="p-4 text-gray-600">Rezagos autorregresivos \(p\)</td>
+                  <td class="p-4 text-gray-600">Matrices de coeficientes \(A_i\)</td>
+                  <td class="p-4 text-gray-600">Recursiva</td>
+                  <td class="p-4 font-mono text-xs" [innerHTML]="math.complexityVAR"></td>
+                  <td class="p-4 text-gray-600">Eficaz en variables de vapor y rocío; sensible a colinealidad física y escala global.</td>
+                </tr>
+                <tr class="hover:bg-gray-50/70 transition-colors">
+                  <td class="p-4 font-bold text-gray-900">ARIMA</td>
+                  <td class="p-4 text-gray-600">Estadístico Univariado</td>
+                  <td class="p-4 text-gray-600">AR(2), I(1), MA(2) por canal</td>
+                  <td class="p-4 text-gray-600">Sin interacción (canal independiente)</td>
+                  <td class="p-4 text-gray-600">Recursiva</td>
+                  <td class="p-4 font-mono text-xs" [innerHTML]="math.complexityARIMA"></td>
+                  <td class="p-4 text-gray-600">Mejor en presión atmosférica (2,516 mbar) y precipitación; 88 parámetros totales.</td>
+                </tr>
+                <tr class="hover:bg-gray-50/70 transition-colors">
+                  <td class="p-4 font-bold text-gray-900">LSTM</td>
+                  <td class="p-4 text-gray-600">Red Recurrente (RNN)</td>
+                  <td class="p-4 text-gray-600">Estado de celda \(C_t\) recurrente</td>
+                  <td class="p-4 text-gray-600">Concatenación de entradas en cada paso</td>
+                  <td class="p-4 text-gray-600">Directa</td>
+                  <td class="p-4 font-mono text-xs" [innerHTML]="math.complexityLSTM"></td>
+                  <td class="p-4 text-gray-600">1,36 M parámetros; detención temprana en época 1 por configuración no ajustada.</td>
+                </tr>
+                <tr class="hover:bg-gray-50/70 transition-colors">
+                  <td class="p-4 font-bold text-gray-900">TSMixer</td>
+                  <td class="p-4 text-gray-600">All-MLP Residual</td>
+                  <td class="p-4 text-gray-600">Time Mixing Block</td>
+                  <td class="p-4 text-gray-600">Feature Mixing Block</td>
+                  <td class="p-4 text-gray-600">Directa</td>
+                  <td class="p-4 font-mono text-xs" [innerHTML]="math.complexityTSMixer"></td>
+                  <td class="p-4 text-gray-600">2° mejor global (nRMSE 0,84) con solo 40.188 parámetros; mejor en viento y coseno.</td>
+                </tr>
+                <tr class="hover:bg-gray-50/70 transition-colors bg-gray-50/40">
+                  <td class="p-4 font-bold text-obsidian-950">iTransformer</td>
+                  <td class="p-4 text-gray-600">Inverted Attention</td>
+                  <td class="p-4 text-gray-600">Inverted Embedding lineal temporal</td>
+                  <td class="p-4 text-gray-600">Self-Attention entre tokens de variable</td>
+                  <td class="p-4 text-gray-600 font-semibold text-gray-700">Directa</td>
+                  <td class="p-4 font-mono text-xs" [innerHTML]="math.complexityITransformer"></td>
+                  <td class="p-4 text-gray-800 font-medium">Líder global (nRMSE 0,76; menor error en 13 de 22 variables y radiación).</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
